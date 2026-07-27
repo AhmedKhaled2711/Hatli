@@ -28,6 +28,7 @@ class HomeViewModel @Inject constructor(
         when (event) {
             HomeUiEvent.Refresh -> refresh()
             HomeUiEvent.OpenAuth -> sendEffect(HomeUiEffect.NavigateToAuth)
+            HomeUiEvent.OpenProfile -> sendEffect(HomeUiEffect.NavigateToProfile)
             is HomeUiEvent.PostClicked ->
                 sendEffect(HomeUiEffect.ShowMessage("Post ${event.id}"))
         }

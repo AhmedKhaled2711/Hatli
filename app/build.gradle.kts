@@ -22,7 +22,6 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
         }
         release {
@@ -64,6 +63,10 @@ dependencies {
     implementation(libs.findLibrary("firebase-analytics").get())
     implementation(libs.findLibrary("firebase-crashlytics").get())
     implementation(libs.findLibrary("firebase-messaging").get())
+    implementation(libs.findLibrary("firebase-auth").get())
+    implementation(libs.findLibrary("firebase-firestore").get())
+    implementation(libs.findLibrary("firebase-storage").get())
+    implementation(libs.findLibrary("coil-compose").get())
 
     testImplementation(libs.findLibrary("junit").get())
     androidTestImplementation(libs.findLibrary("androidx-junit").get())

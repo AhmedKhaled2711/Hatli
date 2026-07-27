@@ -8,6 +8,13 @@ interface Destination {
 }
 
 object Routes {
+    const val SPLASH = "splash"
+    const val ONBOARDING = "onboarding"
+    const val LOGIN = "login"
+    const val OTP = "otp/{verificationId}/{phone}"
+    const val ROLE_SELECT = "role_select"
+    const val CREATE_PROFILE = "create_profile"
+
     const val HOME_GRAPH = "home_graph"
     const val AUTH_GRAPH = "auth_graph"
     const val MENU_GRAPH = "menu_graph"
@@ -26,4 +33,10 @@ object Routes {
 
     const val DEEP_LINK_HOST = "hatli.app"
     const val DEEP_LINK_SCHEME = "https"
+
+    fun otp(verificationId: String, phone: String): String {
+        val encodedPhone = java.net.URLEncoder.encode(phone, Charsets.UTF_8.name())
+        val encodedId = java.net.URLEncoder.encode(verificationId, Charsets.UTF_8.name())
+        return "otp/$encodedId/$encodedPhone"
+    }
 }

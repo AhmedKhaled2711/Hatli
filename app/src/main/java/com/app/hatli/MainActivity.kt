@@ -9,20 +9,31 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import com.app.hatli.core.data.firebase.AuthActivityHolder
 import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.navigation.HatliNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var authActivityHolder: AuthActivityHolder
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            DisposableEffect(Unit) {
+                authActivityHolder.set(this@MainActivity)
+                onDispose { authActivityHolder.set(null) }
+            }
             HatliTheme {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
@@ -39,5 +50,19 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::authActivityHolder.isInitialized) {
+            authActivityHolder.set(this)
+        }
+    }
+
+    override fun onPause() {
+        if (::authActivityHolder.isInitialized) {
+            authActivityHolder.set(null)
+        }
+        super.onPause()
     }
 }

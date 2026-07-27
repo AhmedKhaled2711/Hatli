@@ -25,6 +25,7 @@ retrofitKotlinxSerialization = "1.0.0"
 
 # Database
 room = "2.7.2"
+datastore = "1.1.7"
 
 # Image
 coil = "2.7.0"
@@ -96,6 +97,12 @@ firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.r
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
+
+# Preferences
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 # Inject (pure JVM — keeps domain free of Hilt)
 javax-inject = { group = "javax.inject", name = "javax.inject", version = "1" }

@@ -23,25 +23,58 @@ fun HatliNavHost(
     val navController = rememberNavController()
     val navigator = remember(navController) { Navigator(navController) }
 
+    fun goHomeClearingStack() {
+        navigator.navigateAndClearBackStack(Routes.HOME_GRAPH)
+    }
+
+    fun goAuthClearingStack() {
+        // Splash re-resolves → Login (session cleared). Clears Home from back stack.
+        navigator.navigateAndClearBackStack(Routes.AUTH_GRAPH)
+    }
+
     NavHost(
         navController = navController,
-        startDestination = Routes.HOME_GRAPH,
+        startDestination = Routes.AUTH_GRAPH,
         modifier = modifier,
     ) {
-        homeGraph(
-            onNavigateToAuth = { navigator.navigate(Routes.AUTH_GRAPH) },
-            onMessage = onMessage,
-        )
         authGraph(
-            onBack = { navigator.popBackStack() },
-            onLoginSuccess = {
-                navigator.navigateAndClearBackStack(Routes.HOME_GRAPH)
+            onNavigateHome = { goHomeClearingStack() },
+            onNavigateLogin = {
+                navController.navigate(Routes.LOGIN) {
+                    popUpTo(Routes.SPLASH) { inclusive = true }
+                    launchSingleTop = true
+                }
             },
+            onNavigateOnboarding = {
+                navController.navigate(Routes.ONBOARDING) {
+                    popUpTo(Routes.SPLASH) { inclusive = true }
+                    launchSingleTop = true
+                }
+            },
+            onNavigateRole = {
+                navController.navigate(Routes.ROLE_SELECT) { launchSingleTop = true }
+            },
+            onNavigateCreateProfile = {
+                navController.navigate(Routes.CREATE_PROFILE) { launchSingleTop = true }
+            },
+            onNavigateOtp = { verificationId, phone ->
+                navController.navigate(Routes.otp(verificationId, phone)) {
+                    launchSingleTop = true
+                }
+            },
+        )
+        homeGraph(
+            onNavigateToAuth = { goAuthClearingStack() },
+            onNavigateToProfile = { navigator.navigate(Routes.PROFILE_GRAPH) },
+            onMessage = onMessage,
         )
         menuGraph(onBack = { navigator.popBackStack() })
         cartGraph(onBack = { navigator.popBackStack() })
         checkoutGraph(onBack = { navigator.popBackStack() })
         ordersGraph(onBack = { navigator.popBackStack() })
-        profileGraph(onBack = { navigator.popBackStack() })
+        profileGraph(
+            onBack = { navigator.popBackStack() },
+            onLoggedOut = { goAuthClearingStack() },
+        )
     }
 }

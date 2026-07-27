@@ -26,6 +26,7 @@ import com.app.hatli.core.ui.base.CollectUiEffect
 @Composable
 fun HomeRoute(
     onNavigateToAuth: () -> Unit,
+    onNavigateToProfile: () -> Unit,
     onMessage: (String) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -34,6 +35,7 @@ fun HomeRoute(
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
             HomeUiEffect.NavigateToAuth -> onNavigateToAuth()
+            HomeUiEffect.NavigateToProfile -> onNavigateToProfile()
             is HomeUiEffect.ShowMessage -> onMessage(effect.message)
         }
     }
@@ -71,7 +73,11 @@ fun HomeScreen(
             onClick = { onEvent(HomeUiEvent.Refresh) },
         )
         HatliSecondaryButton(
-            text = "Go to Auth",
+            text = "Profile",
+            onClick = { onEvent(HomeUiEvent.OpenProfile) },
+        )
+        HatliSecondaryButton(
+            text = "Sign out flow",
             onClick = { onEvent(HomeUiEvent.OpenAuth) },
         )
 

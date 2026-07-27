@@ -1,35 +1,62 @@
 package com.app.hatli.feature.auth.navigation
 
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navDeepLink
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.app.hatli.core.ui.navigation.Destination
 import com.app.hatli.core.ui.navigation.Routes
-import com.app.hatli.feature.auth.presentation.AuthRoute
-
-object AuthDestination : Destination {
-    override val route: String = Routes.AUTH
-}
+import com.app.hatli.feature.auth.presentation.login.LoginRoute
+import com.app.hatli.feature.auth.presentation.onboarding.OnboardingRoute
+import com.app.hatli.feature.auth.presentation.otp.OtpRoute
+import com.app.hatli.feature.auth.presentation.profile.CreateProfileRoute
+import com.app.hatli.feature.auth.presentation.role.RoleRoute
+import com.app.hatli.feature.auth.presentation.splash.SplashRoute
 
 fun NavGraphBuilder.authGraph(
-    onBack: () -> Unit,
-    onLoginSuccess: () -> Unit,
+    onNavigateHome: () -> Unit,
+    onNavigateLogin: () -> Unit,
+    onNavigateOnboarding: () -> Unit,
+    onNavigateRole: () -> Unit,
+    onNavigateCreateProfile: () -> Unit,
+    onNavigateOtp: (verificationId: String, phone: String) -> Unit,
 ) {
     navigation(
         route = Routes.AUTH_GRAPH,
-        startDestination = AuthDestination.route,
+        startDestination = Routes.SPLASH,
     ) {
+        composable(Routes.SPLASH) {
+            SplashRoute(
+                onOnboarding = onNavigateOnboarding,
+                onLogin = onNavigateLogin,
+                onCreateProfile = onNavigateCreateProfile,
+                onHome = onNavigateHome,
+            )
+        }
+        composable(Routes.ONBOARDING) {
+            OnboardingRoute(onFinished = onNavigateLogin)
+        }
+        composable(Routes.LOGIN) {
+            LoginRoute(onOtp = onNavigateOtp)
+        }
         composable(
-            route = AuthDestination.route,
-            deepLinks = listOf(
-                navDeepLink {
-                    uriPattern =
-                        "${Routes.DEEP_LINK_SCHEME}://${Routes.DEEP_LINK_HOST}/auth"
-                },
+            route = Routes.OTP,
+            arguments = listOf(
+                navArgument("verificationId") { type = NavType.StringType },
+                navArgument("phone") { type = NavType.StringType },
             ),
         ) {
-            AuthRoute(onBack = onBack, onLoginSuccess = onLoginSuccess)
+            OtpRoute(
+                onRoleSelect = onNavigateRole,
+                onCreateProfile = onNavigateCreateProfile,
+                onHome = onNavigateHome,
+            )
+        }
+        composable(Routes.ROLE_SELECT) {
+            RoleRoute(onCreateProfile = onNavigateCreateProfile)
+        }
+        composable(Routes.CREATE_PROFILE) {
+            CreateProfileRoute(onHome = onNavigateHome)
         }
     }
 }
