@@ -7,6 +7,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.app.hatli.core.designsystem.theme.HatliTheme
 
 @Composable
 fun HatliTextField(
@@ -19,6 +20,8 @@ fun HatliTextField(
     supportingText: String? = null,
     singleLine: Boolean = true,
 ) {
+    val extended = HatliTheme.extendedColors
+    val scheme = MaterialTheme.colorScheme
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -30,8 +33,21 @@ fun HatliTextField(
         supportingText = supportingText?.let { { Text(it) } },
         shape = MaterialTheme.shapes.medium,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedBorderColor = scheme.primary,
+            unfocusedBorderColor = extended.border,
+            disabledBorderColor = extended.disabledContainer,
+            errorBorderColor = scheme.error,
+            focusedLabelColor = scheme.primary,
+            unfocusedLabelColor = scheme.onSurfaceVariant,
+            disabledLabelColor = extended.disabled,
+            cursorColor = scheme.primary,
+            focusedTextColor = scheme.onSurface,
+            unfocusedTextColor = scheme.onSurface,
+            disabledTextColor = extended.disabled,
+            focusedContainerColor = scheme.surface,
+            unfocusedContainerColor = scheme.surface,
+            disabledContainerColor = extended.disabledContainer,
+            errorContainerColor = scheme.surface,
         ),
     )
 }

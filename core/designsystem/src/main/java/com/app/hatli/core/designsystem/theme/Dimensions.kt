@@ -27,3 +27,13 @@ object HatliElevation {
     val md: Dp = 4.dp
     val lg: Dp = 8.dp
 }
+
+object HatliSizing {
+    /** Minimum touch target (Material / a11y). */
+    val minTouch: Dp = 48.dp
+    val topAppBar: Dp = 64.dp
+    val bottomNav: Dp = 80.dp
+    val listRowTwoLine: Dp = 72.dp
+    val textField: Dp = 56.dp
+    val stickyCtaBar: Dp = 72.dp
+}

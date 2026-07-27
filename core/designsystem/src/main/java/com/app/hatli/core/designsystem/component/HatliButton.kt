@@ -1,5 +1,6 @@
 package com.app.hatli.core.designsystem.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.HatliTheme
 
 @Composable
 fun HatliPrimaryButton(
@@ -21,6 +23,7 @@ fun HatliPrimaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val extended = HatliTheme.extendedColors
     Button(
         onClick = onClick,
         enabled = enabled,
@@ -32,6 +35,8 @@ fun HatliPrimaryButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
+            disabledContainerColor = extended.disabledContainer,
+            disabledContentColor = extended.disabled,
         ),
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
@@ -45,6 +50,7 @@ fun HatliSecondaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val extended = HatliTheme.extendedColors
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
@@ -52,6 +58,14 @@ fun HatliSecondaryButton(
             .fillMaxWidth()
             .heightIn(min = 48.dp),
         shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (enabled) MaterialTheme.colorScheme.outline else extended.disabled,
+        ),
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = extended.disabled,
+        ),
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
     }
@@ -64,7 +78,16 @@ fun HatliTextButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
-    TextButton(onClick = onClick, enabled = enabled, modifier = modifier) {
+    val extended = HatliTheme.extendedColors
+    TextButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier,
+        colors = ButtonDefaults.textButtonColors(
+            contentColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = extended.disabled,
+        ),
+    ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
     }
 }
