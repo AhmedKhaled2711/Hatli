@@ -11,13 +11,16 @@ object ProfileDestination : Destination {
     override val route: String = Routes.PROFILE
 }
 
-fun NavGraphBuilder.profileGraph(onBack: () -> Unit) {
+fun NavGraphBuilder.profileGraph(
+    onBack: () -> Unit,
+    onLoggedOut: () -> Unit,
+) {
     navigation(
         route = Routes.PROFILE_GRAPH,
         startDestination = ProfileDestination.route,
     ) {
         composable(ProfileDestination.route) {
-            ProfileRoute(onBack = onBack)
+            ProfileRoute(onLoggedOut = onLoggedOut, onBack = onBack)
         }
     }
 }

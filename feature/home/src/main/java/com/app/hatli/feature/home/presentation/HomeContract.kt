@@ -14,10 +14,12 @@ data class HomeUiState(
 sealed interface HomeUiEvent : UiEvent {
     data object Refresh : HomeUiEvent
     data object OpenAuth : HomeUiEvent
+    data object OpenProfile : HomeUiEvent
     data class PostClicked(val id: Int) : HomeUiEvent
 }
 
 sealed interface HomeUiEffect : UiEffect {
     data object NavigateToAuth : HomeUiEffect
+    data object NavigateToProfile : HomeUiEffect
     data class ShowMessage(val message: String) : HomeUiEffect
 }

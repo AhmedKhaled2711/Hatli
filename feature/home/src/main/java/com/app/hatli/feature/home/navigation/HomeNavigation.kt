@@ -13,6 +13,7 @@ object HomeDestination : Destination {
 
 fun NavGraphBuilder.homeGraph(
     onNavigateToAuth: () -> Unit,
+    onNavigateToProfile: () -> Unit,
     onMessage: (String) -> Unit,
 ) {
     navigation(
@@ -22,6 +23,7 @@ fun NavGraphBuilder.homeGraph(
         composable(HomeDestination.route) {
             HomeRoute(
                 onNavigateToAuth = onNavigateToAuth,
+                onNavigateToProfile = onNavigateToProfile,
                 onMessage = onMessage,
             )
         }

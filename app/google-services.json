@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "000000000000",
-    "project_id": "hatli-phase0-placeholder",
-    "storage_bucket": "hatli-phase0-placeholder.appspot.com"
+    "project_number": "939103381683",
+    "project_id": "hatli-d2e3f",
+    "storage_bucket": "hatli-d2e3f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+        "mobilesdk_app_id": "1:939103381683:android:6aa8cbe8c116ed1bb328c6",
         "android_client_info": {
           "package_name": "com.app.hatli"
         }
@@ -15,26 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyPlaceholderKeyReplaceWithRealFirebase"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:000000000000:android:0000000000000000000001",
-        "android_client_info": {
-          "package_name": "com.app.hatli.debug"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyPlaceholderKeyReplaceWithRealFirebase"
+          "current_key": "AIzaSyBBkrW5OHTeGjPRlvuq2RauWGVACz-SAEs"
         }
       ],
       "services": {

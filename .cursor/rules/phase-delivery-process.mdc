@@ -1,0 +1,71 @@
+---
+description: Phase & feature execution order — product-first, complete one feature before the next
+alwaysApply: true
+---
+
+# Phase & Feature Delivery Process
+
+When implementing any Phase or Feature in Hatli, follow this order. Do **not** jump to Compose screens or ViewModels before product/data contracts are clear.
+
+## Execution order (mandatory)
+
+1. Product Analysis
+2. UX Flow
+3. Navigation
+4. Data Model
+5. Firestore Collections
+6. Domain Models
+7. DTOs
+8. Repository Interfaces
+9. Repository Implementations
+10. UseCases
+11. ViewModels
+12. UI State
+13. Compose Screens
+14. Components
+15. Validation
+16. Error Handling
+17. Loading
+18. Empty State
+19. Testing
+20. Code Review
+21. Refactor
+22. Documentation
+
+## Feature isolation rule
+
+- Finish **one feature completely** (through Definition of Done) before starting the next.
+- Never leave a half-wired feature and switch to another feature "in parallel" unless the user explicitly asks.
+
+## Required Phase artifacts
+
+Before / during each Phase, produce or update (under `docs/phases/`):
+
+| Artifact | Purpose |
+|----------|---------|
+| Product Requirements | What problem are we solving? |
+| Scope | In / Out |
+| User Flows | Happy path + edge paths |
+| Data Models | Domain entities & relationships |
+| Architecture Decisions | Why this design; trade-offs |
+| Screen Specifications | Screens, states, actions |
+| API / Firebase Design | Collections, paths, auth rules notes |
+| Test Cases | Manual + automated targets |
+| Definition of Done | Binary checklist |
+| Code Review Checklist | Review gates |
+
+## Architecture constraints (from Phase 0)
+
+- Features never depend on other features — only on `core/*`.
+- No Firebase / Room / Retrofit in UI or domain.
+- UI → ViewModel → UseCase → Repository → Data sources.
+- MVVM + UDF (`UiState` / `UiEvent` / `UiEffect`).
+- Design system components only in feature UI (no raw Material buttons in features).
+
+## When the user starts a new Phase
+
+1. Start at **Product Analysis** — do not code screens first.
+2. Confirm Scope (In/Out) with the user if ambiguous.
+3. Walk UX Flow + Navigation before writing repositories.
+4. Implement data → domain → presentation in that order.
+5. Close with Testing, Review, Refactor, Documentation.

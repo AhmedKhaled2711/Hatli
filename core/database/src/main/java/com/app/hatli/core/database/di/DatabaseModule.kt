@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.app.hatli.core.database.HatliDatabase
 import com.app.hatli.core.database.dao.PostDao
+import com.app.hatli.core.database.dao.UserProfileDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,9 +25,12 @@ object DatabaseModule {
         HatliDatabase::class.java,
         "hatli.db",
     )
-        .fallbackToDestructiveMigration(dropAllTables = true) // Phase 0 only — add real migrations before prod data
+        .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
 
     @Provides
     fun providePostDao(database: HatliDatabase): PostDao = database.postDao()
+
+    @Provides
+    fun provideUserProfileDao(database: HatliDatabase): UserProfileDao = database.userProfileDao()
 }

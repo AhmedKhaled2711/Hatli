@@ -14,4 +14,10 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:database"))
     implementation(libs.findLibrary("kotlinx-coroutines-core").get())
+    implementation(libs.findLibrary("androidx-datastore-preferences").get())
+
+    implementation(platform(libs.findLibrary("firebase-bom").get()))
+    implementation(libs.findLibrary("firebase-auth").get())
+    implementation(libs.findLibrary("firebase-firestore").get())
+    implementation(libs.findLibrary("firebase-storage").get())
 }
