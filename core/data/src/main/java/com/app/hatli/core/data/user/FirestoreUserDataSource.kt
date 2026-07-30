@@ -3,12 +3,14 @@ package com.app.hatli.core.data.user
 import com.app.hatli.core.model.CreateProfileInput
 import com.app.hatli.core.model.Gender
 import com.app.hatli.core.model.TransportType
+import com.app.hatli.core.model.UserAddress
 import com.app.hatli.core.model.UserProfile
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.model.VerificationStatus
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -26,7 +28,15 @@ class FirestoreUserDataSource @Inject constructor(
     fun observe(uid: String): Flow<UserProfile?> = callbackFlow {
         val registration = users.document(uid).addSnapshotListener { snapshot, error ->
             if (error != null) {
-                close(error)
+                // After Auth.signOut(), rules deny the listen. End cleanly — do not crash UI.
+                if (error is FirebaseFirestoreException &&
+                    error.code == FirebaseFirestoreException.Code.PERMISSION_DENIED
+                ) {
+                    trySend(null)
+                    close()
+                } else {
+                    close(error)
+                }
                 return@addSnapshotListener
             }
             trySend(snapshot?.toUserProfile())
@@ -56,8 +66,8 @@ class FirestoreUserDataSource @Inject constructor(
             lastName = getString(FIELD_LAST_NAME).orEmpty(),
             email = getString(FIELD_EMAIL).orEmpty(),
             gender = runCatching {
-                Gender.valueOf(getString(FIELD_GENDER) ?: Gender.PreferNotToSay.name)
-            }.getOrDefault(Gender.PreferNotToSay),
+                Gender.valueOf(getString(FIELD_GENDER) ?: Gender.Male.name)
+            }.getOrDefault(Gender.Male),
             createdAt = getTimestamp(FIELD_CREATED_AT)?.toDate()?.time
                 ?: getLong(FIELD_CREATED_AT)
                 ?: 0L,
@@ -65,6 +75,7 @@ class FirestoreUserDataSource @Inject constructor(
                 ?: getLong(FIELD_UPDATED_AT)
                 ?: 0L,
             profileCompleted = getBoolean(FIELD_PROFILE_COMPLETED) ?: false,
+            address = readAddress(),
             nationalId = getString(FIELD_NATIONAL_ID),
             idImageUrl = getString(FIELD_ID_IMAGE),
             selfieUrl = getString(FIELD_SELFIE),
@@ -75,6 +86,31 @@ class FirestoreUserDataSource @Inject constructor(
             verificationStatus = getString(FIELD_VERIFICATION)?.let {
                 runCatching { VerificationStatus.valueOf(it) }.getOrNull()
             },
+        )
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun DocumentSnapshot.readAddress(): UserAddress? {
+        val map = get(FIELD_ADDRESS) as? Map<String, Any?> ?: return null
+        val city = map[ADDRESS_CITY] as? String
+        val area = map[ADDRESS_AREA] as? String
+        val street = map[ADDRESS_STREET] as? String
+        val building = map[ADDRESS_BUILDING] as? String
+        if (city.isNullOrBlank() && area.isNullOrBlank() &&
+            street.isNullOrBlank() && building.isNullOrBlank()
+        ) {
+            return null
+        }
+        return UserAddress(
+            city = city.orEmpty(),
+            area = area.orEmpty(),
+            street = street.orEmpty(),
+            building = building.orEmpty(),
+            floor = map[ADDRESS_FLOOR] as? String,
+            apartment = map[ADDRESS_APARTMENT] as? String,
+            notes = map[ADDRESS_NOTES] as? String,
+            latitude = (map[ADDRESS_LAT] as? Number)?.toDouble(),
+            longitude = (map[ADDRESS_LNG] as? Number)?.toDouble(),
         )
     }
 
@@ -89,6 +125,7 @@ class FirestoreUserDataSource @Inject constructor(
             FIELD_GENDER to gender.name,
             FIELD_PROFILE_COMPLETED to profileCompleted,
             FIELD_UPDATED_AT to FieldValue.serverTimestamp(),
+            FIELD_ADDRESS to address?.toFirestoreMap(),
             FIELD_NATIONAL_ID to nationalId,
             FIELD_ID_IMAGE to idImageUrl,
             FIELD_SELFIE to selfieUrl,
@@ -102,6 +139,18 @@ class FirestoreUserDataSource @Inject constructor(
         return map
     }
 
+    private fun UserAddress.toFirestoreMap(): Map<String, Any?> = mapOf(
+        ADDRESS_CITY to city,
+        ADDRESS_AREA to area,
+        ADDRESS_STREET to street,
+        ADDRESS_BUILDING to building,
+        ADDRESS_FLOOR to floor,
+        ADDRESS_APARTMENT to apartment,
+        ADDRESS_NOTES to notes,
+        ADDRESS_LAT to latitude,
+        ADDRESS_LNG to longitude,
+    )
+
     companion object {
         const val COLLECTION = "users"
         const val FIELD_UID = "uid"
@@ -114,6 +163,16 @@ class FirestoreUserDataSource @Inject constructor(
         const val FIELD_CREATED_AT = "createdAt"
         const val FIELD_UPDATED_AT = "updatedAt"
         const val FIELD_PROFILE_COMPLETED = "profileCompleted"
+        const val FIELD_ADDRESS = "address"
+        const val ADDRESS_CITY = "city"
+        const val ADDRESS_AREA = "area"
+        const val ADDRESS_STREET = "street"
+        const val ADDRESS_BUILDING = "building"
+        const val ADDRESS_FLOOR = "floor"
+        const val ADDRESS_APARTMENT = "apartment"
+        const val ADDRESS_NOTES = "notes"
+        const val ADDRESS_LAT = "latitude"
+        const val ADDRESS_LNG = "longitude"
         const val FIELD_NATIONAL_ID = "nationalId"
         const val FIELD_ID_IMAGE = "idImage"
         const val FIELD_SELFIE = "selfie"
@@ -139,6 +198,17 @@ fun CreateProfileInput.toDraftProfile(
     createdAt = now,
     updatedAt = now,
     profileCompleted = true,
+    address = address?.let {
+        it.copy(
+            city = it.city.trim(),
+            area = it.area.trim(),
+            street = it.street.trim(),
+            building = it.building.trim(),
+            floor = it.floor?.trim()?.ifBlank { null },
+            apartment = it.apartment?.trim()?.ifBlank { null },
+            notes = it.notes?.trim()?.ifBlank { null },
+        )
+    },
     nationalId = nationalId?.trim(),
     idImageUrl = idImageUrl,
     selfieUrl = selfieUrl,

@@ -1,0 +1,16 @@
+rules_version = '2';
+
+// Deploy after upgrading to Blaze and setting HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED = true:
+//   firebase deploy --only storage
+// Spark plan: Storage is unavailable — keep the app flag false; these rules are unused until then.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /users/{userId}/{allPaths=**} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null
+                   && request.auth.uid == userId
+                   && request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

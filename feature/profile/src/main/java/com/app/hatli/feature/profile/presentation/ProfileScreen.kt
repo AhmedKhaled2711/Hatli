@@ -60,7 +60,8 @@ fun ProfileScreen(
             }
             else -> {
                 val p = state.profile
-                p.selfieUrl?.let { url ->
+                // Selfie display requires Storage uploads (Blaze). Safe no-op while URLs are null.
+                p.selfieUrl?.takeIf { it.isNotBlank() }?.let { url ->
                     AsyncImage(model = url, contentDescription = "Profile photo")
                 }
                 HatliCard {
@@ -69,7 +70,14 @@ fun ProfileScreen(
                     Text("Phone: ${p.phone}")
                     Text("Email: ${p.email}")
                     Text("Gender: ${p.gender.name}")
+                    p.address?.let { address ->
+                        Text("Address: ${address.formattedOneLine()}")
+                        address.notes?.takeIf { it.isNotBlank() }?.let { notes ->
+                            Text("Notes: $notes")
+                        }
+                    }
                     if (p.role == UserRole.Runner) {
+                        Text("Transport: ${p.transportType?.name.orEmpty()}")
                         Text("Vehicle: ${p.vehicleInfo.orEmpty()}")
                         Text("National ID: ${p.nationalId.orEmpty()}")
                         Text("Verification: ${p.verificationStatus?.name.orEmpty()}")

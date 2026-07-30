@@ -1,11 +1,14 @@
 package com.app.hatli
 
+import android.graphics.Color as AndroidColor
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -15,6 +18,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.app.hatli.core.data.firebase.AuthActivityHolder
 import com.app.hatli.core.designsystem.theme.HatliTheme
+import com.app.hatli.core.designsystem.theme.HatliThemeMode
 import com.app.hatli.navigation.HatliNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -28,17 +32,29 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                lightScrim = AndroidColor.TRANSPARENT,
+                darkScrim = AndroidColor.TRANSPARENT,
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                lightScrim = AndroidColor.TRANSPARENT,
+                darkScrim = AndroidColor.TRANSPARENT,
+            ),
+        )
         setContent {
             DisposableEffect(Unit) {
                 authActivityHolder.set(this@MainActivity)
                 onDispose { authActivityHolder.set(null) }
             }
-            HatliTheme {
+            // FollowSystem applies light + dark from device setting.
+            HatliTheme(themeMode = HatliThemeMode.FollowSystem) {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onBackground,
                     snackbarHost = { SnackbarHost(snackbarHostState) },
                 ) { innerPadding ->
                     HatliNavHost(

@@ -8,6 +8,8 @@ import com.app.hatli.core.domain.usecase.user.GetUserProfileUseCase
 import com.app.hatli.core.domain.usecase.user.ObserveUserProfileUseCase
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -20,8 +22,11 @@ class ProfileViewModel @Inject constructor(
     private val logout: LogoutUseCase,
 ) : BaseViewModel<ProfileUiState, ProfileUiEvent, ProfileUiEffect>(ProfileUiState()) {
 
+    private var observeJob: Job? = null
+
     init {
-        observeUserProfile()
+        observeJob = observeUserProfile()
+            .catch { emit(null) }
             .onEach { profile ->
                 setState { copy(isLoading = false, profile = profile) }
             }
@@ -53,6 +58,9 @@ class ProfileViewModel @Inject constructor(
 
     private fun signOut() {
         viewModelScope.launch {
+            // Stop Firestore listen before Auth.signOut() to avoid PERMISSION_DENIED crash.
+            observeJob?.cancel()
+            observeJob = null
             logout()
             sendEffect(ProfileUiEffect.LoggedOut)
         }
