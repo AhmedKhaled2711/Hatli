@@ -70,23 +70,24 @@ Main — Runner
 **Pages (content)**
 1. **Request or deliver** — one marketplace, two roles  
 2. **Track every step** — live status you can trust  
-3. **Get paid / pay simply** — clear, fast settlement  
+3. **Pay and get paid simply** — clear, fast settlement  
 
-**Layout**
-- Top end: **Skip** (`HatliTextButton`, 48dp)
-- Upper 45%: simple illustration slot (vector, not photo collage)
-- Title `headlineLarge` + body `bodyLarge` (Text Secondary)
-- Page indicator: 3 dots (Primary / Border)
-- Bottom: **Next** / **Get Started** (`HatliPrimaryButton`)
+**Layout** (FlexBox kit pattern, Hatli brand tokens)
+- Top end: **Skip** (`HatliTextButton`, 48dp) — hidden on last page  
+- Upper ~45%: illustration hero — soft forest circle wash + icon badges (vector, not photo collage)  
+- Title `headlineLarge` + body `bodyLarge` (Text Secondary), centered  
+- Page indicator: 3 dots — active pill (Primary) / inactive (outline)  
+- Bottom sticky: **Next** / **Get Started** (`HatliPrimaryButton`)  
 
 **UX**
-- Skip always available — respect returning curiosity without trapping.
-- One idea per page (reference kits often overload with 4 CTAs — we don’t).
-- Android pager + edge swipe; dots are indicators not buttons only.
+- Skip always available until last page — respect returning curiosity without trapping.  
+- One idea per page (reference kits often overload with 4 CTAs — we don’t).  
+- Android `HorizontalPager` + edge swipe; dots are indicators (not the only navigation).  
 
-**States:** Content only (local).
+**States:** Content only (local).  
 
-**Compose:** `HorizontalPager`; mark onboarding complete on Skip or Get Started.
+**Compose:** `HorizontalPager`; mark onboarding complete on Skip or Get Started.  
+**Reference:** [FlexBox Delivery tracking UI kit](https://www.figma.com/design/fHoNXiKXvhN4zbDE6ZL96p/flexbox-Delivery-tracking-app-ui-kit---Free-%F0%9F%98%89--Community-?node-id=101-2) onboarding structure.
 
 ---
 

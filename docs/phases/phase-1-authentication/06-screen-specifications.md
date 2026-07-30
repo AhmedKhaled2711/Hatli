@@ -3,7 +3,7 @@
 | Screen | States | Primary actions | Nav in/out |
 |--------|--------|-----------------|------------|
 | **Splash** | Loading (resolve) | None | → Onboarding / Login / Create Profile / Home |
-| **Onboarding** | Content (pager) | Skip, Next, Get Started | → Login |
+| **Onboarding** | Content (pager + illustration) | Skip, Next, Get Started | → Login |
 | **Login** | Idle / Submitting / Error / Offline | Send OTP, edit phone | → OTP |
 | **OTP** | Entering / Verifying / Error / Resend cooldown | Auto-submit at 6 digits, Resend, Change phone | → Role / Create Profile / Home |
 | **Role select** | Idle / Saving | Select Requester or Runner, Continue | → Create Profile |
