@@ -8,20 +8,23 @@
 | P1-04 | Invalid phone | Error; stay on Login |
 | P1-05 | Correct OTP | Auth session created |
 | P1-06 | Wrong OTP | Friendly invalid code message |
-| P1-07 | Role Requester → Create Profile | Runner fields hidden |
-| P1-08 | Role Runner → Create Profile | Runner fields visible; images hidden when flag false |
-| P1-09 | Save Requester profile | Firestore `users/{uid}` created; navigate Home |
-| P1-10 | Save Runner profile | Doc includes nationalId, transport, verificationStatus Pending; images null |
-| P1-11 | Open Profile | Shows saved names, role, phone, email |
-| P1-12 | Logout | Returns to auth flow; requires OTP again |
-| P1-13 | **Reinstall + same phone OTP** | **Profile data restored from Firestore** |
+| P1-07 | Role Requester → Create Profile | Wizard shows Personal → Address only (2 steps) |
+| P1-08 | Role Runner → Create Profile | Wizard shows Personal → Address → Transport → Verification (4 steps); images hidden when flag false |
+| P1-09 | Save Requester profile | Firestore `users/{uid}` created with `address` map; navigate Home |
+| P1-10 | Save Runner profile | Doc includes address, nationalId, transport, verificationStatus Pending; images null |
+| P1-11 | Open Profile | Shows saved names, role, phone, email, gender, address |
+| P1-12 | Logout | Cancels Firestore listener; returns to auth flow without crash; requires OTP again |
+| P1-13 | **Reinstall + same phone OTP** | **Profile data (incl. address) restored from Firestore** |
 | P1-14 | Cold start with valid session + completed profile | Splash → Home |
 | P1-15 | Session + incomplete profile | Splash/OTP path → Create Profile |
 | P1-16 | Airplane mode on save | NoInternet (or equivalent) error |
 | P1-17 | Walking runner without vehicle | Allowed |
-| P1-18 | Motorcycle runner without vehicle | Validation error |
+| P1-18 | Motorcycle runner without vehicle | Validation error on Transport step |
 | P1-19 | Firestore DB not created | Failure message; no silent success |
 | P1-20 | Storage flag false | No upload attempts; create still succeeds |
+| P1-21 | Gender options | Only Male / Female selectable |
+| P1-22 | Address missing city/area/street/building | Step error; cannot advance / submit |
+| P1-23 | Wizard Back from Address | Returns to Personal; data retained |
 
 ### Automated targets
 

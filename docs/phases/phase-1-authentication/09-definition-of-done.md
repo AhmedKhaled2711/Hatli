@@ -3,11 +3,13 @@
 ## Product deliverables
 
 - [x] User can log in with phone OTP
-- [x] User can create Requester profile
-- [x] User can create Runner profile (without image uploads on Spark)
-- [x] Profile screen shows stored data
-- [x] Profile persisted to Firestore `users/{uid}`
-- [x] Local Room cache written
+- [x] User can create Requester profile (Personal + Address wizard)
+- [x] User can create Runner profile (4-step wizard; without image uploads on Spark)
+- [x] Profile screen shows stored data (incl. address)
+- [x] Profile persisted to Firestore `users/{uid}` (incl. nested `address`)
+- [x] Local Room cache written (flattened address columns)
+- [x] Gender limited to Male / Female
+- [x] Logout cancels Firestore listeners before `signOut` (no PERMISSION_DENIED crash)
 - [x] Reinstall recovery path documented and testable (P1-13)
 
 ## Screens
@@ -17,7 +19,7 @@
 - [x] Login
 - [x] OTP
 - [x] Role select
-- [x] Create Profile
+- [x] Create Profile (role-aware multi-step wizard)
 - [x] Profile
 - [x] Post-auth Home entry
 
@@ -46,6 +48,7 @@
 - [ ] ID image / selfie upload (Blaze + flag)
 - [ ] Admin verification workflow for Runners
 - [ ] Edit profile
+- [ ] Map / Current Location for address
 - [ ] Account deletion UX
 
 ## Phase verdict

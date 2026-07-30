@@ -1,7 +1,7 @@
 # Phase 1 — Authentication & User Lifecycle
 
 **Status:** Delivered (with Storage uploads deferred)  
-**Goal:** A first-time user can enter Hatli, authenticate with phone OTP, choose a role, create a profile, and recover that profile after reinstall.
+**Goal:** A first-time user can enter Hatli, authenticate with phone OTP, choose a role, complete a role-aware profile setup wizard (incl. address), and recover that profile after reinstall.
 
 | Artifact | File |
 |----------|------|
@@ -17,3 +17,12 @@
 | Code Review checklist | [10-code-review-checklist.md](./10-code-review-checklist.md) |
 
 **Module owners:** `:feature:auth`, `:feature:profile`, `:feature:home` (post-auth landing), `:core:data` / `:core:domain` / `:core:model`
+
+## Changelog (post-delivery updates)
+
+| Change | Summary |
+|--------|---------|
+| Multi-step Create Profile | Role-aware wizard: Requester Personal→Address; Runner +Transport→Verification |
+| Address persistence | Nested Firestore `address` map + Room flattened columns; shown on Profile |
+| Gender | Limited to `Male` / `Female` |
+| Safer logout | Cancel Firestore profile listener before `signOut`; tolerate `PERMISSION_DENIED` on observe close |

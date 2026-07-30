@@ -6,17 +6,17 @@
 2. Onboarding incomplete → **Onboarding** (Skip or finish) → marks onboarding done → **Login**.
 3. User enters phone → **Send OTP** → **OTP** screen.
 4. User enters 6-digit code → Auth succeeds.
-5. No completed profile → **Role select** → Requester → **Create Profile**.
-6. User fills shared fields → Save → Firestore + Room write → **Home**.
-7. Optional: Home → **Profile** → view data → Logout → Auth graph.
+5. No completed profile → **Role select** → Requester → **Create Profile** wizard.
+6. **Personal** → Next → **Address** → Save → Firestore + Room write → **Home**.
+7. Optional: Home → **Profile** → view data (incl. address) → Logout → Auth graph.
 
 ## Happy path — new user (Runner)
 
 Same through OTP, then:
 
-5. Role = Runner → Create Profile shows Runner section.
-6. National ID + transport (+ vehicle if not Walking) → Save.
-7. `verificationStatus = Pending`; image URLs null while Storage disabled → Home.
+5. Role = Runner → Create Profile wizard shows four steps: Personal → Address → Transport → Verification.
+6. Complete each step (Next validates the current step); on last step Save.
+7. National ID + transport (+ vehicle if not Walking); `verificationStatus = Pending`; image URLs null while Storage disabled → Home.
 
 ## Happy path — returning user (reinstall)
 
@@ -39,10 +39,11 @@ Same through OTP, then:
 | OTP expired / session expired | Prompt resend / restart verification |
 | Network offline on send/verify | `NoInternet` message |
 | Rate limited | Too-many-attempts message |
-| Create profile validation fail | Field-level / form error; stay on screen |
+| Create profile step validation fail | Error on current step; stay on step (Back allowed except first) |
+| Create profile full submit fail | Error; stay on wizard (may jump back to invalid step) |
 | Firestore missing (DB not created) | Firebase failure surfaced; engineer must create DB in Console |
 | Signed in, profile incomplete | Route to Create Profile (pending role or default Requester) |
-| Logout | Clear session-sensitive local state as implemented; navigate to auth graph |
+| Logout | Cancel profile Firestore listener → `signOut` + clear local cache → navigate to auth graph (no `PERMISSION_DENIED` crash) |
 
 ## Navigation map
 

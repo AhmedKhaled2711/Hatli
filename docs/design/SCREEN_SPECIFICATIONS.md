@@ -157,31 +157,41 @@ Main — Runner
 
 ---
 
-### A6. Create profile
+### A6. Create profile (multi-step wizard)
 
-**Purpose:** Collect identity; Runner adds KYC + transport.
+**Purpose:** Collect identity + delivery address; Runner adds transport + KYC placeholders.
 
-**Shared fields**
-- Avatar optional (camera/gallery sheet)
-- Full name*, Email*, Phone (read-only), Gender*
+**Steps (role-aware)**
+- **Requester:** Personal → Address (Save)
+- **Runner:** Personal → Address → Transport → Verification (Save)
 
-**Runner-only section** (below divider, titled “Verification”)
-- National ID*
-- ID photo* + Selfie* (upload tiles 120dp, 48dp tap affordance overlay)
+**Personal**
+- First name*, Last name*, Email*, Phone (read-only), Gender* (`Male` \| `Female`)
+
+**Address**
+- City*, Area*, Street*, Building*
+- Floor, Apartment, Notes (optional)
+- Lat/lng reserved for future maps / current location (null now)
+
+**Transport (Runner)**
 - Transport type* (chip group: Bicycle, Motorcycle, Car, Walking, Other)
 - Vehicle details (conditional if not Walking)
 
+**Verification (Runner)**
+- National ID*
+- ID photo* + Selfie* only when Storage flag enabled (otherwise copy explains later)
+
 **Layout**
-- Scrollable form; sticky bottom **Save and continue**
-- Section headers `titleMedium`
-- Progress for Runner: linear “Profile · Verification” optional
+- Progress header (`step / total`); step title + short description
+- One step visible at a time; sticky footer **Back** + **Next** / **Save and continue**
+- Per-step validation on Next; full re-validation on Submit
 
 **UX**
-- Don’t show Runner KYC to Requesters (cognitive load).
-- Upload tiles show clear Empty / Uploading / Success / Error.
-- Validation messages under fields, not only toast.
+- Don’t show Runner steps to Requesters.
+- Address copy notes maps coming later.
+- Validation messages under fields / step error, not only toast.
 
-**States:** Loading existing · Editing · Submitting · Field errors · Offline.
+**States:** Step editing · Submitting · Field/step errors · Offline.
 
 ---
 
