@@ -13,7 +13,7 @@ Hatli is **not** a restaurant food-ordering app. Users either:
 - **Requester** — post a delivery request (pickup → dropoff), track progress, pay.
 - **Runner** — browse nearby requests, accept jobs, navigate, complete delivery, get verified.
 
-UI kits referenced for inspiration (Speedy Chow, Delivery App UI Kit) are food-commerce oriented. We keep their **strong UX patterns** (status timelines, sticky CTAs, clear location context, empty states with one action) and discard food-grid / cart / menu patterns that fight Hatli’s mental model.
+UI kits referenced for inspiration (Speedy Chow, [FlexBox Delivery tracking](https://www.figma.com/design/fHoNXiKXvhN4zbDE6ZL96p/flexbox-Delivery-tracking-app-ui-kit---Free-%F0%9F%98%89--Community-?node-id=101-2), Delivery App UI Kit) are food/courier oriented. We keep their **strong UX patterns** (status timelines, sticky CTAs, clear location context, empty states with one action, onboarding pager + hero + dots) and discard food-grid / cart / menu patterns that fight Hatli’s mental model. Onboarding uses Hatli forest/amber tokens — not the kit’s stock palette.
 
 ---
 

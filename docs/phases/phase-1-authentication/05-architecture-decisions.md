@@ -2,6 +2,7 @@
 
 | Decision | Why | Trade-offs | Scalability |
 |----------|-----|------------|-------------|
+| FlexBox-inspired onboarding layout | Familiar delivery-app intro pattern; swipe + dots + sticky CTA | Kit illustrations not licensed assets — use Compose icon heroes | Swap in exported SVGs later without changing flow |
 | Phone OTP via Firebase Auth | Fast MENA-friendly onboarding; no passwords | SMS cost; Play Integrity / SHA setup | Can add more providers behind `AuthRepository` |
 | Single `users/{uid}` document | Simple 1:1 with Auth; easy security rules | Large docs if we cram everything later | Split subcollections when marketplace grows |
 | Role before profile | Captures intent; drives wizard steps | Role change later needs support tooling | Keep `role` field immutable in app for now |

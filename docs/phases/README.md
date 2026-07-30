@@ -30,7 +30,7 @@ Senior Android delivery packs for Hatli. Each phase follows the artifact set in 
 
 **Goal:** First-time and returning users can authenticate and own a durable profile.
 
-**Delivered:** Splash, Onboarding, Login, OTP, Role, multi-step Create Profile (address + role-aware steps), Profile, Firestore `users/{uid}` (+ nested address), Room cache, Auth phone OTP, safer logout (cancel listeners before `signOut`).
+**Delivered:** Splash, FlexBox-inspired Onboarding (pager + illustration + dots), Login, OTP, Role, multi-step Create Profile (address + role-aware steps), Profile, Firestore `users/{uid}` (+ nested address), Room cache, Auth phone OTP, safer logout (cancel listeners before `signOut`).
 
 **Review criterion:** Uninstall → sign in with same phone → profile data (incl. address) returns from Firestore.
 

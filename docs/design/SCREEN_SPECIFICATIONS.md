@@ -414,7 +414,7 @@ Read-only status + reason if rejected + **Resubmit** documents.
 | Screen | Key components |
 |--------|----------------|
 | Splash | Typography display, Progress |
-| Onboarding | Pager, TextButton, PrimaryButton |
+| Onboarding | HorizontalPager, illustration hero, pill dots, TextButton (Skip), PrimaryButton |
 | Login / OTP / Profile forms | TextField, PrimaryButton, BottomSheet |
 | Role | Selectable HatliCard |
 | Homes | TopAppBar, Card, ListRow, NavBar, FAB/CTA |
