@@ -11,7 +11,7 @@ import com.app.hatli.core.database.entity.UserProfileEntity
 
 @Database(
     entities = [PostEntity::class, UserProfileEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false,
 )
 @TypeConverters(InstantConverters::class)

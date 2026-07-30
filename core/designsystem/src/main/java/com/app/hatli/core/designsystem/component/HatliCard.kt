@@ -18,19 +18,50 @@ import com.app.hatli.core.designsystem.theme.HatliTheme
 @Composable
 fun HatliCard(
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    selected: Boolean = false,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val extended = HatliTheme.extendedColors
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = HatliElevation.sm),
-        border = BorderStroke(1.dp, extended.border),
-    ) {
-        Column(modifier = Modifier.padding(HatliSpacing.md), content = content)
+    val border = BorderStroke(
+        width = if (selected) 2.dp else 1.dp,
+        color = if (selected) MaterialTheme.colorScheme.primary else extended.border,
+    )
+    val colors = CardDefaults.cardColors(
+        containerColor = if (selected) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.surface
+        },
+        contentColor = if (selected) {
+            MaterialTheme.colorScheme.onPrimaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurface
+        },
+    )
+    val elevation = CardDefaults.cardElevation(defaultElevation = HatliElevation.sm)
+    val contentPadding = Modifier.padding(HatliSpacing.md)
+
+    if (onClick != null) {
+        Card(
+            onClick = onClick,
+            modifier = modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+            colors = colors,
+            elevation = elevation,
+            border = border,
+        ) {
+            Column(modifier = contentPadding, content = content)
+        }
+    } else {
+        Card(
+            modifier = modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+            colors = colors,
+            elevation = elevation,
+            border = border,
+        ) {
+            Column(modifier = contentPadding, content = content)
+        }
     }
 }

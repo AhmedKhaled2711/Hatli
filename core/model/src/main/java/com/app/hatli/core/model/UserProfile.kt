@@ -18,6 +18,7 @@ data class UserProfile(
     val createdAt: Long,
     val updatedAt: Long,
     val profileCompleted: Boolean,
+    val address: UserAddress? = null,
     // Runner
     val nationalId: String? = null,
     /** Remote Storage URL when uploads are enabled; otherwise null placeholder. */

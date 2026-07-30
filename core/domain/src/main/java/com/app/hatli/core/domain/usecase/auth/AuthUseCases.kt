@@ -49,6 +49,7 @@ class LogoutUseCase @Inject constructor(
     private val clearLocalUserData: ClearLocalUserDataUseCase,
 ) {
     suspend operator fun invoke(): Result<Unit> {
+        // Clear local first, then sign out. Callers must cancel Firestore observers before this.
         clearLocalUserData()
         return authRepository.logout()
     }

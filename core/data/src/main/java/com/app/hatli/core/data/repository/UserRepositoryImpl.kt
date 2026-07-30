@@ -17,6 +17,7 @@ import com.app.hatli.core.model.UserProfile
 import com.app.hatli.core.model.UserRole
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
@@ -41,6 +42,9 @@ class UserRepositoryImpl @Inject constructor(
                 if (profile != null) local.upsert(profile)
             },
         )
+    }.catch {
+        // Listener may fail after logout / rule denial — keep UI alive with last-known null.
+        emit(null)
     }
 
     override suspend fun getProfile(uid: String): Result<UserProfile?> =
@@ -123,6 +127,15 @@ class UserRepositoryImpl @Inject constructor(
         }
         if (input.phone.isBlank()) {
             throw AppError.InvalidInput("Phone number is required.")
+        }
+        val address = input.address
+        if (address == null ||
+            address.city.isBlank() ||
+            address.area.isBlank() ||
+            address.street.isBlank() ||
+            address.building.isBlank()
+        ) {
+            throw AppError.InvalidInput("City, area, street, and building are required.")
         }
         if (input.role == UserRole.Runner) {
             if (input.nationalId.isNullOrBlank()) {
