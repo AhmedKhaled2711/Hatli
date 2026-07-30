@@ -26,3 +26,4 @@
 | Address persistence | Nested Firestore `address` map + Room flattened columns; shown on Profile |
 | Gender | Limited to `Male` / `Female` |
 | Safer logout | Cancel Firestore profile listener before `signOut`; tolerate `PERMISSION_DENIED` on observe close |
+| FlexBox-inspired onboarding | `HorizontalPager`, illustration hero, pill dots, Skip/Next/Get Started; Hatli brand tokens |

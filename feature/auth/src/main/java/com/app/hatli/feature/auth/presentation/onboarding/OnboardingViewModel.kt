@@ -19,6 +19,12 @@ class OnboardingViewModel @Inject constructor(
                 if (state.isLast) complete()
                 else setState { copy(pageIndex = pageIndex + 1) }
             }
+            is OnboardingUiEvent.PageSelected -> {
+                val clamped = event.index.coerceIn(0, uiState.value.pages.lastIndex)
+                if (clamped != uiState.value.pageIndex) {
+                    setState { copy(pageIndex = clamped) }
+                }
+            }
             OnboardingUiEvent.Skip,
             OnboardingUiEvent.GetStarted,
             -> complete()

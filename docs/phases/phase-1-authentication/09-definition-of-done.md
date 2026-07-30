@@ -15,7 +15,7 @@
 ## Screens
 
 - [x] Splash
-- [x] Onboarding
+- [x] Onboarding (FlexBox-inspired pager: swipe, illustration, dots, Skip/Next/Get Started)
 - [x] Login
 - [x] OTP
 - [x] Role select

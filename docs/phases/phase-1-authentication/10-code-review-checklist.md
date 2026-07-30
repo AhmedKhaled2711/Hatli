@@ -13,7 +13,8 @@
 - [ ] Nested `address` written and readable round-trip
 - [ ] `profileCompleted` set true only after successful create
 - [ ] Runner gets `verificationStatus = Pending`
-- [ ] Design-system fields/buttons used on Login / OTP / Create Profile / Profile
+- [ ] Design-system fields/buttons used on Login / OTP / Create Profile / Profile / Onboarding
+- [ ] Onboarding uses `HorizontalPager`, pill indicators, Skip hidden on last page, illustration hero (no raw Material buttons)
 - [ ] Loading disables duplicate submits
 - [ ] Logout cancels Firestore profile observe **before** `signOut`; no PERMISSION_DENIED crash
 - [ ] Logout clears what the product requires (session + local profile cache)

@@ -3,13 +3,33 @@
 | Screen | States | Primary actions | Nav in/out |
 |--------|--------|-----------------|------------|
 | **Splash** | Loading (resolve) | None | → Onboarding / Login / Create Profile / Home |
-| **Onboarding** | Content (pager) | Skip, Next, Get Started | → Login |
+| **Onboarding** | Content (pager + illustration) | Skip, Next, Get Started | → Login |
 | **Login** | Idle / Submitting / Error / Offline | Send OTP, edit phone | → OTP |
 | **OTP** | Entering / Verifying / Error / Resend cooldown | Auto-submit at 6 digits, Resend, Change phone | → Role / Create Profile / Home |
 | **Role select** | Idle / Saving | Select Requester or Runner, Continue | → Create Profile |
 | **Create Profile** | Step editing / Loading / Step errors / Submitting | Next, Back, Save (last step) | → Home |
 | **Home** | Content (foundation) | Profile, Sign out | → Profile / Auth |
 | **Profile** | Loading / Content / Error / Empty | Retry, Back, Log out | → Auth on logout |
+
+## Onboarding — FlexBox-inspired pager
+
+| Page | Title | Idea |
+|------|-------|------|
+| 1 | Request or deliver | One marketplace, two roles |
+| 2 | Track every step | Live status you can trust |
+| 3 | Pay and get paid simply | Clear pricing / fast settlement |
+
+**Chrome**
+- Top end: **Skip** (`HatliTextButton`) — hidden on last page
+- Hero: soft forest circle wash + icon badges (`OnboardingIllustration`)
+- Title `headlineLarge` + body `bodyLarge` (centered, onSurfaceVariant)
+- Pill page indicators (active Primary / inactive outlineVariant)
+- Bottom: **Next** / **Get Started** (`HatliPrimaryButton`)
+- `HorizontalPager` swipe syncs `pageIndex` via `PageSelected`
+
+**Complete:** Skip or Get Started → `SetOnboardingCompletedUseCase` → Login.
+
+**Reference:** FlexBox Delivery tracking UI kit onboarding structure; Hatli forest/amber tokens.
 
 ## Create Profile — wizard
 

@@ -7,7 +7,7 @@
 | Screen | Module |
 |--------|--------|
 | Splash | `:feature:auth` |
-| Onboarding (3 pages) | `:feature:auth` |
+| Onboarding (3 pages, FlexBox-inspired) | `:feature:auth` |
 | Login (phone) | `:feature:auth` |
 | OTP | `:feature:auth` |
 | Role select (Requester / Runner) | `:feature:auth` |
@@ -21,6 +21,13 @@
 - Cloud Firestore — `users/{uid}` profile document
 - Room — local profile cache
 - Session preferences — onboarding completed, pending role
+
+### Onboarding UX (in)
+
+- 3 swipeable pages (`HorizontalPager`): Request or deliver → Track every step → Pay and get paid simply
+- Skip (hidden on last page), Next / Get Started, pill page indicators
+- Illustration hero (soft forest wash + icon badges); Hatli brand tokens (not stock FlexBox palette)
+- Completing Skip or Get Started sets local `onboarding_completed`
 
 ### Requester profile fields
 

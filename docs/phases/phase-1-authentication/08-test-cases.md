@@ -3,7 +3,10 @@
 | ID | Scenario | Expected |
 |----|----------|----------|
 | P1-01 | Fresh install → Splash | Lands on Onboarding (or Login if onboarding already marked) |
-| P1-02 | Complete onboarding | Login shown; preference persisted |
+| P1-02 | Complete onboarding via Get Started | Login shown; `onboarding_completed` persisted |
+| P1-02a | Skip from page 1 or 2 | Login shown; preference persisted; last-page Skip hidden |
+| P1-02b | Swipe between pages | Page index + pill indicator update; Next advances |
+| P1-02c | Onboarding layout | Illustration hero, centered title/body, dots, sticky CTA visible |
 | P1-03 | Valid phone → Send OTP | Navigate to OTP with verification id |
 | P1-04 | Invalid phone | Error; stay on Login |
 | P1-05 | Correct OTP | Auth session created |

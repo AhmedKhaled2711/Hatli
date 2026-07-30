@@ -14,7 +14,7 @@ Hatli cannot show marketplace value until a real user identity exists. First lau
 
 ## Success looks like
 
-- New user completes Splash → Onboarding → Login → OTP → Role → **role-aware Create Profile wizard** → Home.
+- New user completes Splash → **Onboarding** (FlexBox-inspired 3-page pager) → Login → OTP → Role → **role-aware Create Profile wizard** → Home.
 - Create Profile collects personal info + **delivery address** (and Runner transport / verification steps).
 - Gender is limited to **Male / Female**.
 - Returning user with completed profile skips onboarding/profile and lands on Home after Splash resolution.

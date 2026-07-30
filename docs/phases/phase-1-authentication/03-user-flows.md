@@ -3,7 +3,8 @@
 ## Happy path — new user (Requester)
 
 1. Cold start → **Splash** resolves destination.
-2. Onboarding incomplete → **Onboarding** (Skip or finish) → marks onboarding done → **Login**.
+2. Onboarding incomplete → **Onboarding** pager (swipe / Next, or Skip) → marks onboarding done → **Login**.
+   - Pages: Request or deliver → Track every step → Pay and get paid simply (Get Started on last).
 3. User enters phone → **Send OTP** → **OTP** screen.
 4. User enters 6-digit code → Auth succeeds.
 5. No completed profile → **Role select** → Requester → **Create Profile** wizard.
