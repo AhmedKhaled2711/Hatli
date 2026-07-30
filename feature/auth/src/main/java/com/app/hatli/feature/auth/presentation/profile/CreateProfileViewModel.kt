@@ -1,6 +1,7 @@
 package com.app.hatli.feature.auth.presentation.profile
 
 import androidx.lifecycle.viewModelScope
+import com.app.hatli.core.common.feature.HatliFeatureFlags
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.common.result.userMessage
 import com.app.hatli.core.domain.usecase.auth.GetCurrentAuthUserUseCase
@@ -49,6 +50,7 @@ class CreateProfileViewModel @Inject constructor(
         val s = uiState.value
         viewModelScope.launch {
             setState { copy(isLoading = true, errorMessage = null) }
+            val uploadsEnabled = HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED
             val input = CreateProfileInput(
                 role = s.role,
                 firstName = s.firstName,
@@ -57,8 +59,9 @@ class CreateProfileViewModel @Inject constructor(
                 phone = s.phone,
                 gender = s.gender,
                 nationalId = s.nationalId.ifBlank { null },
-                idImageLocalUri = s.idImageUri,
-                selfieLocalUri = s.selfieUri,
+                // Local URIs only matter when Storage uploads are enabled (Blaze).
+                idImageLocalUri = if (uploadsEnabled) s.idImageUri else null,
+                selfieLocalUri = if (uploadsEnabled) s.selfieUri else null,
                 transportType = s.transportType,
                 vehicleInfo = s.vehicleInfo.ifBlank { null },
             )

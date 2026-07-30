@@ -60,7 +60,8 @@ fun ProfileScreen(
             }
             else -> {
                 val p = state.profile
-                p.selfieUrl?.let { url ->
+                // Selfie display requires Storage uploads (Blaze). Safe no-op while URLs are null.
+                p.selfieUrl?.takeIf { it.isNotBlank() }?.let { url ->
                     AsyncImage(model = url, contentDescription = "Profile photo")
                 }
                 HatliCard {

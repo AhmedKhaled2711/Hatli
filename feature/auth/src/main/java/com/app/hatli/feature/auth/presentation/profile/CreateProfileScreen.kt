@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.app.hatli.core.common.feature.HatliFeatureFlags
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.HatliSecondaryButton
 import com.app.hatli.core.designsystem.component.HatliTextField
@@ -42,12 +43,14 @@ fun CreateProfileScreen(
     state: CreateProfileUiState,
     onEvent: (CreateProfileUiEvent) -> Unit,
 ) {
+    // Image pickers kept for when HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED is true.
     val idPicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { onEvent(CreateProfileUiEvent.IdImage(it.toString())) }
     }
     val selfiePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let { onEvent(CreateProfileUiEvent.Selfie(it.toString())) }
     }
+    val imageUploadsEnabled = HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED
 
     Column(
         modifier = Modifier
@@ -95,14 +98,24 @@ fun CreateProfileScreen(
                 onValueChange = { onEvent(CreateProfileUiEvent.NationalId(it)) },
                 label = "National ID",
             )
-            HatliSecondaryButton(
-                text = if (state.idImageUri != null) "ID image selected" else "Pick ID image",
-                onClick = { idPicker.launch("image/*") },
-            )
-            HatliSecondaryButton(
-                text = if (state.selfieUri != null) "Selfie selected" else "Pick selfie",
-                onClick = { selfiePicker.launch("image/*") },
-            )
+
+            if (imageUploadsEnabled) {
+                HatliSecondaryButton(
+                    text = if (state.idImageUri != null) "ID image selected" else "Pick ID image",
+                    onClick = { idPicker.launch("image/*") },
+                )
+                HatliSecondaryButton(
+                    text = if (state.selfieUri != null) "Selfie selected" else "Pick selfie",
+                    onClick = { selfiePicker.launch("image/*") },
+                )
+            } else {
+                Text(
+                    text = "ID photo and selfie verification will be available after Storage is enabled.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
             Text("Transport", style = MaterialTheme.typography.labelLarge)
             TransportType.entries.forEach { type ->
                 HatliSecondaryButton(

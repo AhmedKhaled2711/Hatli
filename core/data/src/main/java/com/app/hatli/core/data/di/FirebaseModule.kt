@@ -16,6 +16,9 @@ import javax.inject.Singleton
  * - Avoids hidden global state (FirebaseAuth.getInstance() everywhere)
  *
  * Trade-off: slightly more wiring; huge win for testability and scoping.
+ *
+ * Note: [FirebaseStorage] stays provided even while [HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED]
+ * is false (Spark plan), so uploads can be re-enabled without DI changes.
  */
 @Module
 @InstallIn(SingletonComponent::class)
