@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,6 +28,7 @@ import com.app.hatli.core.ui.base.CollectUiEffect
 fun ProfileRoute(
     onLoggedOut: () -> Unit,
     onBack: () -> Unit,
+    showBack: Boolean = true,
     viewModel: ProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -34,7 +37,12 @@ fun ProfileRoute(
             ProfileUiEffect.LoggedOut -> onLoggedOut()
         }
     }
-    ProfileScreen(state = state, onEvent = viewModel::onEvent, onBack = onBack)
+    ProfileScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        onBack = onBack,
+        showBack = showBack,
+    )
 }
 
 @Composable
@@ -42,6 +50,7 @@ fun ProfileScreen(
     state: ProfileUiState,
     onEvent: (ProfileUiEvent) -> Unit,
     onBack: () -> Unit,
+    showBack: Boolean = true,
 ) {
     val typography = MaterialTheme.typography
     val onVariant = MaterialTheme.colorScheme.onSurfaceVariant
@@ -49,6 +58,8 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            // Tab chrome owns nav-bar insets; standalone needs full system bars.
+            .then(if (showBack) Modifier.systemBarsPadding() else Modifier.statusBarsPadding())
             .verticalScroll(rememberScrollState())
             .padding(HatliSpacing.lg),
         verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
@@ -112,7 +123,9 @@ fun ProfileScreen(
             }
         }
 
-        HatliSecondaryButton(text = "Back", onClick = onBack)
+        if (showBack) {
+            HatliSecondaryButton(text = "Back", onClick = onBack)
+        }
         HatliPrimaryButton(
             text = "Log out",
             onClick = { onEvent(ProfileUiEvent.Logout) },

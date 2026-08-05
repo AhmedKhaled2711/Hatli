@@ -18,24 +18,27 @@ Auth
 ├── Role select
 └── Create profile (Requester | Runner)
 
-Main — Requester
-├── Home
-├── New request (flow)
-│   ├── Request details
-│   ├── Locations (pickup / dropoff)
-│   ├── Review & confirm
-│   └── Success
-├── Activity (list)
-├── Request detail + tracking
-└── Profile (+ sub: addresses, settings, support)
+Main — Requester (bottom nav)
+├── Home          (state-based dashboard · Hero CTA first)
+├── Requests      (Active · Completed · Cancelled)
+├── Messages      (chat with Runner — Phase 2 empty)
+├── Profile
+├── FAB (+)       Create Request (Phase 2 stub → Phase 3 wizard)
+└── Bell + badge  Notifications affordance
 
-Main — Runner
-├── Jobs (list + map toggle)
-├── Job detail (accept)
-├── Active delivery
-├── Earnings (summary)
-└── Profile (+ verification status)
+Main — Runner (bottom nav)
+├── Home          (Online/Offline · stats · Nearby top 3)
+├── Jobs          (Active · History)  ← not “Requests”
+├── Messages
+└── Profile
+
+Deferred (Phase 3+)
+├── Create Request wizard · Waiting · Tracking · Rate
+├── Accept → Pickup → Delivered
+└── Real-time chat / FCM
 ```
+
+**JTBD:** User opens Hatli to **create a Request** or **fulfill a Job** — not to browse restaurants.
 
 ---
 
@@ -198,45 +201,73 @@ Main — Runner
 
 ## B. Requester main
 
-### B1. Home (Requester)
+### B1. Home (Requester) — Phase 2 JTBD
 
-**Purpose:** Orient + start a request + surface active jobs.
+**Purpose:** Primary action first — create or resume a Request. State-based, not browse.
 
-**Layout**
-1. TopAppBar: location chip (start) · notifications (end)
-2. Optional offline banner
-3. **Active request** card (if any) — status chip + ETA + tap → detail  
-4. Primary CTA card/button: **New delivery request**
-5. Short “How it works” 3-step inline (collapsible after first sessions)
-6. Recent activity preview (max 3 rows) → See all
+**Layout (top → bottom)**
+1. Top bar: title/brand · **notifications bell + badge**
+2. **Hero card (always first when no blocking active job UI):** “عايز تطلب حاجة؟” / Want something? · primary **+ اطلب دلوقتي**
+3. **Current Request** (if any) — status (searching / accepted / …) · title · ETA · CTA
+4. **Recent Requests** (max 5)
+5. **Quick Actions** — supermarket / butcher / bakery / pharmacy / anything (shortcuts, not fixed categories)
+6. **Tips** — e.g. write clear request descriptions
 
-**Bottom nav:** Home · Activity · Profile (+ FAB or in-home CTA for New)
+**State-based UI**
+
+| State | Home emphasis |
+|-------|----------------|
+| Empty | Hero CTA (+ optional short greeting secondary) |
+| SearchingRunner | Current card: searching for Runner |
+| Accepted / InProgress | Current card: runner name · follow |
+| Completed (unrated) | Prompt to rate |
+| Error / Loading | Standard |
+
+**Bottom nav:** Home · Requests · Messages · Profile · **FAB (+)** Create
 
 **UX**
-- Task completion first: create request is never more than one tap from Home.
-- Active card beats burying status only in Activity (anxiety reduction from kits’ tracking focus).
-- No restaurant carousels.
+- Never lead with restaurant grids or greeting-only chrome.
+- One tap to Create from Hero or FAB.
+- Design system + Mada only.
 
-**States:** Loading skeletons · Empty (no active/recent) · Content · Error · Offline.
+**States:** Loading · Empty · Searching · Accepted · Rate · Error.
+
+**Compose:** `RequesterHomeScreen` + cards; data via `HomeRepository` (fake in Phase 2).
 
 ---
 
-### B2. New request — Details
+### B1b. Requests (list) — Phase 2 shell
 
-**Purpose:** What needs moving.
+**Purpose:** All requester requests with filters.
 
-**Fields**
+**Layout:** Segmented / chips: Active · Completed · Cancelled · `HatliCard` rows.
+
+**States:** Loading · Empty · Content.
+
+---
+
+### B1c. Messages (Requester/Runner) — Phase 2
+
+**Purpose:** Placeholder until chat.
+
+**Layout:** Empty state — “Chat with your Runner soon.”
+
+---
+
+### B2. New request — Details (Phase 3+)
+
+**Purpose:** What needs moving. **Out of Phase 2** — FAB/Hero open a stub only.
+
+**Fields** (future)
 - Title / short description*
 - Category chips (Parcel, Documents, Food/grocery pickup, Other) — optional metadata, not restaurant menu
 - Size/weight estimate chips (Small / Medium / Large)
 - Notes (optional)
-- Offer amount* (secondary emphasis — amber label “Your offer”)
+- Offer amount*
 
-**UX:** Categories as chips (keep from kits) but labeled for parcels, not cuisines.
+**UX:** Categories as chips but labeled for parcels, not cuisines.
 
 **States:** Editing · Validation · Offline (block submit).
-
----
 
 ### B3. New request — Locations
 
@@ -271,16 +302,9 @@ Main — Runner
 
 ---
 
-### B6. Activity (list)
+### B6. Activity (list) — superseded by **Requests** (B1b)
 
-**Purpose:** All requester requests.
-
-**Layout**
-- TopAppBar title “Activity”
-- Filter chips: Active · Completed · Cancelled · All
-- `HatliListRow`: title, route snippet, status chip, time, price trailing
-
-**States:** Loading · Empty (“No requests yet” → New request) · Content · Error · Offline cached.
+Kept for historical reference; Phase 2 uses **Requests** tab naming.
 
 ---
 
@@ -307,15 +331,38 @@ Main — Runner
 
 ## C. Runner main
 
-### C1. Jobs (browse)
+### C0. Home (Runner) — Phase 2 JTBD
 
-**Purpose:** Find and accept work quickly.
+**Purpose:** Control availability and surface nearby work without leaving Home.
 
 **Layout**
-- Top: location + **List | Map** toggle (segmented, 48dp)
-- Filter chips: Distance · Offer · Size
-- List rows: offer (emphasized), distance, pickup→dropoff, size chip, time posted
-- Map mode: markers; tap → peek sheet with **View** / **Accept**
+1. Top bar · bell + badge
+2. **Presence card:** Online (green) / Offline (red) · Go Offline / Go Online
+3. **Daily earnings** · **Today’s jobs** · **Rating**
+4. **Nearby Requests** — top 3 (title, distance, offer) · **View All** → Jobs tab
+5. If **active job** — focus card above nearby
+
+**States:** Offline · OnlineEmpty · Nearby · ActiveJob · Loading · Error.
+
+**Bottom nav:** Home · **Jobs** · Messages · Profile (no FAB).
+
+---
+
+### C1. Jobs (list) — Phase 2 shell
+
+**Purpose:** Browse assigned / available work (full accept map UI Phase 3+).
+
+**Layout**
+- Filters: Active · History
+- Rows: title, distance, offer, status
+
+**States:** Loading · Empty · Content.
+
+---
+
+### C1b. Jobs browse (map) — Phase 3+
+
+**Purpose:** Find and accept work quickly (map toggle deferred).
 
 **UX**
 - Sort default: nearest + highest offer hybrid (document in product); UI shows current sort in chip.

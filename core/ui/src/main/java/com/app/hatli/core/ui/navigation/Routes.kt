@@ -23,6 +23,10 @@ object Routes {
     const val ORDERS_GRAPH = "orders_graph"
     const val PROFILE_GRAPH = "profile_graph"
 
+    /** Post-auth main shell (bottom nav). */
+    const val MAIN_SHELL = "main_shell"
+    const val CREATE_REQUEST_STUB = "create_request_stub"
+
     const val HOME = "home"
     const val AUTH = "auth"
     const val MENU = "menu"

@@ -8,7 +8,8 @@ Senior Android delivery packs for Hatli. Each phase follows the artifact set in 
 |-------|------|--------|--------|
 | **0** | Foundation | ✔ Complete | [phase-0-foundation](./phase-0-foundation/) |
 | **1** | Authentication & User Lifecycle | ✔ Complete (Storage deferred) | [phase-1-authentication](./phase-1-authentication/) |
-| 2+ | Marketplace features | Not started | — |
+| **2** | JTBD Main Home & Shell | ✔ Complete (Create Request deferred) | [phase-2-main-home](./phase-2-main-home/) |
+| 3+ | Create Request / Jobs execution / Chat | Not started | — |
 
 ## Design references (cross-cutting)
 
@@ -35,6 +36,16 @@ Senior Android delivery packs for Hatli. Each phase follows the artifact set in 
 **Review criterion:** Uninstall → sign in with same phone → profile data (incl. address) returns from Firestore.
 
 **Deferred:** ID image / selfie uploads until Blaze (`HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED`); map / current-location pin for address.
+
+## Phase 2 — JTBD Main Home & Shell (summary)
+
+**Goal:** Post-auth shell and Home that match Request/Job JTBD — not restaurant browse.
+
+**Delivered:** Role-aware bottom nav (Requests vs Jobs), Requester Home (Hero CTA first + current/recent/quick actions/tips), Runner Home (Online/Offline + stats + nearby top 3), FAB + notification badge, Requests/Jobs list shells, Messages empty, Profile tab, `FakeHomeRepository` + domain models, phase docs.
+
+**Review criterion:** Requester and Runner each see the correct tabs and a Home that leads with Create or Go Online.
+
+**Deferred:** Create Request wizard, tracking, accept/pickup/deliver, real chat/FCM (Phase 3+).
 
 ## How to use these docs
 

@@ -10,10 +10,12 @@ import com.app.hatli.core.ui.navigation.Routes
 import com.app.hatli.feature.auth.navigation.authGraph
 import com.app.hatli.feature.cart.navigation.cartGraph
 import com.app.hatli.feature.checkout.navigation.checkoutGraph
+import com.app.hatli.feature.home.navigation.CreateRequestStubDestination
 import com.app.hatli.feature.home.navigation.homeGraph
 import com.app.hatli.feature.menu.navigation.menuGraph
 import com.app.hatli.feature.orders.navigation.ordersGraph
 import com.app.hatli.feature.profile.navigation.profileGraph
+import com.app.hatli.feature.profile.presentation.ProfileRoute
 
 @Composable
 fun HatliNavHost(
@@ -28,7 +30,6 @@ fun HatliNavHost(
     }
 
     fun goAuthClearingStack() {
-        // Splash re-resolves → Login (session cleared). Clears Home from back stack.
         navigator.navigateAndClearBackStack(Routes.AUTH_GRAPH)
     }
 
@@ -64,9 +65,20 @@ fun HatliNavHost(
             },
         )
         homeGraph(
-            onNavigateToAuth = { goAuthClearingStack() },
-            onNavigateToProfile = { navigator.navigate(Routes.PROFILE_GRAPH) },
+            profileTab = {
+                ProfileRoute(
+                    onLoggedOut = { goAuthClearingStack() },
+                    onBack = {},
+                    showBack = false,
+                )
+            },
             onMessage = onMessage,
+            onNavigateCreateStub = {
+                navController.navigate(CreateRequestStubDestination.route) {
+                    launchSingleTop = true
+                }
+            },
+            onBackFromCreateStub = { navController.popBackStack() },
         )
         menuGraph(onBack = { navigator.popBackStack() })
         cartGraph(onBack = { navigator.popBackStack() })
