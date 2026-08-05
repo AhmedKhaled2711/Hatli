@@ -23,6 +23,23 @@ object Routes {
     const val ORDERS_GRAPH = "orders_graph"
     const val PROFILE_GRAPH = "profile_graph"
 
+    /** Post-auth main shell (bottom nav). */
+    const val MAIN_SHELL = "main_shell"
+
+    /** Assisted Create Request wizard (Phase 3). */
+    const val REQUEST_GRAPH = "request_graph"
+    const val CREATE_REQUEST = "create_request"
+    const val REQUEST_DETAIL = "request_detail/{requestId}"
+    const val RATE_RUNNER = "rate_runner/{requestId}"
+
+    /** Chat thread (Phase 4). */
+    const val CHAT_GRAPH = "chat_graph"
+    const val CHAT = "chat/{requestId}"
+
+    fun requestDetail(requestId: String): String = "request_detail/$requestId"
+    fun rateRunner(requestId: String): String = "rate_runner/$requestId"
+    fun chat(requestId: String): String = "chat/$requestId"
+
     const val HOME = "home"
     const val AUTH = "auth"
     const val MENU = "menu"

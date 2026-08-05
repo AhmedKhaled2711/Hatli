@@ -18,24 +18,38 @@ Auth
 ├── Role select
 └── Create profile (Requester | Runner)
 
-Main — Requester
-├── Home
-├── New request (flow)
-│   ├── Request details
-│   ├── Locations (pickup / dropoff)
-│   ├── Review & confirm
-│   └── Success
-├── Activity (list)
-├── Request detail + tracking
-└── Profile (+ sub: addresses, settings, support)
+Main — Requester (bottom nav)
+├── Home          (state-based dashboard · Hero CTA first)
+├── Requests      (Active · Completed · Cancelled)
+├── Messages      (chat with Runner — Phase 2 empty)
+├── Profile
+├── FAB (+)       Create Request (Phase 3 assisted wizard)
+└── Bell + badge  Notifications affordance
 
-Main — Runner
-├── Jobs (list + map toggle)
-├── Job detail (accept)
-├── Active delivery
-├── Earnings (summary)
-└── Profile (+ verification status)
+Main — Runner (bottom nav)
+├── Home          (Online/Offline · stats · Nearby Pending top 3)
+├── Jobs          (Active · History)  ← not “Requests”
+├── Messages
+└── Profile
+
+Create Request (Phase 3)
+├── Category: Shopping | Pickup | Bills | Custom
+├── Category-specific steps → Fee → Review → Submit (Pending)
+└── Runner Accept → live update
+
+Post-Accept (Phase 4)
+├── Current Request / Current Job (pinned on Home)
+├── Status: Accepted → InProgress → Purchased? → OnTheWay → Delivered → Completed
+├── Chat (Firestore messages under request)
+├── Request Detail + Cancel
+└── Confirm delivery + Rate Runner
+
+Deferred (Phase 4b+)
+├── FCM push
+└── Live GPS / map tracking
 ```
+
+**JTBD:** User opens Hatli to **create a Request** or **fulfill a Job** — not to browse restaurants.
 
 ---
 
@@ -46,20 +60,21 @@ Main — Runner
 **Purpose:** Brand moment + resolve session/start destination (no user action).
 
 **Layout**
-- Full-bleed background (`Background` → subtle Forest900 radial wash optional via brush, not loud gradient kits)
-- Centered wordmark **Hatli** (`displayLarge`, Primary)
-- Short tagline under brand (`bodyMedium`, Text Secondary): e.g. “Deliveries you can trust”
-- Bottom: indeterminate `CircularProgressIndicator` (Primary), 48dp clear area
+- Full-bleed background (`Background`)
+- Centered branded **delivery_man** Lottie (`lottie/splash/delivery_man.json`) — mint teal `#30E6C1` body accents, charcoal badge with Primary **H**, soft teal wash; same motion/timing as source
+- Wordmark **Hatli** under animation (`displayLarge`, Primary)
+- Short tagline (`bodyMedium`, Text Secondary): “Deliveries you can trust”
+- Bottom: indeterminate `CircularProgressIndicator` (Primary)
 
-**Components:** Brand text, progress indicator only.
+**Components:** Lottie hero, brand text, progress indicator.
 
 **UX**
-- Brand is the hero (not a marketing headline competing with logo).
-- No Skip — splash is ≤ ~1.5s perceived; routing is the job.
+- Brand is the hero (Lottie + wordmark; no competing marketing headline).
+- No Skip — splash holds ~1.5s min then routes.
 
 **States:** Loading only → navigate (Onboarding | Login | Create Profile | Home).
 
-**Compose:** `Box` + `Column`; no scroll; respect system bars with `WindowInsets`.
+**Compose:** `Box` + `Column` + `HatliLottieAnimation`; respect system bars.
 
 ---
 
@@ -67,27 +82,26 @@ Main — Runner
 
 **Purpose:** Explain Requester/Runner value before phone auth.
 
-**Pages (content)**
-1. **Request or deliver** — one marketplace, two roles  
-2. **Track every step** — live status you can trust  
-3. **Pay and get paid simply** — clear, fast settlement  
+**Pages (content)** — EN / AR via `feature/auth` strings  
+1. **Order anything nearby** / اطلب أي حاجة من منطقتك  
+2. **Create your request in seconds** / اطلب اللي أنت عايزه  
+3. **Nearby runners are ready** / أقرب Runner هيجيلك  
 
-**Layout** (FlexBox kit pattern, Hatli brand tokens)
-- Top end: **Skip** (`HatliTextButton`, 48dp) — hidden on last page  
-- Upper ~45%: illustration hero — soft forest circle wash + icon badges (vector, not photo collage)  
-- Title `headlineLarge` + body `bodyLarge` (Text Secondary), centered  
-- Page indicator: 3 dots — active pill (Primary) / inactive (outline)  
-- Bottom sticky: **Next** / **Get Started** (`HatliPrimaryButton`)  
+**Layout** (premium delivery-app pattern, Hatli mint/charcoal tokens)
+- **Background:** branded teal wash (`OnboardingBackground`) — swappable for a custom asset later  
+- **Top bar:** Hatli wordmark (start) · **Skip** / **لاحقًا** (end, hidden on last) — RTL-aware  
+- **Hero (~2/3):** centered `PhoneMockup` — page 1 shows a realistic request list + “Accepted by Ahmed” badge  
+- **Bottom sheet (~1/3):** animated title + body, pill indicator, **Next** / **Get Started** (التالي / ابدأ دلوقتي)  
 
 **UX**
-- Skip always available until last page — respect returning curiosity without trapping.  
-- One idea per page (reference kits often overload with 4 CTAs — we don’t).  
-- Android `HorizontalPager` + edge swipe; dots are indicators (not the only navigation).  
+- First screen teaches the product in under 3 seconds with a real request mock (not a generic delivery illustration).  
+- Skip until last page. One idea per page; swipe or Next.  
 
 **States:** Content only (local).  
 
-**Compose:** `HorizontalPager`; mark onboarding complete on Skip or Get Started.  
-**Reference:** [FlexBox Delivery tracking UI kit](https://www.figma.com/design/fHoNXiKXvhN4zbDE6ZL96p/flexbox-Delivery-tracking-app-ui-kit---Free-%F0%9F%98%89--Community-?node-id=101-2) onboarding structure.
+**Compose:** `OnboardingTopBar` · `PhoneMockup` · `OnboardingPage` · `OnboardingPhoneScreen` · `OnboardingBottomSheet` · `OnboardingIndicator`.  
+**i18n:** `values/strings.xml` + `values-ar/strings.xml`.  
+**Complete:** Skip or Get Started → mark onboarding done → Login.
 
 ---
 
@@ -198,124 +212,144 @@ Main — Runner
 
 ## B. Requester main
 
-### B1. Home (Requester)
+### B1. Home (Requester) — Phase 2 JTBD
 
-**Purpose:** Orient + start a request + surface active jobs.
+**Purpose:** Primary action first — create or resume a Request. State-based, not browse.
 
-**Layout**
-1. TopAppBar: location chip (start) · notifications (end)
-2. Optional offline banner
-3. **Active request** card (if any) — status chip + ETA + tap → detail  
-4. Primary CTA card/button: **New delivery request**
-5. Short “How it works” 3-step inline (collapsible after first sessions)
-6. Recent activity preview (max 3 rows) → See all
+**Layout (top → bottom)**
+1. Top bar: title/brand · **notifications bell + badge**
+2. **Hero card (always first when no blocking active job UI):** “عايز تطلب حاجة؟” / Want something? · primary **+ اطلب دلوقتي**
+3. **Current Request** (if any) — status (searching / accepted / …) · title · ETA · CTA
+4. **Recent Requests** (max 5)
+5. **Quick Actions** — supermarket / butcher / bakery / pharmacy / anything (shortcuts, not fixed categories)
+6. **Tips** — e.g. write clear request descriptions
 
-**Bottom nav:** Home · Activity · Profile (+ FAB or in-home CTA for New)
+**State-based UI**
+
+| State | Home emphasis |
+|-------|----------------|
+| Empty | Hero CTA (+ optional short greeting secondary) |
+| SearchingRunner | Current card: searching for Runner |
+| Accepted / InProgress | Current card: runner name · follow |
+| Completed (unrated) | Prompt to rate |
+| Error / Loading | Standard |
+
+**Bottom nav:** Home · Requests · Messages · Profile · **FAB (+)** Create
 
 **UX**
-- Task completion first: create request is never more than one tap from Home.
-- Active card beats burying status only in Activity (anxiety reduction from kits’ tracking focus).
-- No restaurant carousels.
+- Never lead with restaurant grids or greeting-only chrome.
+- One tap to Create from Hero or FAB.
+- Design system + Mada only.
 
-**States:** Loading skeletons · Empty (no active/recent) · Content · Error · Offline.
+**States:** Loading · Empty · Searching · Accepted · Rate · Error.
+
+**Compose:** `RequesterHomeScreen` + cards; data via `HomeRepository` (fake in Phase 2).
 
 ---
 
-### B2. New request — Details
+### B1b. Requests (list) — Phase 2 shell
 
-**Purpose:** What needs moving.
+**Purpose:** All requester requests with filters.
 
-**Fields**
-- Title / short description*
-- Category chips (Parcel, Documents, Food/grocery pickup, Other) — optional metadata, not restaurant menu
-- Size/weight estimate chips (Small / Medium / Large)
-- Notes (optional)
-- Offer amount* (secondary emphasis — amber label “Your offer”)
+**Layout:** Segmented / chips: Active · Completed · Cancelled · `HatliCard` rows.
 
-**UX:** Categories as chips (keep from kits) but labeled for parcels, not cuisines.
-
-**States:** Editing · Validation · Offline (block submit).
+**States:** Loading · Empty · Content.
 
 ---
 
-### B3. New request — Locations
+### B1c. Messages (Requester/Runner) — Phase 2
 
-**Purpose:** Pickup & dropoff clarity (core of delivery UX).
+**Purpose:** Placeholder until chat.
 
-**Layout**
-- Two blocks: **Pickup** / **Dropoff**
-  - Address line + “Set on map” 
-  - Contact name/phone optional toggles
-- Map preview strip (full-bleed width, ~160dp) showing both pins when set
-- Bottom: **Continue**
+**Layout:** Empty state — “Chat with your Runner soon.”
 
-**UX**
-- Map is supporting context, not a floating card collage.
-- Address search uses M3 SearchBar + results list + confirm pin sheet.
-- RTL: pickup/dropoff icons mirrored carefully (arrow direction follows locale).
+---
 
-**States:** Missing location errors · GPS loading · Permission denied (dialog → settings).
+### B2. New request — Category & assisted wizard (Phase 3)
+
+**Purpose:** Guided create — never a blank free-text first screen.
+
+**Flow**
+1. Large category cards: **Shopping · Pickup · Bills · Custom**
+2. Branch steps (see Phase 3 docs) → suggested delivery fee (default 35 EGP, editable) → Review
+3. Submit → `requests` doc `Pending` → back to Home
+
+**Out of Phase 3:** Map pin picker, place-specific categories (Butcher/Bakery), payments.
+
+**States:** Editing · Validation · Submitting · Offline error.
+
+### B3. New request — Locations (Pickup category / later maps)
+
+**Purpose:** Pickup & dropoff as **text addresses** in Phase 3 Pickup flow. Full map UX deferred.
+
+**Phase 3 fields:** Pickup address string · Dropoff address string · Item description.
+
+**Deferred:** Set on map, GPS, dual pins.
 
 ---
 
 ### B4. New request — Review & confirm
 
-**Purpose:** Prevent costly mistakes before publish.
+**Purpose:** Prevent mistakes before publish.
 
 **Layout**
-- Summary sections: What · Route · Offer · Payment method
-- Edit pencils per section (48dp)
+- Summary: Category · What · Addresses · Budget · Delivery fee
 - Sticky **Confirm request**
 
-**Success (B5):** Full-page success — check icon (Success color), “Request posted”, primary **Track request**, text **Back to home**.
+**Success:** Pop to Home with Current Request = Pending (listener).
 
 ---
 
-### B6. Activity (list)
+### B6. Activity (list) — superseded by **Requests** (B1b)
 
-**Purpose:** All requester requests.
-
-**Layout**
-- TopAppBar title “Activity”
-- Filter chips: Active · Completed · Cancelled · All
-- `HatliListRow`: title, route snippet, status chip, time, price trailing
-
-**States:** Loading · Empty (“No requests yet” → New request) · Content · Error · Offline cached.
+Kept for historical reference; Phase 2 uses **Requests** tab naming.
 
 ---
 
 ### B7. Request detail + tracking
 
-**Purpose:** Status transparency + actions.
+**Purpose:** Status transparency + actions (**execution UI Phase 4+**).
 
-**Layout**
-- TopAppBar + overflow (Cancel, Support)
-- Status chip + last updated
-- **Timeline** (Placed → Accepted → Picked up → Delivered)
-- Runner card when assigned (avatar, name, transport, call/chat actions)
-- Route summary
-- Map section
-- Sticky actions by state: Cancel | Contact runner | Confirm delivery | Rate
+**Phase 3:** Home cards + Accept only. Detail/timeline deferred.
 
-**UX**
-- Timeline from food kits is the right pattern — keep it; use semantic colors per step.
-- Call/chat only after accept (privacy).
-
-**States:** Loading · Content · Runner pending (empty runner card with waiting copy) · Error · Success snackbars on status change.
+**States:** Loading · Content · Runner pending · Error.
 
 ---
 
 ## C. Runner main
 
-### C1. Jobs (browse)
+### C0. Home (Runner) — Phase 2 JTBD
 
-**Purpose:** Find and accept work quickly.
+**Purpose:** Control availability and surface nearby work without leaving Home.
 
 **Layout**
-- Top: location + **List | Map** toggle (segmented, 48dp)
-- Filter chips: Distance · Offer · Size
-- List rows: offer (emphasized), distance, pickup→dropoff, size chip, time posted
-- Map mode: markers; tap → peek sheet with **View** / **Accept**
+1. Top bar · bell + badge
+2. **Presence card:** Online (green) / Offline (red) · Go Offline / Go Online
+3. **Daily earnings** · **Today’s jobs** · **Rating**
+4. **Nearby Requests** — top 3 (title, distance, offer) · **View All** → Jobs tab
+5. If **active job** — focus card above nearby
+
+**States:** Offline · OnlineEmpty · Nearby · ActiveJob · Loading · Error.
+
+**Bottom nav:** Home · **Jobs** · Messages · Profile (no FAB).
+
+---
+
+### C1. Jobs (list) — Phase 2 shell
+
+**Purpose:** Browse assigned / available work (full accept map UI Phase 3+).
+
+**Layout**
+- Filters: Active · History
+- Rows: title, distance, offer, status
+
+**States:** Loading · Empty · Content.
+
+---
+
+### C1b. Jobs browse (map) — Phase 3+
+
+**Purpose:** Find and accept work quickly (map toggle deferred).
 
 **UX**
 - Sort default: nearest + highest offer hybrid (document in product); UI shows current sort in chip.

@@ -29,6 +29,7 @@ datastore = "1.1.7"
 
 # Image
 coil = "2.7.0"
+lottie = "6.6.6"
 
 # Firebase
 firebaseBom = "33.15.0"
@@ -91,6 +92,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 
 # Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# Lottie
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 
 # Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }

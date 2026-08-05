@@ -9,11 +9,14 @@ import com.app.hatli.core.ui.navigation.Navigator
 import com.app.hatli.core.ui.navigation.Routes
 import com.app.hatli.feature.auth.navigation.authGraph
 import com.app.hatli.feature.cart.navigation.cartGraph
+import com.app.hatli.feature.chat.navigation.chatGraph
 import com.app.hatli.feature.checkout.navigation.checkoutGraph
 import com.app.hatli.feature.home.navigation.homeGraph
 import com.app.hatli.feature.menu.navigation.menuGraph
 import com.app.hatli.feature.orders.navigation.ordersGraph
 import com.app.hatli.feature.profile.navigation.profileGraph
+import com.app.hatli.feature.profile.presentation.ProfileRoute
+import com.app.hatli.feature.request.navigation.requestGraph
 
 @Composable
 fun HatliNavHost(
@@ -28,7 +31,6 @@ fun HatliNavHost(
     }
 
     fun goAuthClearingStack() {
-        // Splash re-resolves → Login (session cleared). Clears Home from back stack.
         navigator.navigateAndClearBackStack(Routes.AUTH_GRAPH)
     }
 
@@ -64,8 +66,45 @@ fun HatliNavHost(
             },
         )
         homeGraph(
-            onNavigateToAuth = { goAuthClearingStack() },
-            onNavigateToProfile = { navigator.navigate(Routes.PROFILE_GRAPH) },
+            profileTab = {
+                ProfileRoute(
+                    onLoggedOut = { goAuthClearingStack() },
+                    onBack = {},
+                    showBack = false,
+                )
+            },
+            onMessage = onMessage,
+            onNavigateCreateRequest = {
+                navController.navigate(Routes.CREATE_REQUEST) {
+                    launchSingleTop = true
+                }
+            },
+            onOpenChat = { id ->
+                navController.navigate(Routes.chat(id)) { launchSingleTop = true }
+            },
+            onOpenDetail = { id ->
+                navController.navigate(Routes.requestDetail(id)) { launchSingleTop = true }
+            },
+            onOpenRate = { id ->
+                navController.navigate(Routes.rateRunner(id)) { launchSingleTop = true }
+            },
+        )
+        requestGraph(
+            onBack = { navController.popBackStack() },
+            onSubmitted = {
+                navController.popBackStack()
+                onMessage("Request posted — waiting for a Runner")
+            },
+            onOpenChat = { id ->
+                navController.navigate(Routes.chat(id)) { launchSingleTop = true }
+            },
+            onOpenRate = { id ->
+                navController.navigate(Routes.rateRunner(id)) { launchSingleTop = true }
+            },
+            onMessage = onMessage,
+        )
+        chatGraph(
+            onBack = { navController.popBackStack() },
             onMessage = onMessage,
         )
         menuGraph(onBack = { navigator.popBackStack() })

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.hatli.core.domain.usecase.user.ResolveStartDestinationUseCase
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,7 +26,11 @@ class SplashViewModel @Inject constructor(
     private fun resolve() {
         viewModelScope.launch {
             setState { copy(isResolving = true) }
+            val startedAt = System.currentTimeMillis()
             val destination = resolveStartDestination()
+            val elapsed = System.currentTimeMillis() - startedAt
+            val remaining = MIN_SPLASH_MS - elapsed
+            if (remaining > 0) delay(remaining)
             setState { copy(isResolving = false) }
             sendEffect(
                 when (destination) {
@@ -40,5 +45,10 @@ class SplashViewModel @Inject constructor(
                 },
             )
         }
+    }
+
+    private companion object {
+        /** Lets the branded delivery Lottie read before routing (~1.5s). */
+        const val MIN_SPLASH_MS = 1_500L
     }
 }

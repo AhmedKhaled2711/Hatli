@@ -6,8 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -51,14 +51,17 @@ class MainActivity : ComponentActivity() {
             HatliTheme(themeMode = HatliThemeMode.FollowSystem) {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
+                // Zero insets here — each destination owns status/nav bar padding once.
+                // Nesting Scaffold + TopAppBar insets caused a large empty band above Home.
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0),
                     containerColor = MaterialTheme.colorScheme.background,
                     contentColor = MaterialTheme.colorScheme.onBackground,
                     snackbarHost = { SnackbarHost(snackbarHostState) },
-                ) { innerPadding ->
+                ) {
                     HatliNavHost(
-                        modifier = Modifier.padding(innerPadding),
+                        modifier = Modifier.fillMaxSize(),
                         onMessage = { message ->
                             scope.launch { snackbarHostState.showSnackbar(message) }
                         },
