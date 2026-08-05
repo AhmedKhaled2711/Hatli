@@ -43,6 +43,9 @@ fun ProfileScreen(
     onEvent: (ProfileUiEvent) -> Unit,
     onBack: () -> Unit,
 ) {
+    val typography = MaterialTheme.typography
+    val onVariant = MaterialTheme.colorScheme.onSurfaceVariant
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,37 +53,60 @@ fun ProfileScreen(
             .padding(HatliSpacing.lg),
         verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
     ) {
-        Text("Profile", style = MaterialTheme.typography.headlineLarge)
+        Text("Profile", style = typography.headlineLarge)
 
         when {
             state.isLoading && state.profile == null -> CircularProgressIndicator()
             state.profile == null -> {
-                Text(state.errorMessage ?: "No profile found")
+                Text(
+                    text = state.errorMessage ?: "No profile found",
+                    style = typography.bodyLarge,
+                    color = onVariant,
+                )
                 HatliSecondaryButton(text = "Retry", onClick = { onEvent(ProfileUiEvent.Refresh) })
             }
             else -> {
                 val p = state.profile
-                // Selfie display requires Storage uploads (Blaze). Safe no-op while URLs are null.
                 p.selfieUrl?.takeIf { it.isNotBlank() }?.let { url ->
                     AsyncImage(model = url, contentDescription = "Profile photo")
                 }
                 HatliCard {
-                    Text(p.fullName, style = MaterialTheme.typography.titleLarge)
-                    Text("Role: ${p.role.name}")
-                    Text("Phone: ${p.phone}")
-                    Text("Email: ${p.email}")
-                    Text("Gender: ${p.gender.name}")
+                    Text(p.fullName, style = typography.titleLarge)
+                    Text("Role: ${p.role.name}", style = typography.bodyMedium, color = onVariant)
+                    Text("Phone: ${p.phone}", style = typography.bodyMedium, color = onVariant)
+                    Text("Email: ${p.email}", style = typography.bodyMedium, color = onVariant)
+                    Text("Gender: ${p.gender.name}", style = typography.bodyMedium, color = onVariant)
                     p.address?.let { address ->
-                        Text("Address: ${address.formattedOneLine()}")
+                        Text(
+                            text = "Address: ${address.formattedOneLine()}",
+                            style = typography.bodyMedium,
+                            color = onVariant,
+                        )
                         address.notes?.takeIf { it.isNotBlank() }?.let { notes ->
-                            Text("Notes: $notes")
+                            Text("Notes: $notes", style = typography.bodyMedium, color = onVariant)
                         }
                     }
                     if (p.role == UserRole.Runner) {
-                        Text("Transport: ${p.transportType?.name.orEmpty()}")
-                        Text("Vehicle: ${p.vehicleInfo.orEmpty()}")
-                        Text("National ID: ${p.nationalId.orEmpty()}")
-                        Text("Verification: ${p.verificationStatus?.name.orEmpty()}")
+                        Text(
+                            text = "Transport: ${p.transportType?.name.orEmpty()}",
+                            style = typography.bodyMedium,
+                            color = onVariant,
+                        )
+                        Text(
+                            text = "Vehicle: ${p.vehicleInfo.orEmpty()}",
+                            style = typography.bodyMedium,
+                            color = onVariant,
+                        )
+                        Text(
+                            text = "National ID: ${p.nationalId.orEmpty()}",
+                            style = typography.bodyMedium,
+                            color = onVariant,
+                        )
+                        Text(
+                            text = "Verification: ${p.verificationStatus?.name.orEmpty()}",
+                            style = typography.bodyMedium,
+                            color = onVariant,
+                        )
                     }
                 }
             }

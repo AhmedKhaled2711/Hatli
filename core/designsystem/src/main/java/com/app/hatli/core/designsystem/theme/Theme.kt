@@ -3,6 +3,7 @@ package com.app.hatli.core.designsystem.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
@@ -17,6 +18,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.FontFamily
 import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
@@ -103,6 +105,10 @@ object HatliTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalHatliIsDarkTheme.current
+
+    /** Brand typeface (same as [HatliTypography] / MaterialTheme.typography). */
+    val fontFamily: FontFamily
+        get() = HatliFontFamily
 }
 
 @Composable
@@ -147,11 +153,16 @@ fun HatliTheme(
             typography = HatliTypography,
             shapes = HatliShapes,
         ) {
-            Surface(
-                color = colorScheme.background,
-                contentColor = colorScheme.onBackground,
-                content = content,
-            )
+            // Bare Text() / TextField labels inherit Mada even without an explicit style.
+            CompositionLocalProvider(
+                LocalTextStyle provides HatliTypography.bodyLarge,
+            ) {
+                Surface(
+                    color = colorScheme.background,
+                    contentColor = colorScheme.onBackground,
+                    content = content,
+                )
+            }
         }
     }
 }

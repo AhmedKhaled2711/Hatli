@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.HatliTextButton
+import com.app.hatli.core.designsystem.component.HatliTextField
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.ui.base.CollectUiEffect
 
@@ -48,6 +48,7 @@ fun OtpScreen(
 ) {
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) { focusRequester.requestFocus() }
+    val typography = MaterialTheme.typography
 
     Column(
         modifier = Modifier
@@ -55,27 +56,26 @@ fun OtpScreen(
             .padding(HatliSpacing.lg),
         verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
     ) {
-        Text("Verify OTP", style = MaterialTheme.typography.headlineLarge)
+        Text("Verify OTP", style = typography.headlineLarge)
         Text(
-            "Code sent to ${state.phone}",
-            style = MaterialTheme.typography.bodyMedium,
+            text = "Code sent to ${state.phone}",
+            style = typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        OutlinedTextField(
+        HatliTextField(
             value = state.code,
             onValueChange = { onEvent(OtpUiEvent.CodeChanged(it)) },
+            label = "6-digit code",
             modifier = Modifier.focusRequester(focusRequester),
-            label = { Text("6-digit code") },
-            singleLine = true,
             isError = state.errorMessage != null,
-            supportingText = state.errorMessage?.let { { Text(it) } },
+            supportingText = state.errorMessage,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-            shape = MaterialTheme.shapes.medium,
         )
         Text(
-            if (state.canResend) "You can resend now"
+            text = if (state.canResend) "You can resend now"
             else "Resend in ${state.secondsLeft}s",
-            style = MaterialTheme.typography.bodySmall,
+            style = typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         HatliPrimaryButton(
             text = if (state.isLoading) "Verifying…" else "Verify",

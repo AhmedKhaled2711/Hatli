@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -34,7 +33,7 @@ import com.app.hatli.core.designsystem.theme.HatliSpacing
 
 /**
  * Overlay bottom sheet (~3.5/10 screen) — covers the lower third of the phone,
- * matching the FlexBox onboarding reference.
+ * matching the FlexBox onboarding reference. Typography from [MaterialTheme] (Mada).
  */
 @Composable
 fun OnboardingBottomSheet(
@@ -94,7 +93,6 @@ fun OnboardingBottomSheet(
                     Text(
                         text = pageTitle,
                         style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
                         maxLines = 2,

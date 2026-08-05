@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,7 +24,7 @@ import com.app.hatli.feature.auth.presentation.onboarding.OnboardingStrings
 
 /**
  * Flush under the status bar: Hatli wordmark · Skip.
- * [darkHeader] = light text on dark band (page 2); otherwise dark text on teal.
+ * Uses [MaterialTheme.typography] (Mada) — no raw fontSize.
  */
 @Composable
 fun OnboardingTopBar(
@@ -34,6 +35,7 @@ fun OnboardingTopBar(
 ) {
     val onHeader = if (darkHeader) HatliColors.White else HatliColors.OnPrimary
     val skipColor = onHeader.copy(alpha = 0.55f)
+    val typography = MaterialTheme.typography
 
     Row(
         modifier = modifier
@@ -44,8 +46,7 @@ fun OnboardingTopBar(
     ) {
         Text(
             text = stringResource(OnboardingStrings.brand),
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
+            style = typography.titleLarge.copy(fontWeight = FontWeight.Bold),
             color = onHeader,
         )
         if (showSkip) {
@@ -58,10 +59,11 @@ fun OnboardingTopBar(
                 ) {
                     Text(
                         text = stringResource(OnboardingStrings.skip).uppercase(),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp,
+                        style = typography.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = 0.8.sp,
+                        ),
                         color = skipColor,
-                        letterSpacing = 0.8.sp,
                     )
                 }
             }

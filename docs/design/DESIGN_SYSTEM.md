@@ -119,12 +119,17 @@ Implementation: `HatliColors`, `HatliExtendedColors`, `HatliTheme` in `:core:des
 
 ## 4. Typography
 
-M3 type scale via `HatliTypography`. Hierarchy (Compose → role):
+**Location (single source of truth):** `core/designsystem/src/main/res/font/`  
+**API:** `HatliFontFamily` (Mada) / `HatliFonts.Tajawal` → applied in `HatliTypography` → `HatliTheme`.
+
+M3 type scale via `HatliTypography` (family **Mada** — EN + AR). Hierarchy:
 
 | Style | Size / weight | Use |
 |-------|---------------|-----|
 | `displayLarge` | 40 / Bold | Brand splash only |
 | `headlineLarge` | 28 / SemiBold | Screen titles (auth, empty) |
+| `headlineMedium` | 24 / SemiBold | Sheet / section titles |
+| `headlineSmall` | 20 / SemiBold | Compact titles |
 | `titleLarge` | 22 / SemiBold | Section headers, dialog titles |
 | `titleMedium` | 16 / Medium | List primary line, card titles |
 | `bodyLarge` | 16 / Regular | Forms, readable body |
@@ -135,7 +140,12 @@ M3 type scale via `HatliTypography`. Hierarchy (Compose → role):
 
 - One headline per screen; never stack two `headline*` styles.
 - Prefer `titleMedium` + `bodyMedium` for list density.
-- Future: load a single custom family (e.g. Plus Jakarta Sans) via `FontFamily` — keep weights aligned to this scale. Avoid Inter/Roboto defaults in marketing surfaces when custom fonts land.
+- Always use `MaterialTheme.typography.*` (or `fontFamily = HatliFontFamily`) — never `FontFamily.Default` / system sans in feature UI.
+- Primary face: **Mada**. Optional alternate: **Tajawal** via `HatliFonts.Tajawal`.
+- `HatliTheme` sets `LocalTextStyle` to `bodyLarge` so bare `Text()` still gets Mada.
+- Custom fonts use `includeFontPadding = false` for consistent EN/AR metrics.
+- To change brand type: swap files under `res/font/` and update `Font.kt`; see `core/designsystem/fonts/README.md`.
+
 
 ---
 
