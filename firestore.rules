@@ -1,12 +1,79 @@
 rules_version = '2';
 
-// Spark-friendly: Auth users can read/write only their own profile document.
-// Console: Firestore → Rules → paste & Publish
-// Or: firebase deploy --only firestore:rules
+// Firebase Console → Firestore → Rules → paste → Publish
 service cloud.firestore {
   match /databases/{database}/documents {
+
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null
+        && request.auth.uid == userId;
+    }
+
+    match /requests/{requestId} {
+      function signedIn() {
+        return request.auth != null;
+      }
+      function isOwner() {
+        return signedIn() && resource.data.requesterId == request.auth.uid;
+      }
+      function isRunner() {
+        return signedIn() && resource.data.runnerId == request.auth.uid;
+      }
+      function isParticipant() {
+        return isOwner() || isRunner();
+      }
+      function isOpenPending() {
+        return resource.data.status == 'Pending'
+          && resource.data.runnerId == null;
+      }
+
+      allow create: if signedIn()
+        && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.status == 'Pending'
+        && request.resource.data.runnerId == null
+        && request.resource.data.requestId == requestId;
+
+      allow read: if signedIn() && (
+        resource.data.requesterId == request.auth.uid
+        || resource.data.runnerId == request.auth.uid
+        || resource.data.status == 'Pending'
+      );
+
+      allow update: if signedIn() && (
+        // Accept
+        (
+          isOpenPending()
+          && request.resource.data.runnerId == request.auth.uid
+          && request.resource.data.status == 'Accepted'
+          && request.resource.data.requesterId == resource.data.requesterId
+        )
+        // Runner advances status / chat unread fields
+        || isRunner()
+        // Requester confirm, cancel, rate, chat unread
+        || isOwner()
+      );
+
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if signedIn() && (
+          get(/databases/$(database)/documents/requests/$(requestId)).data.requesterId
+            == request.auth.uid
+          || get(/databases/$(database)/documents/requests/$(requestId)).data.runnerId
+            == request.auth.uid
+        );
+        allow create: if signedIn()
+          && request.resource.data.senderId == request.auth.uid
+          && (
+            get(/databases/$(database)/documents/requests/$(requestId)).data.requesterId
+              == request.auth.uid
+            || get(/databases/$(database)/documents/requests/$(requestId)).data.runnerId
+              == request.auth.uid
+          )
+          && get(/databases/$(database)/documents/requests/$(requestId)).data.status
+            != 'Pending';
+        allow update, delete: if false;
+      }
     }
   }
 }
