@@ -33,7 +33,7 @@ val LightHatliExtendedColors = HatliExtendedColors(
     success = HatliColors.Success,
     onSuccess = HatliColors.OnSuccess,
     successContainer = HatliColors.SuccessContainer,
-    onSuccessContainer = HatliColors.Forest900,
+    onSuccessContainer = HatliColors.Teal900,
     warning = HatliColors.Warning,
     onWarning = HatliColors.OnWarning,
     warningContainer = HatliColors.WarningContainer,
@@ -50,23 +50,23 @@ val LightHatliExtendedColors = HatliExtendedColors(
 )
 
 val DarkHatliExtendedColors = HatliExtendedColors(
-    success = Color(0xFF7BC4A4),
-    onSuccess = HatliColors.Forest900,
-    successContainer = Color(0xFF0F3D30),
-    onSuccessContainer = HatliColors.Forest100,
+    success = HatliColors.Teal300,
+    onSuccess = HatliColors.Gray800,
+    successContainer = HatliColors.Teal800,
+    onSuccessContainer = HatliColors.Teal100,
     warning = Color(0xFFF0C45A),
     onWarning = Color(0xFF2A1C00),
     warningContainer = Color(0xFF3D2E08),
-    onWarningContainer = HatliColors.Amber100,
+    onWarningContainer = Color(0xFFFFF4D6),
     info = Color(0xFF8BB4E0),
-    onInfo = HatliColors.Slate900,
+    onInfo = HatliColors.Gray800,
     infoContainer = Color(0xFF1A334D),
     onInfoContainer = HatliColors.InfoContainer,
     border = HatliColors.DarkBorder,
-    textPrimary = HatliColors.Slate50,
-    textSecondary = HatliColors.Slate400,
-    disabled = Color(0xFF6B7A74),
-    disabledContainer = Color(0xFF24302C),
+    textPrimary = HatliColors.White,
+    textSecondary = HatliColors.Gray400,
+    disabled = HatliColors.Gray500,
+    disabledContainer = HatliColors.DarkSurfaceVariant,
 )
 
 val LocalHatliExtendedColors = staticCompositionLocalOf { LightHatliExtendedColors }

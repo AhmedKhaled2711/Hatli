@@ -46,20 +46,21 @@ Main — Runner
 **Purpose:** Brand moment + resolve session/start destination (no user action).
 
 **Layout**
-- Full-bleed background (`Background` → subtle Forest900 radial wash optional via brush, not loud gradient kits)
-- Centered wordmark **Hatli** (`displayLarge`, Primary)
-- Short tagline under brand (`bodyMedium`, Text Secondary): e.g. “Deliveries you can trust”
-- Bottom: indeterminate `CircularProgressIndicator` (Primary), 48dp clear area
+- Full-bleed background (`Background`)
+- Centered branded **delivery_man** Lottie (`lottie/splash/delivery_man.json`) — mint teal `#30E6C1` body accents, charcoal badge with Primary **H**, soft teal wash; same motion/timing as source
+- Wordmark **Hatli** under animation (`displayLarge`, Primary)
+- Short tagline (`bodyMedium`, Text Secondary): “Deliveries you can trust”
+- Bottom: indeterminate `CircularProgressIndicator` (Primary)
 
-**Components:** Brand text, progress indicator only.
+**Components:** Lottie hero, brand text, progress indicator.
 
 **UX**
-- Brand is the hero (not a marketing headline competing with logo).
-- No Skip — splash is ≤ ~1.5s perceived; routing is the job.
+- Brand is the hero (Lottie + wordmark; no competing marketing headline).
+- No Skip — splash holds ~1.5s min then routes.
 
 **States:** Loading only → navigate (Onboarding | Login | Create Profile | Home).
 
-**Compose:** `Box` + `Column`; no scroll; respect system bars with `WindowInsets`.
+**Compose:** `Box` + `Column` + `HatliLottieAnimation`; respect system bars.
 
 ---
 

@@ -3,7 +3,7 @@
 | ID | Scenario | Expected |
 |----|----------|----------|
 | P0-01 | `./gradlew :app:assembleDebug` | SUCCESS |
-| P0-02 | Open app on light system theme | Forest/amber light surfaces; readable text |
+| P0-02 | Open app on light system theme | Teal/charcoal light surfaces; readable text |
 | P0-03 | Open app on dark system theme | Dark scaffold; status bar icons contrast correctly |
 | P0-04 | Hilt graph | App launches; no missing binding crash on cold start |
 | P0-05 | Navigation host | Start destination is auth graph (Splash) |

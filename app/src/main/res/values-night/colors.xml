@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="hatli_primary">#FF6BA894</color>
-    <color name="hatli_background">#FF111816</color>
-    <color name="hatli_surface">#FF161E1B</color>
-    <color name="hatli_on_background">#FFF4F6F5</color>
+    <color name="hatli_primary">#FF30E6C1</color>
+    <color name="hatli_on_primary">#FF1E1E1E</color>
+    <color name="hatli_background">#FF1E1E1E</color>
+    <color name="hatli_surface">#FF262626</color>
+    <color name="hatli_on_background">#FFFFFFFF</color>
 </resources>

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.app.hatli.core.designsystem.component.HatliLottieAnimation
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.HatliTextButton
 import com.app.hatli.core.designsystem.theme.HatliColors
@@ -181,6 +182,17 @@ private fun OnboardingPageContent(
 private fun OnboardingHeroIllustration(
     illustration: OnboardingIllustration,
 ) {
+    HatliLottieAnimation(
+        assetPath = OnboardingLottieAssets.pathFor(illustration),
+        modifier = Modifier.size(280.dp),
+        fallback = { OnboardingIconHeroIllustration(illustration = illustration) },
+    )
+}
+
+@Composable
+private fun OnboardingIconHeroIllustration(
+    illustration: OnboardingIllustration,
+) {
     val (primaryIcon, accentIcon) = when (illustration) {
         OnboardingIllustration.Roles -> Icons.Outlined.SwapHoriz to Icons.Outlined.LocalShipping
         OnboardingIllustration.Track -> Icons.Outlined.Route to Icons.Outlined.LocalShipping
@@ -191,18 +203,17 @@ private fun OnboardingHeroIllustration(
         contentAlignment = Alignment.Center,
         modifier = Modifier.size(280.dp),
     ) {
-        // Soft outer wash (FlexBox-style illustration backdrop)
         Box(
             modifier = Modifier
                 .size(260.dp)
                 .clip(CircleShape)
-                .background(HatliColors.Forest100.copy(alpha = 0.55f)),
+                .background(HatliColors.Teal100.copy(alpha = 0.55f)),
         )
         Box(
             modifier = Modifier
                 .size(200.dp)
                 .clip(CircleShape)
-                .background(HatliColors.Forest100),
+                .background(HatliColors.Teal100),
         )
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             IllustrationBadge(icon = primaryIcon, size = 88.dp)
@@ -220,8 +231,8 @@ private fun IllustrationBadge(
     size: Dp,
     secondary: Boolean = false,
 ) {
-    val container = if (secondary) HatliColors.Amber100 else MaterialTheme.colorScheme.primary
-    val tint = if (secondary) HatliColors.Amber700 else MaterialTheme.colorScheme.onPrimary
+    val container = if (secondary) HatliColors.Gray100 else MaterialTheme.colorScheme.primary
+    val tint = if (secondary) HatliColors.Gray700 else MaterialTheme.colorScheme.onPrimary
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier

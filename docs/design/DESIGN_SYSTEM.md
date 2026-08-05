@@ -13,7 +13,7 @@ Hatli is **not** a restaurant food-ordering app. Users either:
 - **Requester** — post a delivery request (pickup → dropoff), track progress, pay.
 - **Runner** — browse nearby requests, accept jobs, navigate, complete delivery, get verified.
 
-UI kits referenced for inspiration (Speedy Chow, [FlexBox Delivery tracking](https://www.figma.com/design/fHoNXiKXvhN4zbDE6ZL96p/flexbox-Delivery-tracking-app-ui-kit---Free-%F0%9F%98%89--Community-?node-id=101-2), Delivery App UI Kit) are food/courier oriented. We keep their **strong UX patterns** (status timelines, sticky CTAs, clear location context, empty states with one action, onboarding pager + hero + dots) and discard food-grid / cart / menu patterns that fight Hatli’s mental model. Onboarding uses Hatli forest/amber tokens — not the kit’s stock palette.
+UI kits referenced for inspiration (Speedy Chow, [FlexBox Delivery tracking](https://www.figma.com/design/fHoNXiKXvhN4zbDE6ZL96p/flexbox-Delivery-tracking-app-ui-kit---Free-%F0%9F%98%89--Community-?node-id=101-2), Delivery App UI Kit) are food/courier oriented. We keep their **strong UX patterns** (status timelines, sticky CTAs, clear location context, empty states with one action, onboarding pager + hero + dots) and discard food-grid / cart / menu patterns that fight Hatli’s mental model. Onboarding / splash use Hatli **mint teal + charcoal** tokens — not the kit’s stock palette.
 
 ---
 
@@ -36,7 +36,7 @@ UI kits referenced for inspiration (Speedy Chow, [FlexBox Delivery tracking](htt
 |--------------|---------|-----------|
 | Food-photo masonry grids | Wrong content type; heavy scrolling | Compact request list rows + optional map |
 | Nested card-in-card | Visual noise, hard Compose nesting | Single surface elevation; dividers inside |
-| Oversaturated neon accents | Feels cheap; fails a11y | Desaturated forest + amber |
+| Oversaturated neon accents | Feels cheap; fails a11y | Mint teal primary + charcoal neutrals; dark onPrimary on teal |
 | iOS large-title + blur chrome | Not Android idiomatic | M3 TopAppBar + NavigationBar |
 | Floating promo badges on hero | Clutter, hard RTL | No overlays on media |
 | Tiny icon-only filters | Miss 48dp targets | Chips ≥ 48dp height, text + optional icon |
@@ -52,25 +52,36 @@ UI kits referenced for inspiration (Speedy Chow, [FlexBox Delivery tracking](htt
 
 ## 3. Color system
 
-Brand: **deep forest** (trust, reliability) + **restrained amber** (urgency, money, attention).  
-Not purple-indigo. Not cream/terracotta.
+Brand: **mint teal** `#30E6C1` (energy, delivery motion) + **charcoal** `#1E1E1E` / `#262626` + **white** `#FFFFFF`.  
+Not purple-indigo. Not cream/terracotta. Not deep forest (legacy).
+
+### Brand anchors (from product)
+
+| Swatch | Hex | Role |
+|--------|-----|------|
+| Primary | `#30E6C1` | Filled CTAs, key icons, active nav (`Teal500`) |
+| Primary alt | `#30E5C0` | Same family (`Teal400`) |
+| White | `#FFFFFF` | Light surfaces, onSecondary |
+| Gray700 | `#262626` | Dark elevated surface / secondary |
+| Gray800 | `#1E1E1E` | Dark background / onPrimary text |
 
 ### Semantic tokens (required palette)
 
 | Token | Light | Usage |
 |-------|-------|--------|
-| **Primary** | `#145C48` Forest700 | Filled buttons, key icons, active nav |
-| **Secondary** | `#C9920A` Amber500 | Highlights, earnings, soft urgency |
-| **Surface** | `#FBFCFB` SoftWhite | Cards, sheets, dialogs |
-| **Background** | `#F4F6F5` Slate50 | Scaffold |
+| **Primary** | `#30E6C1` Teal500 | Filled buttons, key icons, active nav |
+| **OnPrimary** | `#1E1E1E` | Label on primary fills (contrast) |
+| **Secondary** | `#262626` Gray700 | Dark chrome, secondary emphasis |
+| **Surface** | `#FFFFFF` | Cards, sheets, dialogs |
+| **Background** | `#F7F7F7` Gray50 | Scaffold |
 | **Error** | `#B3261E` | Destructive, validation |
-| **Warning** | `#9A6A04` | Pending verification, delays |
-| **Success** | `#1B6B4A` | Delivered, verified, paid |
-| **Info** | `#2F5D8C` | Neutral tips, system notices |
-| **Text Primary** | `#111816` | Titles, body |
-| **Text Secondary** | `#5A6B64` | Meta, hints |
-| **Border** | `#D5DED9` | Outlines, dividers |
-| **Disabled** | `#8A9A93` text / `#E8EEEC` fill | Inactive controls |
+| **Warning** | `#C47F0A` | Pending verification, delays |
+| **Success** | `#129A84` Teal700 | Delivered, verified, paid |
+| **Info** | `#2F6FED` | Neutral tips, system notices |
+| **Text Primary** | `#1E1E1E` | Titles, body |
+| **Text Secondary** | `#757575` | Meta, hints |
+| **Border** | `#E0E0E0` | Outlines, dividers |
+| **Disabled** | `#9E9E9E` text / `#EEEEEE` fill | Inactive controls |
 
 Containers (chips, banners): `ErrorContainer`, `WarningContainer`, `SuccessContainer`, `InfoContainer` — see `HatliColors` in `core/designsystem`.
 
@@ -78,18 +89,19 @@ Containers (chips, banners): `ErrorContainer`, `WarningContainer`, `SuccessConta
 
 - Body text on Background/Surface: ≥ **4.5:1**
 - Large text / icons: ≥ **3:1**
-- Primary filled button: onPrimary on Primary ≥ **4.5:1**
-- Never use Secondary amber for long body text on white (use for icons/chips only)
-- Disabled must remain distinguishable from Secondary text (opacity + token, not opacity alone)
+- Primary filled button: **onPrimary (`#1E1E1E`) on Primary (`#30E6C1`)** — never white on teal
+- Secondary charcoal is for chrome / dark CTAs; long body text uses TextPrimary
+- Disabled must remain distinguishable from Secondary text (token, not opacity alone)
 
 ### Dark mode (fully applied)
 
 | Layer | Light | Dark |
 |-------|-------|------|
-| Background | `#F4F6F5` | `#111816` |
-| Surface | `#FBFCFB` | `#161E1B` |
-| Primary | Forest700 `#145C48` | Forest300 `#6BA894` |
-| Border | `#D5DED9` | `#2F3B36` |
+| Background | `#F7F7F7` | `#1E1E1E` |
+| Surface | `#FFFFFF` | `#262626` |
+| Primary | Teal500 `#30E6C1` | Teal500 `#30E6C1` |
+| OnPrimary | `#1E1E1E` | `#1E1E1E` |
+| Border | `#E0E0E0` | `#3A3A3A` |
 | Success / Warning / Info | Light containers | Dark containers via `HatliExtendedColors` |
 
 **Runtime wiring**
