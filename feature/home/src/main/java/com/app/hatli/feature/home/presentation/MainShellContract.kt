@@ -1,5 +1,6 @@
 package com.app.hatli.feature.home.presentation
 
+import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.core.model.RequesterHomeSnapshot
@@ -52,10 +53,12 @@ data class MainShellUiState(
         get() = allRequests.filter { summary ->
             when (requestFilter) {
                 RequestListFilter.Active -> summary.status in setOf(
-                    RequestStatus.SearchingRunner,
+                    RequestStatus.Pending,
                     RequestStatus.Accepted,
                     RequestStatus.InProgress,
-                    RequestStatus.Draft,
+                    RequestStatus.Purchased,
+                    RequestStatus.OnTheWay,
+                    RequestStatus.Delivered,
                 )
                 RequestListFilter.Completed -> summary.status == RequestStatus.Completed
                 RequestListFilter.Cancelled -> summary.status == RequestStatus.Cancelled
@@ -71,6 +74,22 @@ data class MainShellUiState(
                     summary.status == RequestStatus.Cancelled
             }
         }
+
+    /** Threads available for the Messages tab (accepted+ work with chat). */
+    val conversations: List<RequestSummary>
+        get() {
+            val source = when (role) {
+                UserRole.Requester -> allRequests
+                UserRole.Runner -> allJobs.filter { it.status != RequestStatus.Pending }
+                null -> emptyList()
+            }
+            return source
+                .filter { it.canOpenChat }
+                .sortedWith(
+                    compareByDescending<RequestSummary> { it.unreadCount > 0 }
+                        .thenByDescending { it.updatedAtEpochMs },
+                )
+        }
 }
 
 sealed interface MainShellUiEvent : UiEvent {
@@ -82,9 +101,43 @@ sealed interface MainShellUiEvent : UiEvent {
     data class RequestFilterSelected(val filter: RequestListFilter) : MainShellUiEvent
     data class JobFilterSelected(val filter: JobListFilter) : MainShellUiEvent
     data class QuickActionClicked(val id: String) : MainShellUiEvent
+    data class AcceptRequest(val requestId: String) : MainShellUiEvent
+    data class AdvanceStatus(val requestId: String, val toStatus: RequestStatus) : MainShellUiEvent
+    data class ConfirmDelivery(val requestId: String) : MainShellUiEvent
+    data class OpenChat(val requestId: String) : MainShellUiEvent
+    data class OpenDetail(val requestId: String) : MainShellUiEvent
+    data class OpenRate(val requestId: String) : MainShellUiEvent
 }
 
 sealed interface MainShellUiEffect : UiEffect {
-    data object NavigateCreateRequestStub : MainShellUiEffect
+    data object NavigateCreateRequest : MainShellUiEffect
+    data class NavigateChat(val requestId: String) : MainShellUiEffect
+    data class NavigateDetail(val requestId: String) : MainShellUiEffect
+    data class NavigateRate(val requestId: String) : MainShellUiEffect
     data class ShowMessage(val message: String) : MainShellUiEffect
+}
+
+fun RequestSummary.runnerNextStatus(): RequestStatus? {
+    // Mirror Request.nextRunnerStatus using summary fields.
+    return when (status) {
+        RequestStatus.Accepted -> RequestStatus.InProgress
+        RequestStatus.InProgress -> when (category) {
+            RequestCategory.Shopping -> RequestStatus.Purchased
+            else -> RequestStatus.OnTheWay
+        }
+        RequestStatus.Purchased -> RequestStatus.OnTheWay
+        RequestStatus.OnTheWay -> RequestStatus.Delivered
+        else -> null
+    }
+}
+
+fun RequestSummary.runnerNextCtaLabel(): String? {
+    val next = runnerNextStatus() ?: return null
+    return when (next) {
+        RequestStatus.InProgress -> "Start work"
+        RequestStatus.Purchased -> "Mark purchased"
+        RequestStatus.OnTheWay -> if (status == RequestStatus.InProgress) "On the way" else "On the way"
+        RequestStatus.Delivered -> "Mark delivered"
+        else -> null
+    }
 }

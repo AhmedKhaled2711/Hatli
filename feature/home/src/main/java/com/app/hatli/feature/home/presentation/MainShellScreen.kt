@@ -8,15 +8,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ListAlt
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.ChatBubbleOutline
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.ListAlt
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.WorkOutline
 import androidx.compose.material3.CircularProgressIndicator
@@ -34,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +43,7 @@ import com.app.hatli.core.designsystem.component.HatliSecondaryButton
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.model.QuickAction
+import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.core.model.RequesterHomeSnapshot
@@ -50,6 +51,8 @@ import com.app.hatli.core.model.RunnerHomeSnapshot
 import com.app.hatli.core.model.RunnerHomeStats
 import com.app.hatli.core.model.RunnerPresence
 import com.app.hatli.core.ui.base.CollectUiEffect
+import com.app.hatli.feature.home.presentation.components.ConversationRowCard
+import com.app.hatli.feature.home.presentation.components.CurrentJobCard
 import com.app.hatli.feature.home.presentation.components.CurrentRequestCard
 import com.app.hatli.feature.home.presentation.components.HeroCreateCard
 import com.app.hatli.feature.home.presentation.components.MainTopBar
@@ -60,14 +63,20 @@ import com.app.hatli.feature.home.presentation.components.RunnerStatsRow
 @Composable
 fun MainShellRoute(
     profileTab: @Composable () -> Unit,
-    onCreateRequestStub: () -> Unit,
+    onCreateRequest: () -> Unit,
+    onOpenChat: (String) -> Unit,
+    onOpenDetail: (String) -> Unit,
+    onOpenRate: (String) -> Unit,
     onMessage: (String) -> Unit,
     viewModel: MainShellViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
-            MainShellUiEffect.NavigateCreateRequestStub -> onCreateRequestStub()
+            MainShellUiEffect.NavigateCreateRequest -> onCreateRequest()
+            is MainShellUiEffect.NavigateChat -> onOpenChat(effect.requestId)
+            is MainShellUiEffect.NavigateDetail -> onOpenDetail(effect.requestId)
+            is MainShellUiEffect.NavigateRate -> onOpenRate(effect.requestId)
             is MainShellUiEffect.ShowMessage -> onMessage(effect.message)
         }
     }
@@ -124,7 +133,6 @@ private fun MainShellReady(
                     },
                     unread = state.unreadNotifications,
                     onNotifications = { onEvent(MainShellUiEvent.OpenNotifications) },
-                    // Bell only on Home — list/message tabs are title-only (production pattern).
                     showNotifications = state.selectedTab == MainTab.Home,
                 )
             }
@@ -161,12 +169,23 @@ private fun MainShellReady(
                             isAr = isAr,
                             onCreate = { onEvent(MainShellUiEvent.CreateRequest) },
                             onQuickAction = { onEvent(MainShellUiEvent.QuickActionClicked(it)) },
+                            onChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
+                            onDetails = { onEvent(MainShellUiEvent.OpenDetail(it)) },
+                            onConfirm = { onEvent(MainShellUiEvent.ConfirmDelivery(it)) },
+                            onRate = { onEvent(MainShellUiEvent.OpenRate(it)) },
                         )
                     } else {
                         RunnerHomeContent(
                             snapshot = state.runnerHome,
+                            isAr = isAr,
                             onToggleOnline = { onEvent(MainShellUiEvent.ToggleRunnerOnline) },
                             onViewAll = { onEvent(MainShellUiEvent.ViewAllJobs) },
+                            onAccept = { onEvent(MainShellUiEvent.AcceptRequest(it)) },
+                            onChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
+                            onDetails = { onEvent(MainShellUiEvent.OpenDetail(it)) },
+                            onAdvance = { id, status ->
+                                onEvent(MainShellUiEvent.AdvanceStatus(id, status))
+                            },
                         )
                     }
                 }
@@ -177,6 +196,9 @@ private fun MainShellReady(
                             items = state.filteredRequests,
                             onFilter = { onEvent(MainShellUiEvent.RequestFilterSelected(it)) },
                             onCreate = { onEvent(MainShellUiEvent.CreateRequest) },
+                            onOpenDetail = { onEvent(MainShellUiEvent.OpenDetail(it)) },
+                            onOpenChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
+                            onRate = { onEvent(MainShellUiEvent.OpenRate(it)) },
                             isAr = isAr,
                         )
                     } else {
@@ -184,11 +206,18 @@ private fun MainShellReady(
                             filter = state.jobFilter,
                             items = state.filteredJobs,
                             onFilter = { onEvent(MainShellUiEvent.JobFilterSelected(it)) },
+                            onAccept = { onEvent(MainShellUiEvent.AcceptRequest(it)) },
+                            onOpenDetail = { onEvent(MainShellUiEvent.OpenDetail(it)) },
+                            onOpenChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
                             isAr = isAr,
                         )
                     }
                 }
-                MainTab.Messages -> MessagesEmptyContent(isAr = isAr)
+                MainTab.Messages -> MessagesContent(
+                    conversations = state.conversations,
+                    isAr = isAr,
+                    onOpenChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
+                )
                 MainTab.Profile -> profileTab()
             }
         }
@@ -207,7 +236,7 @@ private fun MainBottomBar(
         TabSpec(
             MainTab.RequestsOrJobs,
             if (isRequester) "Requests" else "Jobs",
-            if (isRequester) Icons.Outlined.ListAlt else Icons.Outlined.WorkOutline,
+            if (isRequester) Icons.AutoMirrored.Outlined.ListAlt else Icons.Outlined.WorkOutline,
         ),
         TabSpec(MainTab.Messages, "Messages", Icons.Outlined.ChatBubbleOutline),
         TabSpec(MainTab.Profile, "Profile", Icons.Outlined.Person),
@@ -232,6 +261,10 @@ fun RequesterHomeContent(
     isAr: Boolean,
     onCreate: () -> Unit,
     onQuickAction: (String) -> Unit,
+    onChat: (String) -> Unit,
+    onDetails: (String) -> Unit,
+    onConfirm: (String) -> Unit,
+    onRate: (String) -> Unit,
 ) {
     if (snapshot == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -251,7 +284,24 @@ fun RequesterHomeContent(
                 )
             }
             snapshot.active?.let { active ->
-                item { CurrentRequestCard(summary = active) }
+                item {
+                    CurrentRequestCard(
+                        summary = active,
+                        isAr = isAr,
+                        onChat = { onChat(active.id) },
+                        onDetails = { onDetails(active.id) },
+                        onConfirm = if (active.status == RequestStatus.Delivered) {
+                            { onConfirm(active.id) }
+                        } else {
+                            null
+                        },
+                        onRate = if (active.needsRating) {
+                            { onRate(active.id) }
+                        } else {
+                            null
+                        },
+                    )
+                }
             }
             if (snapshot.recent.isNotEmpty()) {
                 item {
@@ -261,7 +311,11 @@ fun RequesterHomeContent(
                     )
                 }
                 items(snapshot.recent.take(5), key = { it.id }) { row ->
-                    RequestRowCard(summary = row)
+                    RequestRowCard(
+                        summary = row,
+                        isAr = isAr,
+                        onClick = { onDetails(row.id) },
+                    )
                 }
             }
             item {
@@ -314,8 +368,13 @@ private fun QuickActionChip(
 @Composable
 fun RunnerHomeContent(
     snapshot: RunnerHomeSnapshot?,
+    isAr: Boolean,
     onToggleOnline: () -> Unit,
     onViewAll: () -> Unit,
+    onAccept: (String) -> Unit,
+    onChat: (String) -> Unit,
+    onDetails: (String) -> Unit,
+    onAdvance: (String, RequestStatus) -> Unit,
 ) {
     if (snapshot == null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -338,29 +397,82 @@ fun RunnerHomeContent(
                     rating = snapshot.stats.rating,
                 )
             }
+            snapshot.activeJob?.let { active ->
+                item {
+                    val next = active.runnerNextStatus()
+                    CurrentJobCard(
+                        summary = active,
+                        nextCta = active.runnerNextCtaLabel(),
+                        onNextStatus = next?.let { status ->
+                            { onAdvance(active.id, status) }
+                        },
+                        onChat = { onChat(active.id) },
+                        onDetails = { onDetails(active.id) },
+                        isAr = isAr,
+                    )
+                }
+            } ?: item {
+                HatliCard {
+                    Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs)) {
+                        Text(
+                            text = if (isAr) "لا توجد وظيفة نشطة" else "No active job",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                        Text(
+                            text = if (isAr) {
+                                "لما تقبل طلب، هيظهر هنا مع حالة التنفيذ والمحادثة."
+                            } else {
+                                "When you accept a request, it pins here with status actions and chat."
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
             if (!online) {
                 item {
                     Text(
-                        text = "افتح الاستقبال عشان تشوف الطلبات القريبة.",
+                        text = if (isAr) {
+                            "افتح الاستقبال عشان تشوف الطلبات القريبة."
+                        } else {
+                            "Go online to browse nearby requests."
+                        },
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
             } else if (snapshot.nearby.isEmpty()) {
                 item {
                     Text(
-                        text = "مفيش طلبات قريبة دلوقتي — خلي الاستقبال مفتوح.",
+                        text = if (isAr) {
+                            "مفيش طلبات قريبة دلوقتي — خلي الاستقبال مفتوح."
+                        } else {
+                            "No nearby requests right now — stay online."
+                        },
                         style = MaterialTheme.typography.bodyLarge,
                     )
                 }
             } else {
                 item {
-                    Text("Nearby Requests", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = if (isAr) "طلبات قريبة" else "Nearby Requests",
+                        style = MaterialTheme.typography.titleMedium,
+                    )
                 }
                 items(snapshot.nearby.take(3), key = { it.id }) { job ->
-                    RequestRowCard(summary = job)
+                    PendingJobCard(
+                        summary = job,
+                        isAr = isAr,
+                        onAccept = { onAccept(job.id) },
+                        onDetails = { onDetails(job.id) },
+                    )
                 }
                 item {
-                    HatliSecondaryButton(text = "View All", onClick = onViewAll)
+                    HatliSecondaryButton(
+                        text = if (isAr) "عرض الكل" else "View all jobs",
+                        onClick = onViewAll,
+                    )
                 }
             }
         }
@@ -373,6 +485,9 @@ fun RequestsListContent(
     items: List<RequestSummary>,
     onFilter: (RequestListFilter) -> Unit,
     onCreate: () -> Unit,
+    onOpenDetail: (String) -> Unit,
+    onOpenChat: (String) -> Unit,
+    onRate: (String) -> Unit,
     isAr: Boolean,
 ) {
     Column(
@@ -399,7 +514,29 @@ fun RequestsListContent(
             )
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-                items(items, key = { it.id }) { RequestRowCard(it) }
+                items(items, key = { it.id }) { row ->
+                    RequestRowCard(
+                        summary = row,
+                        isAr = isAr,
+                        onClick = { onOpenDetail(row.id) },
+                        trailingAction = {
+                            Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs)) {
+                                if (row.canOpenChat) {
+                                    HatliSecondaryButton(
+                                        text = if (isAr) "محادثة" else "Chat",
+                                        onClick = { onOpenChat(row.id) },
+                                    )
+                                }
+                                if (row.needsRating) {
+                                    HatliPrimaryButton(
+                                        text = if (isAr) "قيّم" else "Rate",
+                                        onClick = { onRate(row.id) },
+                                    )
+                                }
+                            }
+                        },
+                    )
+                }
             }
         }
     }
@@ -410,6 +547,9 @@ fun JobsListContent(
     filter: JobListFilter,
     items: List<RequestSummary>,
     onFilter: (JobListFilter) -> Unit,
+    onAccept: (String) -> Unit,
+    onOpenDetail: (String) -> Unit,
+    onOpenChat: (String) -> Unit,
     isAr: Boolean,
 ) {
     Column(
@@ -427,50 +567,110 @@ fun JobsListContent(
         }
         if (items.isEmpty()) {
             Text(
-                text = if (isAr) "مافيش وظائف" else "No jobs yet",
+                text = if (isAr) {
+                    "مافيش وظائف — اقبل طلب من Nearby أو افتح الاستقبال"
+                } else {
+                    "No jobs yet — accept a nearby request or go online"
+                },
                 style = MaterialTheme.typography.bodyLarge,
             )
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-                items(items, key = { it.id }) { RequestRowCard(it) }
+                items(items, key = { it.id }) { job ->
+                    if (job.status == RequestStatus.Pending) {
+                        PendingJobCard(
+                            summary = job,
+                            isAr = isAr,
+                            onAccept = { onAccept(job.id) },
+                            onDetails = { onOpenDetail(job.id) },
+                        )
+                    } else {
+                        RequestRowCard(
+                            summary = job,
+                            isAr = isAr,
+                            onClick = { onOpenDetail(job.id) },
+                            trailingAction = {
+                                if (job.canOpenChat) {
+                                    HatliSecondaryButton(
+                                        text = if (isAr) "محادثة" else "Chat",
+                                        onClick = { onOpenChat(job.id) },
+                                    )
+                                }
+                            },
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun MessagesEmptyContent(isAr: Boolean) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(HatliSpacing.lg),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = if (isAr) "الشات مع الـ Runner قريبًا" else "Chat with your Runner soon",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+private fun PendingJobCard(
+    summary: RequestSummary,
+    isAr: Boolean,
+    onAccept: () -> Unit,
+    onDetails: () -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
+        RequestRowCard(
+            summary = summary,
+            isAr = isAr,
+            onClick = onDetails,
+        )
+        HatliPrimaryButton(
+            text = if (isAr) "قبول" else "Accept",
+            onClick = onAccept,
         )
     }
 }
 
 @Composable
-fun CreateRequestStubScreen(
-    onBack: () -> Unit,
+fun MessagesContent(
+    conversations: List<RequestSummary>,
+    isAr: Boolean,
+    onOpenChat: (String) -> Unit,
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding()
-            .padding(HatliSpacing.lg),
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
-    ) {
-        Text("Create Request", style = MaterialTheme.typography.headlineLarge)
-        Text(
-            text = "Full wizard ships in Phase 3. This stub confirms FAB / Hero navigation.",
-            style = MaterialTheme.typography.bodyLarge,
-        )
-        HatliSecondaryButton(text = "Back", onClick = onBack)
+    if (conversations.isEmpty()) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(HatliSpacing.lg),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
+            ) {
+                Text(
+                    text = if (isAr) "مافيش محادثات لسه" else "No conversations yet",
+                    style = MaterialTheme.typography.titleMedium,
+                )
+                Text(
+                    text = if (isAr) {
+                        "لما يتقبل طلب، هتقدر تفتح الشات من هنا أو من الطلب الحالي."
+                    } else {
+                        "After a request is accepted, open chat here or from your Current Request / Active Job."
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(HatliSpacing.md),
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
+        ) {
+            items(conversations, key = { it.id }) { row ->
+                ConversationRowCard(
+                    summary = row,
+                    isAr = isAr,
+                    onClick = { onOpenChat(row.id) },
+                )
+            }
+        }
     }
 }
 
@@ -483,20 +683,25 @@ private fun RequesterHomePreview() {
             snapshot = RequesterHomeSnapshot(
                 active = RequestSummary(
                     id = "1",
-                    title = "2 كيلو لحمة",
-                    status = RequestStatus.SearchingRunner,
-                    etaMinutes = 30,
+                    title = "2 kg meat",
+                    status = RequestStatus.Accepted,
+                    category = RequestCategory.Shopping,
+                    runnerName = "Ahmed",
                 ),
                 recent = emptyList(),
                 quickActions = listOf(
-                    QuickAction("a", "Supermarket", "سوبر ماركت"),
+                    QuickAction("a", "Shopping", "تسوق"),
                 ),
                 tipEn = "Write clearly",
                 tipAr = "اكتب بوضوح",
             ),
-            isAr = true,
+            isAr = false,
             onCreate = {},
             onQuickAction = {},
+            onChat = {},
+            onDetails = {},
+            onConfirm = {},
+            onRate = {},
         )
     }
 }
@@ -509,18 +714,30 @@ private fun RunnerHomePreview() {
             snapshot = RunnerHomeSnapshot(
                 presence = RunnerPresence(true),
                 stats = RunnerHomeStats(120.0, 6, 4.9),
+                activeJob = RequestSummary(
+                    id = "2",
+                    title = "Pharmacy pickup",
+                    status = RequestStatus.Accepted,
+                    category = RequestCategory.Pickup,
+                    requesterName = "Sara",
+                ),
                 nearby = listOf(
                     RequestSummary(
                         id = "1",
-                        title = "2 كيلو لحمة",
-                        status = RequestStatus.SearchingRunner,
+                        title = "2 kg meat",
+                        status = RequestStatus.Pending,
                         distanceMeters = 800,
                         offerAmount = 35.0,
                     ),
                 ),
             ),
+            isAr = false,
             onToggleOnline = {},
             onViewAll = {},
+            onAccept = {},
+            onChat = {},
+            onDetails = {},
+            onAdvance = { _, _ -> },
         )
     }
 }

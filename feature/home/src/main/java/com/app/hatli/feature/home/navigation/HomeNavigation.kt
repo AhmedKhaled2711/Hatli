@@ -6,22 +6,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.app.hatli.core.ui.navigation.Destination
 import com.app.hatli.core.ui.navigation.Routes
-import com.app.hatli.feature.home.presentation.CreateRequestStubScreen
 import com.app.hatli.feature.home.presentation.MainShellRoute
 
 object MainShellDestination : Destination {
     override val route: String = Routes.MAIN_SHELL
 }
 
-object CreateRequestStubDestination : Destination {
-    override val route: String = Routes.CREATE_REQUEST_STUB
-}
-
 fun NavGraphBuilder.homeGraph(
     profileTab: @Composable () -> Unit,
     onMessage: (String) -> Unit,
-    onNavigateCreateStub: () -> Unit,
-    onBackFromCreateStub: () -> Unit,
+    onNavigateCreateRequest: () -> Unit,
+    onOpenChat: (String) -> Unit,
+    onOpenDetail: (String) -> Unit,
+    onOpenRate: (String) -> Unit,
 ) {
     navigation(
         route = Routes.HOME_GRAPH,
@@ -30,12 +27,12 @@ fun NavGraphBuilder.homeGraph(
         composable(MainShellDestination.route) {
             MainShellRoute(
                 profileTab = profileTab,
-                onCreateRequestStub = onNavigateCreateStub,
+                onCreateRequest = onNavigateCreateRequest,
+                onOpenChat = onOpenChat,
+                onOpenDetail = onOpenDetail,
+                onOpenRate = onOpenRate,
                 onMessage = onMessage,
             )
-        }
-        composable(CreateRequestStubDestination.route) {
-            CreateRequestStubScreen(onBack = onBackFromCreateStub)
         }
     }
 }
