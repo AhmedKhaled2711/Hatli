@@ -9,7 +9,9 @@ Senior Android delivery packs for Hatli. Each phase follows the artifact set in 
 | **0** | Foundation | ✔ Complete | [phase-0-foundation](./phase-0-foundation/) |
 | **1** | Authentication & User Lifecycle | ✔ Complete (Storage deferred) | [phase-1-authentication](./phase-1-authentication/) |
 | **2** | JTBD Main Home & Shell | ✔ Complete (Create Request deferred) | [phase-2-main-home](./phase-2-main-home/) |
-| 3+ | Create Request / Jobs execution / Chat | Not started | — |
+| **3** | Request Creation & Marketplace (Slice B) | ✔ Complete | [phase-3-request-marketplace](./phase-3-request-marketplace/) |
+| **4** | Post-Accept Lifecycle + Chat | ✔ Complete | [phase-4-lifecycle-chat](./phase-4-lifecycle-chat/) |
+| 4b+ | FCM / Maps tracking | Not started | — |
 
 ## Design references (cross-cutting)
 
@@ -46,6 +48,24 @@ Senior Android delivery packs for Hatli. Each phase follows the artifact set in 
 **Review criterion:** Requester and Runner each see the correct tabs and a Home that leads with Create or Go Online.
 
 **Deferred:** Create Request wizard, tracking, accept/pickup/deliver, real chat/FCM (Phase 3+).
+
+## Phase 3 — Request Creation & Marketplace Slice B (summary)
+
+**Goal:** Assisted Create Request + Pending marketplace + Accept with Firestore realtime.
+
+**Delivered:** Category wizard (Shopping / Pickup / Bills / Custom), `requests` collection + rules/indexes, Snapshot Listeners, race-safe Accept, Firestore-backed Home, `:feature:request`.
+
+**Review criterion:** Create → Runner sees Pending live → Accept → Requester Home shows Accepted without refresh.
+
+**Deferred:** Tracking execution UI, maps/geo fee, chat/FCM, payments.
+
+## Phase 4 — Post-Accept Lifecycle + Chat (summary)
+
+**Goal:** Active Current Request/Job after Accept, status progression, Chat, confirm + rate.
+
+**Delivered:** Status machine + Purchased, Home Current pins + CTAs, Detail/cancel, `:feature:chat`, confirm + rating.
+
+**Deferred:** FCM (4b), maps/GPS, image chat, payments.
 
 ## How to use these docs
 

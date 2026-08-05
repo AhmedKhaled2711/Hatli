@@ -23,19 +23,30 @@ Main — Requester (bottom nav)
 ├── Requests      (Active · Completed · Cancelled)
 ├── Messages      (chat with Runner — Phase 2 empty)
 ├── Profile
-├── FAB (+)       Create Request (Phase 2 stub → Phase 3 wizard)
+├── FAB (+)       Create Request (Phase 3 assisted wizard)
 └── Bell + badge  Notifications affordance
 
 Main — Runner (bottom nav)
-├── Home          (Online/Offline · stats · Nearby top 3)
+├── Home          (Online/Offline · stats · Nearby Pending top 3)
 ├── Jobs          (Active · History)  ← not “Requests”
 ├── Messages
 └── Profile
 
-Deferred (Phase 3+)
-├── Create Request wizard · Waiting · Tracking · Rate
-├── Accept → Pickup → Delivered
-└── Real-time chat / FCM
+Create Request (Phase 3)
+├── Category: Shopping | Pickup | Bills | Custom
+├── Category-specific steps → Fee → Review → Submit (Pending)
+└── Runner Accept → live update
+
+Post-Accept (Phase 4)
+├── Current Request / Current Job (pinned on Home)
+├── Status: Accepted → InProgress → Purchased? → OnTheWay → Delivered → Completed
+├── Chat (Firestore messages under request)
+├── Request Detail + Cancel
+└── Confirm delivery + Rate Runner
+
+Deferred (Phase 4b+)
+├── FCM push
+└── Live GPS / map tracking
 ```
 
 **JTBD:** User opens Hatli to **create a Request** or **fulfill a Job** — not to browse restaurants.
@@ -254,51 +265,38 @@ Deferred (Phase 3+)
 
 ---
 
-### B2. New request — Details (Phase 3+)
+### B2. New request — Category & assisted wizard (Phase 3)
 
-**Purpose:** What needs moving. **Out of Phase 2** — FAB/Hero open a stub only.
+**Purpose:** Guided create — never a blank free-text first screen.
 
-**Fields** (future)
-- Title / short description*
-- Category chips (Parcel, Documents, Food/grocery pickup, Other) — optional metadata, not restaurant menu
-- Size/weight estimate chips (Small / Medium / Large)
-- Notes (optional)
-- Offer amount*
+**Flow**
+1. Large category cards: **Shopping · Pickup · Bills · Custom**
+2. Branch steps (see Phase 3 docs) → suggested delivery fee (default 35 EGP, editable) → Review
+3. Submit → `requests` doc `Pending` → back to Home
 
-**UX:** Categories as chips but labeled for parcels, not cuisines.
+**Out of Phase 3:** Map pin picker, place-specific categories (Butcher/Bakery), payments.
 
-**States:** Editing · Validation · Offline (block submit).
+**States:** Editing · Validation · Submitting · Offline error.
 
-### B3. New request — Locations
+### B3. New request — Locations (Pickup category / later maps)
 
-**Purpose:** Pickup & dropoff clarity (core of delivery UX).
+**Purpose:** Pickup & dropoff as **text addresses** in Phase 3 Pickup flow. Full map UX deferred.
 
-**Layout**
-- Two blocks: **Pickup** / **Dropoff**
-  - Address line + “Set on map” 
-  - Contact name/phone optional toggles
-- Map preview strip (full-bleed width, ~160dp) showing both pins when set
-- Bottom: **Continue**
+**Phase 3 fields:** Pickup address string · Dropoff address string · Item description.
 
-**UX**
-- Map is supporting context, not a floating card collage.
-- Address search uses M3 SearchBar + results list + confirm pin sheet.
-- RTL: pickup/dropoff icons mirrored carefully (arrow direction follows locale).
-
-**States:** Missing location errors · GPS loading · Permission denied (dialog → settings).
+**Deferred:** Set on map, GPS, dual pins.
 
 ---
 
 ### B4. New request — Review & confirm
 
-**Purpose:** Prevent costly mistakes before publish.
+**Purpose:** Prevent mistakes before publish.
 
 **Layout**
-- Summary sections: What · Route · Offer · Payment method
-- Edit pencils per section (48dp)
+- Summary: Category · What · Addresses · Budget · Delivery fee
 - Sticky **Confirm request**
 
-**Success (B5):** Full-page success — check icon (Success color), “Request posted”, primary **Track request**, text **Back to home**.
+**Success:** Pop to Home with Current Request = Pending (listener).
 
 ---
 
@@ -310,22 +308,11 @@ Kept for historical reference; Phase 2 uses **Requests** tab naming.
 
 ### B7. Request detail + tracking
 
-**Purpose:** Status transparency + actions.
+**Purpose:** Status transparency + actions (**execution UI Phase 4+**).
 
-**Layout**
-- TopAppBar + overflow (Cancel, Support)
-- Status chip + last updated
-- **Timeline** (Placed → Accepted → Picked up → Delivered)
-- Runner card when assigned (avatar, name, transport, call/chat actions)
-- Route summary
-- Map section
-- Sticky actions by state: Cancel | Contact runner | Confirm delivery | Rate
+**Phase 3:** Home cards + Accept only. Detail/timeline deferred.
 
-**UX**
-- Timeline from food kits is the right pattern — keep it; use semantic colors per step.
-- Call/chat only after accept (privacy).
-
-**States:** Loading · Content · Runner pending (empty runner card with waiting copy) · Error · Success snackbars on status change.
+**States:** Loading · Content · Runner pending · Error.
 
 ---
 
