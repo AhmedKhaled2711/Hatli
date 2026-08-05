@@ -1,18 +1,15 @@
 package com.app.hatli.feature.auth.presentation.onboarding
 
 /**
- * Drop Lottie JSON files under:
- *
- * `feature/auth/src/main/assets/lottie/onboarding/`
- *
- * File names must match [pathFor] below. Until files exist, onboarding shows the icon fallback.
+ * Optional Lottie paths per page (assets under `lottie/onboarding/`).
+ * Missing files fall back to Compose mock screens inside [components.PhoneMockup].
  */
 object OnboardingLottieAssets {
     private const val BASE = "lottie/onboarding"
 
-    fun pathFor(illustration: OnboardingIllustration): String = when (illustration) {
-        OnboardingIllustration.Roles -> "$BASE/onboarding_roles.json"
-        OnboardingIllustration.Track -> "$BASE/onboarding_track.json"
-        OnboardingIllustration.Pay -> "$BASE/onboarding_pay.json"
+    fun pathFor(page: OnboardingPageType): String = when (page) {
+        OnboardingPageType.OrderNearby -> "$BASE/onboarding_order.json"
+        OnboardingPageType.CreateRequest -> "$BASE/onboarding_create.json"
+        OnboardingPageType.NearbyRunners -> "$BASE/onboarding_runners.json"
     }
 }

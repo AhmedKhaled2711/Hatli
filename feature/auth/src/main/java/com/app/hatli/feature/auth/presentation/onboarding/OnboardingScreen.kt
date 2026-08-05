@@ -1,53 +1,35 @@
 package com.app.hatli.feature.auth.presentation.onboarding
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.LocalShipping
-import androidx.compose.material.icons.outlined.Payments
-import androidx.compose.material.icons.outlined.Route
-import androidx.compose.material.icons.outlined.SwapHoriz
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.hatli.core.designsystem.component.HatliLottieAnimation
-import com.app.hatli.core.designsystem.component.HatliPrimaryButton
-import com.app.hatli.core.designsystem.component.HatliTextButton
-import com.app.hatli.core.designsystem.theme.HatliColors
-import com.app.hatli.core.designsystem.theme.HatliRadius
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.ui.base.CollectUiEffect
+import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingBackground
+import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingBottomSheet
+import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingPage
+import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingTopBar
 import kotlinx.coroutines.flow.distinctUntilChanged
+
+/** Bottom sheet height — matches FlexBox-style reference (3.5/10). */
+private const val OnboardingSheetHeightFraction = 3.5f / 10f
 
 @Composable
 fun OnboardingRoute(
@@ -64,8 +46,8 @@ fun OnboardingRoute(
 }
 
 /**
- * FlexBox-inspired onboarding: Skip · illustration hero · title/body · dots · sticky CTA.
- * Brand colors follow Hatli forest/amber tokens (not the kit’s stock palette).
+ * FlexBox-style onboarding:
+ * header under status bar · phone hero · sheet overlays lower third of the phone.
  */
 @Composable
 fun OnboardingScreen(
@@ -91,191 +73,90 @@ fun OnboardingScreen(
             }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .statusBarsPadding()
-            .navigationBarsPadding()
-            .padding(horizontal = HatliSpacing.lg),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(HatliSpacing.xxl),
-            horizontalArrangement = Arrangement.End,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            if (!state.isLast) {
-                HatliTextButton(
-                    text = "Skip",
-                    onClick = { onEvent(OnboardingUiEvent.Skip) },
+    val currentPage = state.currentPage
+    val backgroundRes = when (pagerState.currentPage) {
+        0 -> OnboardingStrings.bgPage1
+        1 -> OnboardingStrings.bgPage2
+        else -> OnboardingStrings.bgPage3
+    }
+    val darkHeader = pagerState.currentPage == 1
+
+    OnboardingBackground(backgroundRes = backgroundRes) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                OnboardingTopBar(
+                    showSkip = !state.isLast,
+                    onSkip = { onEvent(OnboardingUiEvent.Skip) },
+                    darkHeader = darkHeader,
+                    modifier = Modifier.statusBarsPadding(),
                 )
+
+                // Phone fills remaining height (including area behind the sheet).
+                HorizontalPager(
+                    state = pagerState,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = HatliSpacing.md),
+                ) { page ->
+                    OnboardingPage(
+                        page = state.pages[page],
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
-        }
 
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-        ) { page ->
-            OnboardingPageContent(page = state.pages[page])
-        }
-
-        OnboardingPageIndicator(
-            pageCount = state.pages.size,
-            currentPage = state.pageIndex,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(vertical = HatliSpacing.lg),
-        )
-
-        HatliPrimaryButton(
-            text = if (state.isLast) "Get Started" else "Next",
-            onClick = {
-                if (state.isLast) onEvent(OnboardingUiEvent.GetStarted)
-                else onEvent(OnboardingUiEvent.Next)
-            },
-            modifier = Modifier.padding(bottom = HatliSpacing.lg),
-        )
-    }
-}
-
-@Composable
-private fun OnboardingPageContent(
-    page: OnboardingPage,
-) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center,
-        ) {
-            OnboardingHeroIllustration(illustration = page.illustration)
-        }
-
-        Text(
-            text = page.title,
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = HatliSpacing.sm),
-        )
-        Spacer(modifier = Modifier.height(HatliSpacing.sm))
-        Text(
-            text = page.body,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = HatliSpacing.md),
-        )
-        Spacer(modifier = Modifier.height(HatliSpacing.md))
-    }
-}
-
-@Composable
-private fun OnboardingHeroIllustration(
-    illustration: OnboardingIllustration,
-) {
-    HatliLottieAnimation(
-        assetPath = OnboardingLottieAssets.pathFor(illustration),
-        modifier = Modifier.size(280.dp),
-        fallback = { OnboardingIconHeroIllustration(illustration = illustration) },
-    )
-}
-
-@Composable
-private fun OnboardingIconHeroIllustration(
-    illustration: OnboardingIllustration,
-) {
-    val (primaryIcon, accentIcon) = when (illustration) {
-        OnboardingIllustration.Roles -> Icons.Outlined.SwapHoriz to Icons.Outlined.LocalShipping
-        OnboardingIllustration.Track -> Icons.Outlined.Route to Icons.Outlined.LocalShipping
-        OnboardingIllustration.Pay -> Icons.Outlined.Payments to Icons.Outlined.LocalShipping
-    }
-
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.size(280.dp),
-    ) {
-        Box(
-            modifier = Modifier
-                .size(260.dp)
-                .clip(CircleShape)
-                .background(HatliColors.Teal100.copy(alpha = 0.55f)),
-        )
-        Box(
-            modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape)
-                .background(HatliColors.Teal100),
-        )
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            IllustrationBadge(icon = primaryIcon, size = 88.dp)
-            Spacer(modifier = Modifier.height(HatliSpacing.md))
-            Row(horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-                IllustrationBadge(icon = accentIcon, size = 56.dp, secondary = true)
-            }
-        }
-    }
-}
-
-@Composable
-private fun IllustrationBadge(
-    icon: ImageVector,
-    size: Dp,
-    secondary: Boolean = false,
-) {
-    val container = if (secondary) HatliColors.Gray100 else MaterialTheme.colorScheme.primary
-    val tint = if (secondary) HatliColors.Gray700 else MaterialTheme.colorScheme.onPrimary
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(size)
-            .clip(RoundedCornerShape(HatliRadius.xl))
-            .background(container),
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = tint,
-            modifier = Modifier.size(size * 0.45f),
-        )
-    }
-}
-
-@Composable
-private fun OnboardingPageIndicator(
-    pageCount: Int,
-    currentPage: Int,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        repeat(pageCount) { index ->
-            val selected = index == currentPage
-            val width by animateDpAsState(
-                targetValue = if (selected) 24.dp else 8.dp,
-                label = "onboardingDotWidth",
-            )
-            Box(
+            // Sheet overlays the lower portion of the phone (reference layout).
+            OnboardingBottomSheet(
+                title = currentPage.titleText(),
+                description = currentPage.bodyText(),
+                pageKey = state.pageIndex,
+                pageCount = state.pages.size,
+                currentPage = state.pageIndex,
+                primaryLabel = onboardingPrimaryLabel(state.isLast),
+                onPrimaryClick = {
+                    if (state.isLast) onEvent(OnboardingUiEvent.GetStarted)
+                    else onEvent(OnboardingUiEvent.Next)
+                },
                 modifier = Modifier
-                    .height(8.dp)
-                    .width(width)
-                    .clip(RoundedCornerShape(percent = 50))
-                    .background(
-                        if (selected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.outlineVariant,
-                    ),
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .fillMaxHeight(OnboardingSheetHeightFraction),
             )
         }
+    }
+}
+
+@Preview(name = "1 · Order nearby · Light", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "1 · Order nearby · Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "1 · Order nearby · AR", showBackground = true, locale = "ar", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun OnboardingPage1Preview() {
+    OnboardingPreviewHost(pageIndex = 0)
+}
+
+@Preview(name = "2 · Create request · Light", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "2 · Create request · Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "2 · Create request · AR", showBackground = true, locale = "ar", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun OnboardingPage2Preview() {
+    OnboardingPreviewHost(pageIndex = 1)
+}
+
+@Preview(name = "3 · Nearby runners · Light", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(name = "3 · Nearby runners · Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "3 · Nearby runners · AR", showBackground = true, locale = "ar", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun OnboardingPage3Preview() {
+    OnboardingPreviewHost(pageIndex = 2)
+}
+
+@Composable
+private fun OnboardingPreviewHost(pageIndex: Int) {
+    HatliTheme {
+        OnboardingScreen(
+            state = OnboardingUiState(pageIndex = pageIndex),
+            onEvent = {},
+        )
     }
 }

@@ -68,27 +68,26 @@ Main — Runner
 
 **Purpose:** Explain Requester/Runner value before phone auth.
 
-**Pages (content)**
-1. **Request or deliver** — one marketplace, two roles  
-2. **Track every step** — live status you can trust  
-3. **Pay and get paid simply** — clear, fast settlement  
+**Pages (content)** — EN / AR via `feature/auth` strings  
+1. **Order anything nearby** / اطلب أي حاجة من منطقتك  
+2. **Create your request in seconds** / اطلب اللي أنت عايزه  
+3. **Nearby runners are ready** / أقرب Runner هيجيلك  
 
-**Layout** (FlexBox kit pattern, Hatli brand tokens)
-- Top end: **Skip** (`HatliTextButton`, 48dp) — hidden on last page  
-- Upper ~45%: illustration hero — soft forest circle wash + icon badges (vector, not photo collage)  
-- Title `headlineLarge` + body `bodyLarge` (Text Secondary), centered  
-- Page indicator: 3 dots — active pill (Primary) / inactive (outline)  
-- Bottom sticky: **Next** / **Get Started** (`HatliPrimaryButton`)  
+**Layout** (premium delivery-app pattern, Hatli mint/charcoal tokens)
+- **Background:** branded teal wash (`OnboardingBackground`) — swappable for a custom asset later  
+- **Top bar:** Hatli wordmark (start) · **Skip** / **لاحقًا** (end, hidden on last) — RTL-aware  
+- **Hero (~2/3):** centered `PhoneMockup` — page 1 shows a realistic request list + “Accepted by Ahmed” badge  
+- **Bottom sheet (~1/3):** animated title + body, pill indicator, **Next** / **Get Started** (التالي / ابدأ دلوقتي)  
 
 **UX**
-- Skip always available until last page — respect returning curiosity without trapping.  
-- One idea per page (reference kits often overload with 4 CTAs — we don’t).  
-- Android `HorizontalPager` + edge swipe; dots are indicators (not the only navigation).  
+- First screen teaches the product in under 3 seconds with a real request mock (not a generic delivery illustration).  
+- Skip until last page. One idea per page; swipe or Next.  
 
 **States:** Content only (local).  
 
-**Compose:** `HorizontalPager`; mark onboarding complete on Skip or Get Started.  
-**Reference:** [FlexBox Delivery tracking UI kit](https://www.figma.com/design/fHoNXiKXvhN4zbDE6ZL96p/flexbox-Delivery-tracking-app-ui-kit---Free-%F0%9F%98%89--Community-?node-id=101-2) onboarding structure.
+**Compose:** `OnboardingTopBar` · `PhoneMockup` · `OnboardingPage` · `OnboardingPhoneScreen` · `OnboardingBottomSheet` · `OnboardingIndicator`.  
+**i18n:** `values/strings.xml` + `values-ar/strings.xml`.  
+**Complete:** Skip or Get Started → mark onboarding done → Login.
 
 ---
 
