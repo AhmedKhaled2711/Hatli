@@ -43,6 +43,8 @@ dependencies {
     implementation(project(":feature:checkout"))
     implementation(project(":feature:orders"))
     implementation(project(":feature:profile"))
+    implementation(project(":feature:request"))
+    implementation(project(":feature:chat"))
 
     implementation(project(":core:common"))
     implementation(project(":core:model"))
