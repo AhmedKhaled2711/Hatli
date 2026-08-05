@@ -7,12 +7,23 @@ data class RequestSummary(
     val id: String,
     val title: String,
     val status: RequestStatus,
+    val category: RequestCategory? = null,
     val etaMinutes: Int? = null,
     val distanceMeters: Int? = null,
     val offerAmount: Double? = null,
     val runnerName: String? = null,
+    val requesterName: String? = null,
+    val unreadCount: Int = 0,
+    val lastMessage: String? = null,
+    val hasRating: Boolean = false,
     val updatedAtEpochMs: Long = 0L,
-)
+) {
+    val needsRating: Boolean
+        get() = status == RequestStatus.Completed && !hasRating
+
+    val canOpenChat: Boolean
+        get() = status != RequestStatus.Pending && status != RequestStatus.Cancelled
+}
 
 data class QuickAction(
     val id: String,
