@@ -12,6 +12,7 @@ import com.app.hatli.feature.auth.presentation.otp.OtpRoute
 import com.app.hatli.feature.auth.presentation.profile.CreateProfileRoute
 import com.app.hatli.feature.auth.presentation.role.RoleRoute
 import com.app.hatli.feature.auth.presentation.splash.SplashRoute
+import com.app.hatli.feature.auth.presentation.start.StartRoute
 
 fun NavGraphBuilder.authGraph(
     onNavigateHome: () -> Unit,
@@ -33,17 +34,35 @@ fun NavGraphBuilder.authGraph(
                 onHome = onNavigateHome,
             )
         }
+
         composable(Routes.ONBOARDING) {
-            OnboardingRoute(onFinished = onNavigateLogin)
+            OnboardingRoute(
+                onFinished = onNavigateLogin,
+            )
         }
+
+        composable(Routes.START) {
+            StartRoute(
+                onBack = onNavigateOnboarding,
+                onPhoneLogin = onNavigateLogin,
+            )
+        }
+
         composable(Routes.LOGIN) {
-            LoginRoute(onOtp = onNavigateOtp)
+            LoginRoute(
+                onOtp = onNavigateOtp,
+            )
         }
+
         composable(
             route = Routes.OTP,
             arguments = listOf(
-                navArgument("verificationId") { type = NavType.StringType },
-                navArgument("phone") { type = NavType.StringType },
+                navArgument("verificationId") {
+                    type = NavType.StringType
+                },
+                navArgument("phone") {
+                    type = NavType.StringType
+                },
             ),
         ) {
             OtpRoute(
@@ -52,11 +71,17 @@ fun NavGraphBuilder.authGraph(
                 onHome = onNavigateHome,
             )
         }
+
         composable(Routes.ROLE_SELECT) {
-            RoleRoute(onCreateProfile = onNavigateCreateProfile)
+            RoleRoute(
+                onCreateProfile = onNavigateCreateProfile,
+            )
         }
+
         composable(Routes.CREATE_PROFILE) {
-            CreateProfileRoute(onHome = onNavigateHome)
+            CreateProfileRoute(
+                onHome = onNavigateHome,
+            )
         }
     }
 }

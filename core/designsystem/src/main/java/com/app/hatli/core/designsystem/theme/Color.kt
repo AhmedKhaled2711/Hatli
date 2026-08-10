@@ -45,6 +45,7 @@ object HatliColors {
     /** Scaffold dark background / onPrimary — `#1E1E1E`. */
     val Gray800 = Color(0xFF1E1E1E)
     val Gray900 = Color(0xFF121212)
+    val DeepTeal = Color(0xFF1A443B)
 
     // --- Semantic: product palette ---
 
@@ -54,7 +55,7 @@ object HatliColors {
      * Text/icons on primary fills.
      * Dark charcoal (not white) — bright teal fails contrast with white.
      */
-    val OnPrimary = Gray800
+    val OnPrimary = DeepTeal
     /** Secondary chrome / dark CTAs / emphasis surfaces. */
     val Secondary = Gray700
     val OnSecondary = White

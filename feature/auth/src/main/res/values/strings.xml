@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Onboarding -->
+
     <string name="onboarding_brand">Hatli</string>
 
     <string name="onboarding_skip">Skip</string>
@@ -23,4 +26,18 @@
 
     <string name="onboarding_mock_page2_hint">New request</string>
     <string name="onboarding_mock_page3_hint">Runner nearby</string>
+
+    <!-- Authentication -->
+
+    <string name="auth_lets_get_started">Let\'s start</string>
+    <string name="auth_sign_in_to_continue">Sign in to continue with Hatli</string>
+    <string name="auth_continue_with_facebook">Continue with Facebook</string>
+    <string name="auth_continue_with_google">Continue with Google</string>
+    <string name="auth_or">or</string>
+    <string name="auth_sign_in_with_phone">Sign in with phone number</string>
+    <string name="auth_dont_have_account">Don\'t have an account?</string>
+    <string name="auth_sign_up">Sign up</string>
+    <string name="auth_back">Back</string>
+    <string name="auth_coming_soon">Coming soon</string>
+
 </resources>

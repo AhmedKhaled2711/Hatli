@@ -9,6 +9,7 @@ interface Destination {
 
 object Routes {
     const val SPLASH = "splash"
+    const val START = "start"
     const val ONBOARDING = "onboarding"
     const val LOGIN = "login"
     const val OTP = "otp/{verificationId}/{phone}"

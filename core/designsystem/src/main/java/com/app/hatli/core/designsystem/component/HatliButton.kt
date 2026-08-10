@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.HatliTheme
+import androidx.compose.foundation.layout.padding
 
 @Composable
 fun HatliPrimaryButton(
@@ -89,5 +90,49 @@ fun HatliTextButton(
         ),
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
+    }
+}
+
+@Composable
+fun HatliSocialButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    icon: @Composable () -> Unit,
+    ) {
+    val extended = HatliTheme.extendedColors
+
+    OutlinedButton(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier
+            .fillMaxWidth()
+            .heightIn(min = 48.dp),
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(
+            width = 1.dp,
+            color = if (enabled) {
+                MaterialTheme.colorScheme.outline
+            } else {
+                extended.disabled
+            },
+        ),
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            disabledContentColor = extended.disabled,
+        ),
+        contentPadding = PaddingValues(
+            horizontal = HatliSpacing.md,
+            vertical = HatliSpacing.sm,
+        ),
+    ) {
+        icon()
+
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.padding(start = HatliSpacing.sm),
+        )
     }
 }
