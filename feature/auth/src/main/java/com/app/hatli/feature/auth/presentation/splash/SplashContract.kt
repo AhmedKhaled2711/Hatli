@@ -14,6 +14,7 @@ sealed interface SplashUiEvent : UiEvent {
 
 sealed interface SplashUiEffect : UiEffect {
     data object GoOnboarding : SplashUiEffect
+    data object GoStart : SplashUiEffect
     data object GoLogin : SplashUiEffect
     data object GoCreateProfile : SplashUiEffect
     data object GoHome : SplashUiEffect

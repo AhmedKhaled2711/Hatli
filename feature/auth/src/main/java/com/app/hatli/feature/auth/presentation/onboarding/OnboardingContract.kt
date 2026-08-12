@@ -30,5 +30,5 @@ sealed interface OnboardingUiEvent : UiEvent {
 }
 
 sealed interface OnboardingUiEffect : UiEffect {
-    data object GoLogin : OnboardingUiEffect
+    data object GoStart : OnboardingUiEffect
 }

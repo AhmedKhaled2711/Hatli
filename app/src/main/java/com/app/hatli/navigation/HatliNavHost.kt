@@ -40,27 +40,53 @@ fun HatliNavHost(
         modifier = modifier,
     ) {
         authGraph(
-            onNavigateHome = { goHomeClearingStack() },
-            onNavigateLogin = {
-                navController.navigate(Routes.LOGIN) {
-                    popUpTo(Routes.SPLASH) { inclusive = true }
-                    launchSingleTop = true
-                }
+            onNavigateHome = {
+                goHomeClearingStack()
             },
+
             onNavigateOnboarding = {
                 navController.navigate(Routes.ONBOARDING) {
-                    popUpTo(Routes.SPLASH) { inclusive = true }
+                    popUpTo(Routes.SPLASH) {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 }
             },
+
+            onNavigateStart = {
+                navController.navigate(Routes.START) {
+                    popUpTo(Routes.SPLASH) {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
+                }
+            },
+
+            onNavigateLogin = {
+                navController.navigate(Routes.LOGIN) {
+                    launchSingleTop = true
+                }
+            },
+
             onNavigateRole = {
-                navController.navigate(Routes.ROLE_SELECT) { launchSingleTop = true }
+                navController.navigate(Routes.ROLE_SELECT) {
+                    launchSingleTop = true
+                }
             },
+
             onNavigateCreateProfile = {
-                navController.navigate(Routes.CREATE_PROFILE) { launchSingleTop = true }
+                navController.navigate(Routes.CREATE_PROFILE) {
+                    launchSingleTop = true
+                }
             },
+
             onNavigateOtp = { verificationId, phone ->
-                navController.navigate(Routes.otp(verificationId, phone)) {
+                navController.navigate(
+                    Routes.otp(
+                        verificationId = verificationId,
+                        phone = phone,
+                    ),
+                ) {
                     launchSingleTop = true
                 }
             },

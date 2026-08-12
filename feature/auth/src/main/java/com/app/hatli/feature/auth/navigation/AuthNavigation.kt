@@ -18,6 +18,7 @@ fun NavGraphBuilder.authGraph(
     onNavigateHome: () -> Unit,
     onNavigateLogin: () -> Unit,
     onNavigateOnboarding: () -> Unit,
+    onNavigateStart: () -> Unit,
     onNavigateRole: () -> Unit,
     onNavigateCreateProfile: () -> Unit,
     onNavigateOtp: (verificationId: String, phone: String) -> Unit,
@@ -29,6 +30,7 @@ fun NavGraphBuilder.authGraph(
         composable(Routes.SPLASH) {
             SplashRoute(
                 onOnboarding = onNavigateOnboarding,
+                onStart = onNavigateStart,
                 onLogin = onNavigateLogin,
                 onCreateProfile = onNavigateCreateProfile,
                 onHome = onNavigateHome,
@@ -37,7 +39,7 @@ fun NavGraphBuilder.authGraph(
 
         composable(Routes.ONBOARDING) {
             OnboardingRoute(
-                onFinished = onNavigateLogin,
+                onStart = onNavigateStart,
             )
         }
 

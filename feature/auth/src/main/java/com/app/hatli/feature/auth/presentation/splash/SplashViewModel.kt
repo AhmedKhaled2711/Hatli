@@ -36,10 +36,16 @@ class SplashViewModel @Inject constructor(
                 when (destination) {
                     ResolveStartDestinationUseCase.StartDestination.Onboarding ->
                         SplashUiEffect.GoOnboarding
+
+                    ResolveStartDestinationUseCase.StartDestination.Start ->
+                        SplashUiEffect.GoStart
+
                     ResolveStartDestinationUseCase.StartDestination.Login ->
                         SplashUiEffect.GoLogin
+
                     ResolveStartDestinationUseCase.StartDestination.CreateProfile ->
                         SplashUiEffect.GoCreateProfile
+
                     ResolveStartDestinationUseCase.StartDestination.Home ->
                         SplashUiEffect.GoHome
                 },
