@@ -52,6 +52,7 @@ fun NavGraphBuilder.authGraph(
 
         composable(Routes.LOGIN) {
             LoginRoute(
+                onBack = onNavigateStart,
                 onOtp = onNavigateOtp,
             )
         }

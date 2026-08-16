@@ -84,7 +84,6 @@ fun StartScreen(
         modifier = modifier
             .fillMaxSize()
             .navigationBarsPadding()
-            .padding(horizontal = HatliSpacing.lg),
     ) {
         Spacer(
             modifier = Modifier.height(HatliSpacing.sm),
@@ -100,8 +99,9 @@ fun StartScreen(
         )
 
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+                               .padding(horizontal = HatliSpacing.lg),
+        horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(R.string.auth_lets_get_started),
@@ -156,7 +156,7 @@ fun StartScreen(
             )
 
             HatliPrimaryButton(
-                text = stringResource(R.string.auth_sign_in_with_phone),
+                text = stringResource(R.string.auth_continue_with_phone),
                 onClick = onPhoneClick,
             )
 

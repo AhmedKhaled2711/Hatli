@@ -33,10 +33,37 @@
     <string name="auth_continue_with_facebook">كمّل باستخدام Facebook</string>
     <string name="auth_continue_with_google">كمّل باستخدام Google</string>
     <string name="auth_or">أو</string>
-    <string name="auth_sign_in_with_phone">سجّل دخول برقم الموبايل</string>
+    <string name="auth_continue_with_phone">المتابعة باستخدام رقم الهاتف</string>
     <string name="auth_dont_have_account">معندكش حساب؟</string>
     <string name="auth_sign_up">إنشاء حساب</string>
     <string name="auth_back">رجوع</string>
     <string name="auth_coming_soon">قريبًا</string>
+
+    <!-- Authentication - Phone -->
+
+    <string name="auth_phone_title">تابع باستخدام رقم هاتفك</string>
+    <string name="auth_phone_description">
+        سنرسل لك رمز تحقق للمتابعة.
+    </string>
+    <string name="auth_phone_number">رقم الهاتف</string>
+    <string name="auth_continue">متابعة</string>
+    <string name="auth_sending">جارٍ الإرسال…</string>
+
+    <!-- Authentication - OTP -->
+
+    <string name="auth_otp_title">تحقق من رقم هاتفك</string>
+    <string name="auth_otp_description">
+        أدخل رمز التحقق المكون من 6 أرقام الذي أُرسل إلى %1$s.
+    </string>
+    <string name="auth_verify">تحقق</string>
+    <string name="auth_verifying">جارٍ التحقق…</string>
+    <string name="auth_resend_code">إعادة إرسال الرمز</string>
+    <string name="auth_resend_code_in">
+        إعادة إرسال الرمز خلال %1$s
+    </string>
+    <string name="auth_invalid_otp">
+        رمز التحقق غير صحيح. حاول مرة أخرى.
+    </string>
+    <string name="auth_mobile_verification">التحقق من رقم الهاتف</string>
 
 </resources>

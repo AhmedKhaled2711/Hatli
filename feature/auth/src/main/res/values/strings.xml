@@ -34,10 +34,34 @@
     <string name="auth_continue_with_facebook">Continue with Facebook</string>
     <string name="auth_continue_with_google">Continue with Google</string>
     <string name="auth_or">or</string>
-    <string name="auth_sign_in_with_phone">Sign in with phone number</string>
+    <string name="auth_continue_with_phone">Continue with phone number</string>
     <string name="auth_dont_have_account">Don\'t have an account?</string>
     <string name="auth_sign_up">Sign up</string>
     <string name="auth_back">Back</string>
     <string name="auth_coming_soon">Coming soon</string>
+
+    <!-- Authentication - Phone -->
+
+    <string name="auth_phone_title">Continue with your phone number</string>
+    <string name="auth_phone_description">
+        We will send you a verification code to continue.
+    </string>
+    <string name="auth_phone_number">Phone number</string>
+    <string name="auth_continue">Continue</string>
+    <string name="auth_sending">Sending…</string>
+
+    <!-- Authentication - OTP -->
+    <string name="auth_otp_title">Verify your phone number</string>
+    <string name="auth_otp_description">
+        Enter the 6-digit code sent to %1$s.
+    </string>
+    <string name="auth_verify">Verify</string>
+    <string name="auth_verifying">Verifying…</string>
+    <string name="auth_resend_code">Resend code</string>
+    <string name="auth_resend_code_in">Resend code in %1$s</string>
+    <string name="auth_invalid_otp">
+        Incorrect verification code. Please try again.
+    </string>
+    <string name="auth_mobile_verification">Mobile verification</string>
 
 </resources>
