@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ============================== -->
     <!-- Onboarding -->
+    <!-- ============================== -->
 
     <string name="onboarding_brand">هاتلي</string>
-
     <string name="onboarding_skip">لاحقًا</string>
     <string name="onboarding_next">التالي</string>
     <string name="onboarding_get_started">ابدأ دلوقتي</string>
-
     <string name="onboarding_page1_title">اطلب أي حاجة من منطقتك</string>
     <string name="onboarding_page1_body">عايز حاجة من السوبر ماركت؟ من الجزار؟ من الفرن؟ أو حتى من أي محل قريب؟ اكتب طلبك وسيب هاتلي يوصلهولك.</string>
-
     <string name="onboarding_page2_title">اطلب اللي أنت عايزه</string>
     <string name="onboarding_page2_body">اكتب طلباتك براحتك، وحدد المكان لو حابب، وسيب باقي المشوار علينا.</string>
-
     <string name="onboarding_page3_title">أقرب Runner هيجيلك</string>
     <string name="onboarding_page3_body">أول ما تنزل طلبك، الـ Runner القريب منك يقدر يقبله ويجيب لك اللي محتاجه بسرعة.</string>
-
     <string name="onboarding_mock_request_title">طلبك</string>
     <string name="onboarding_mock_item_meat">🥩 2 كيلو لحمة</string>
     <string name="onboarding_mock_item_pepsi">🥤 2 كانز بيبسي</string>
     <string name="onboarding_mock_item_bread">🍞 5 أرغفة عيش</string>
     <string name="onboarding_mock_accepted_by">تم قبول الطلب بواسطة أحمد 🚴</string>
-
     <string name="onboarding_mock_page2_hint">طلب جديد</string>
     <string name="onboarding_mock_page3_hint">Runner قريب</string>
 
-    <!-- Authentication -->
+
+    <!-- ============================== -->
+    <!-- Auth - Start -->
+    <!-- ============================== -->
+
     <string name="auth_lets_get_started">يلا نبدأ</string>
     <string name="auth_sign_in_to_continue">سجّل دخولك وكمل مع هاتلي</string>
     <string name="auth_continue_with_facebook">كمّل باستخدام Facebook</string>
@@ -39,7 +39,9 @@
     <string name="auth_back">رجوع</string>
     <string name="auth_coming_soon">قريبًا</string>
 
-    <!-- Authentication - Phone -->
+    <!-- ============================== -->
+    <!-- Auth - Login -->
+    <!-- ============================== -->
 
     <string name="auth_phone_title">تابع باستخدام رقم هاتفك</string>
     <string name="auth_phone_description">
@@ -49,12 +51,15 @@
     <string name="auth_continue">متابعة</string>
     <string name="auth_sending">جارٍ الإرسال…</string>
 
-    <!-- Authentication - OTP -->
+    <!-- ============================== -->
+    <!-- Auth - OTP -->
+    <!-- ============================== -->
 
     <string name="auth_otp_title">تحقق من رقم هاتفك</string>
     <string name="auth_otp_description">
         أدخل رمز التحقق المكون من 6 أرقام الذي أُرسل إلى %1$s.
     </string>
+    <string name="auth_otp_code">رمز التحقق المكون من 6 أرقام</string>
     <string name="auth_verify">تحقق</string>
     <string name="auth_verifying">جارٍ التحقق…</string>
     <string name="auth_resend_code">إعادة إرسال الرمز</string>

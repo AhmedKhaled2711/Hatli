@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================== -->
+    <!-- Home - Header -->
+    <!-- ============================== -->
+
+    <string name="home_good_morning">Good morning 👋</string>
+    <string name="home_notifications">Notifications</string>
+
+    <!-- Temporary until profile image upload is implemented -->
+    <string name="home_default_profile_image">Profile</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Navigation -->
+    <!-- ============================== -->
+
+    <string name="home_tab_home">Home</string>
+    <string name="home_tab_requests">Requests</string>
+    <string name="home_tab_jobs">Jobs</string>
+    <string name="home_tab_messages">Messages</string>
+    <string name="home_tab_profile">Profile</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Requester -->
+    <!-- ============================== -->
+
+    <string name="home_requester_hero_title">Need something nearby?</string>
+    <string name="home_requester_hero_cta">+ Order now</string>
+
+    <string name="home_recent_requests">Recent requests</string>
+    <string name="home_quick_actions">Quick actions</string>
+    <string name="home_tip">Tip</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Runner -->
+    <!-- ============================== -->
+
+    <string name="home_runner_no_active_job">No active job</string>
+
+    <string name="home_runner_no_active_job_description">
+        When you accept a request, it pins here with status actions and chat.
+    </string>
+
+    <string name="home_runner_go_online">
+        Go online to browse nearby requests.
+    </string>
+
+    <string name="home_runner_no_nearby_requests">
+        No nearby requests right now — stay online.
+    </string>
+
+    <string name="home_runner_nearby_requests">Nearby requests</string>
+    <string name="home_runner_view_all_jobs">View all jobs</string>
+    <string name="home_runner_accept">Accept</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Requests -->
+    <!-- ============================== -->
+
+    <string name="home_requests_empty">No requests here</string>
+    <string name="home_requests_create">Create request</string>
+    <string name="home_requests_chat">Chat</string>
+    <string name="home_requests_rate">Rate</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Jobs -->
+    <!-- ============================== -->
+
+    <string name="home_jobs_empty">
+    No jobs yet — accept a nearby request or go online
+    </string>
+
+    <string name="home_jobs_chat">Chat</string>
+
+    <!-- Job Filters -->
+    <string name="home_jobs_filter_all">All</string>
+    <string name="home_jobs_filter_pending">Pending</string>
+    <string name="home_jobs_filter_accepted">Accepted</string>
+    <string name="home_jobs_filter_picked_up">Picked up</string>
+    <string name="home_jobs_filter_delivered">Delivered</string>
+    <string name="home_jobs_filter_cancelled">Cancelled</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Messages -->
+    <!-- ============================== -->
+
+    <string name="home_messages_empty_title">No conversations yet</string>
+
+    <string name="home_messages_empty_description">
+        After a request is accepted, open chat here or from your current request or active job.
+    </string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Quick Actions -->
+    <!-- ============================== -->
+
+    <string name="home_quick_action_new_request">New request</string>
+    <string name="home_quick_action_my_requests">My requests</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Jobs -->
+    <!-- ============================== -->
+
+    <string name="home_jobs_filter_active">Active</string>
+    <string name="home_jobs_filter_history">History</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Request Filters -->
+    <!-- ============================== -->
+
+    <string name="home_requests_filter_active">Active</string>
+    <string name="home_requests_filter_completed">Completed</string>
+    <string name="home_requests_filter_cancelled">Cancelled</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Runner Status Actions -->
+    <!-- ============================== -->
+
+    <string name="home_runner_start_work">Start work</string>
+    <string name="home_runner_mark_purchased">Mark purchased</string>
+    <string name="home_runner_on_the_way">On the way</string>
+    <string name="home_runner_mark_delivered">Mark delivered</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Accessibility -->
+    <!-- ============================== -->
+
+    <string name="home_create_request">Create request</string>
+
+    <!-- ============================== -->
+    <!-- Home - Requester Content -->
+    <!-- ============================== -->
+
+    <string name="home_requester_completed_requests">
+    Completed requests
+    </string>
+
+    <string name="home_requester_total_requests">
+    Total requests
+    </string>
+
+    <string name="home_requester_current_request">
+    Current request
+    </string>
+
+    <string name="home_requester_view_all">
+    View all
+    </string>
+
+    <string name="home_requester_quick_actions">
+    Quick actions
+    </string>
+
+    <string name="home_requester_services">
+    Services
+    </string>
+
+    <!-- ============================== -->
+    <!-- Home - Runner - Current Job -->
+    <!-- ============================== -->
+
+    <string name="home_runner_current_job">Active Job</string>
+
+    <string name="home_runner_request_for">
+    For %1$s
+    </string>
+
+    <string name="home_runner_new_messages">
+    %1$d new messages
+    </string>
+
+    <string name="home_runner_chat">
+    Chat
+    </string>
+
+    <string name="home_runner_details">
+    Details
+    </string>
+
+    <string name="home_runner_waiting_confirmation">
+    Waiting for requester to confirm
+    </string>
+
+    <string name="home_runner_for_requester">For %1$s</string>
+
+
+
+
+</resources>

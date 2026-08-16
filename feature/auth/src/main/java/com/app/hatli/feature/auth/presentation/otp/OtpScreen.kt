@@ -1,10 +1,7 @@
 package com.app.hatli.feature.auth.presentation.otp
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,17 +12,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.HatliTextButton
 import com.app.hatli.core.designsystem.component.HatliTextField
+import com.app.hatli.core.designsystem.component.auth.HatliAuthScreen
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.ui.base.CollectUiEffect
+import com.app.hatli.feature.auth.R
 
 @Composable
 fun OtpRoute(
+    onBack: () -> Unit,
     onRoleSelect: () -> Unit,
     onCreateProfile: () -> Unit,
     onHome: () -> Unit,
@@ -39,54 +40,111 @@ fun OtpRoute(
             OtpUiEffect.GoHome -> onHome()
         }
     }
-    OtpScreen(state = state, onEvent = viewModel::onEvent)
+    OtpScreen(
+        state = state,
+        onBack = onBack,
+        onEvent = viewModel::onEvent
+    )
 }
 
 @Composable
 fun OtpScreen(
     state: OtpUiState,
+    onBack: () -> Unit,
     onEvent: (OtpUiEvent) -> Unit,
 ) {
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(Unit) { focusRequester.requestFocus() }
-    val typography = MaterialTheme.typography
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding()
-            .padding(HatliSpacing.lg),
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    HatliAuthScreen(
+        title = stringResource(R.string.auth_mobile_verification),
+        onBack = onBack,
     ) {
-        Text("Verify OTP", style = typography.headlineLarge)
+        Spacer(
+            modifier = Modifier.height(HatliSpacing.xl),
+        )
+
         Text(
-            text = "Code sent to ${state.phone}",
-            style = typography.bodyMedium,
+            text = stringResource(R.string.auth_otp_title),
+            style = MaterialTheme.typography.headlineLarge,
+        )
+
+        Spacer(
+            modifier = Modifier.height(HatliSpacing.sm),
+        )
+
+        Text(
+            text = stringResource(
+                R.string.auth_otp_description,
+                state.phone,
+            ),
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        Spacer(
+            modifier = Modifier.height(HatliSpacing.lg),
+        )
+
         HatliTextField(
             value = state.code,
-            onValueChange = { onEvent(OtpUiEvent.CodeChanged(it)) },
-            label = "6-digit code",
+            onValueChange = {
+                onEvent(OtpUiEvent.CodeChanged(it))
+            },
+            label = stringResource(R.string.auth_otp_code),
             modifier = Modifier.focusRequester(focusRequester),
             isError = state.errorMessage != null,
             supportingText = state.errorMessage,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.NumberPassword,
+            ),
         )
+
+        Spacer(
+            modifier = Modifier.height(HatliSpacing.lg),
+        )
+
         Text(
-            text = if (state.canResend) "You can resend now"
-            else "Resend in ${state.secondsLeft}s",
-            style = typography.bodySmall,
+            text = if (state.canResend) {
+                stringResource(R.string.auth_resend_code)
+            } else {
+                stringResource(
+                    R.string.auth_resend_code_in,
+                    state.secondsLeft,
+                )
+            },
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+
+        Spacer(
+            modifier = Modifier.height(HatliSpacing.md),
+        )
+
         HatliPrimaryButton(
-            text = if (state.isLoading) "Verifying…" else "Verify",
-            onClick = { onEvent(OtpUiEvent.Verify) },
+            text = if (state.isLoading) {
+                stringResource(R.string.auth_verifying)
+            } else {
+                stringResource(R.string.auth_verify)
+            },
+            onClick = {
+                onEvent(OtpUiEvent.Verify)
+            },
             enabled = !state.isLoading && state.code.length == 6,
         )
+
+        Spacer(
+            modifier = Modifier.height(HatliSpacing.sm),
+        )
+
         HatliTextButton(
-            text = "Resend code",
-            onClick = { onEvent(OtpUiEvent.Resend) },
+            text = stringResource(R.string.auth_resend_code),
+            onClick = {
+                onEvent(OtpUiEvent.Resend)
+            },
             enabled = state.canResend && !state.isLoading,
         )
     }

@@ -69,6 +69,7 @@ fun NavGraphBuilder.authGraph(
             ),
         ) {
             OtpRoute(
+                onBack = onNavigateLogin,
                 onRoleSelect = onNavigateRole,
                 onCreateProfile = onNavigateCreateProfile,
                 onHome = onNavigateHome,

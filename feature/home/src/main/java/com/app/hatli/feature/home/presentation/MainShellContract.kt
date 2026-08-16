@@ -28,6 +28,13 @@ enum class JobListFilter {
     History,
 }
 
+enum class RunnerNextAction {
+    StartWork,
+    MarkPurchased,
+    OnTheWay,
+    MarkDelivered,
+}
+
 data class MainShellUiState(
     val isLoadingProfile: Boolean = true,
     val role: UserRole? = null,
@@ -131,13 +138,13 @@ fun RequestSummary.runnerNextStatus(): RequestStatus? {
     }
 }
 
-fun RequestSummary.runnerNextCtaLabel(): String? {
-    val next = runnerNextStatus() ?: return null
-    return when (next) {
-        RequestStatus.InProgress -> "Start work"
-        RequestStatus.Purchased -> "Mark purchased"
-        RequestStatus.OnTheWay -> if (status == RequestStatus.InProgress) "On the way" else "On the way"
-        RequestStatus.Delivered -> "Mark delivered"
+fun RequestSummary.runnerNextAction(): RunnerNextAction? {
+    return when (runnerNextStatus()) {
+        RequestStatus.InProgress -> RunnerNextAction.StartWork
+        RequestStatus.Purchased -> RunnerNextAction.MarkPurchased
+        RequestStatus.OnTheWay -> RunnerNextAction.OnTheWay
+        RequestStatus.Delivered -> RunnerNextAction.MarkDelivered
+        null -> null
         else -> null
     }
 }

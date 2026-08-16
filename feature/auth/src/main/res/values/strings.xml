@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ============================== -->
     <!-- Onboarding -->
+    <!-- ============================== -->
 
     <string name="onboarding_brand">Hatli</string>
-
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_next">Next</string>
     <string name="onboarding_get_started">Get Started</string>
-
     <string name="onboarding_page1_title">Order anything nearby</string>
     <string name="onboarding_page1_body">Need something from a supermarket, bakery, butcher, or any local shop? Create a request and let Hatli deliver it to you.</string>
-
     <string name="onboarding_page2_title">Create your request in seconds</string>
     <string name="onboarding_page2_body">Describe what you need, choose your location, and we\'ll take care of the rest.</string>
-
     <string name="onboarding_page3_title">Nearby runners are ready</string>
     <string name="onboarding_page3_body">Once your request is posted, nearby runners can accept it and deliver what you need quickly.</string>
-
     <string name="onboarding_mock_request_title">Your request</string>
     <string name="onboarding_mock_item_meat">🥩 2 kg of meat</string>
     <string name="onboarding_mock_item_pepsi">🥤 2 cans of Pepsi</string>
     <string name="onboarding_mock_item_bread">🍞 5 loaves of bread</string>
     <string name="onboarding_mock_accepted_by">Accepted by Ahmed 🚴</string>
-
     <string name="onboarding_mock_page2_hint">New request</string>
     <string name="onboarding_mock_page3_hint">Runner nearby</string>
 
-    <!-- Authentication -->
+    <!-- ============================== -->
+    <!-- Auth - Start -->
+    <!-- ============================== -->
 
     <string name="auth_lets_get_started">Let\'s start</string>
     <string name="auth_sign_in_to_continue">Sign in to continue with Hatli</string>
@@ -40,7 +38,9 @@
     <string name="auth_back">Back</string>
     <string name="auth_coming_soon">Coming soon</string>
 
-    <!-- Authentication - Phone -->
+    <!-- ============================== -->
+    <!-- Auth - Login -->
+    <!-- ============================== -->
 
     <string name="auth_phone_title">Continue with your phone number</string>
     <string name="auth_phone_description">
@@ -50,11 +50,15 @@
     <string name="auth_continue">Continue</string>
     <string name="auth_sending">Sending…</string>
 
-    <!-- Authentication - OTP -->
+    <!-- ============================== -->
+    <!-- Auth - OTP -->
+    <!-- ============================== -->
+
     <string name="auth_otp_title">Verify your phone number</string>
     <string name="auth_otp_description">
         Enter the 6-digit code sent to %1$s.
     </string>
+    <string name="auth_otp_code">6-digit code</string>
     <string name="auth_verify">Verify</string>
     <string name="auth_verifying">Verifying…</string>
     <string name="auth_resend_code">Resend code</string>

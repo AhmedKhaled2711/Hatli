@@ -30,6 +30,9 @@ import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.core.model.requesterLabelAr
 import com.app.hatli.core.model.shortLabelEn
+import androidx.compose.ui.res.stringResource
+import com.app.hatli.feature.home.R
+import com.app.hatli.feature.home.presentation.RunnerNextAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -183,72 +186,114 @@ fun CurrentRequestCard(
 @Composable
 fun CurrentJobCard(
     summary: RequestSummary,
-    nextCta: String?,
+    nextAction: RunnerNextAction?,
     onNextStatus: (() -> Unit)?,
     onChat: () -> Unit,
     onDetails: () -> Unit,
     isAr: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val nextCta = when (nextAction) {
+        RunnerNextAction.StartWork ->
+            stringResource(R.string.home_runner_start_work)
+
+        RunnerNextAction.MarkPurchased ->
+            stringResource(R.string.home_runner_mark_purchased)
+
+        RunnerNextAction.OnTheWay ->
+            stringResource(R.string.home_runner_on_the_way)
+
+        RunnerNextAction.MarkDelivered ->
+            stringResource(R.string.home_runner_mark_delivered)
+
+        null -> null
+    }
+
     HatliCard(
         modifier = modifier.fillMaxWidth(),
         onClick = onDetails,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(
+                HatliSpacing.sm,
+            ),
+        ) {
             Text(
-                text = if (isAr) "وظيفتك الحالية" else "Active Job",
+                text = stringResource(
+                    R.string.home_runner_current_job,
+                ),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
             )
+
             Text(
-                text = summary.requesterName?.let {
-                    if (isAr) "طلب $it" else "For $it"
+                text = summary.requesterName?.let { requesterName ->
+                    stringResource(
+                        R.string.home_runner_for_requester,
+                        requesterName,
+                    )
                 } ?: summary.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
-            Text(summary.title, style = MaterialTheme.typography.bodyLarge)
+
+            Text(
+                text = summary.title,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+
             RequestStatusStepper(
                 status = summary.status,
                 category = summary.category,
                 isAr = isAr,
             )
+
             if (summary.unreadCount > 0) {
                 Text(
-                    text = if (isAr) {
-                        "${summary.unreadCount} رسائل جديدة"
-                    } else {
-                        "${summary.unreadCount} new messages"
-                    },
+                    text = stringResource(
+                        R.string.home_runner_new_messages,
+                        summary.unreadCount,
+                    ),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
+                horizontalArrangement = Arrangement.spacedBy(
+                    HatliSpacing.sm,
+                ),
             ) {
                 HatliSecondaryButton(
-                    text = if (isAr) "محادثة" else "Chat",
+                    text = stringResource(
+                        R.string.home_runner_chat,
+                    ),
                     onClick = onChat,
                     modifier = Modifier.weight(1f),
                 )
+
                 HatliSecondaryButton(
-                    text = if (isAr) "التفاصيل" else "Details",
+                    text = stringResource(
+                        R.string.home_runner_details,
+                    ),
                     onClick = onDetails,
                     modifier = Modifier.weight(1f),
                 )
             }
+
             if (nextCta != null && onNextStatus != null) {
-                HatliPrimaryButton(text = nextCta, onClick = onNextStatus)
+                HatliPrimaryButton(
+                    text = nextCta,
+                    onClick = onNextStatus,
+                )
             }
+
             if (summary.status == RequestStatus.Delivered) {
                 Text(
-                    text = if (isAr) {
-                        "في انتظار تأكيد صاحب الطلب"
-                    } else {
-                        "Waiting for requester to confirm"
-                    },
+                    text = stringResource(
+                        R.string.home_runner_waiting_confirmation,
+                    ),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
