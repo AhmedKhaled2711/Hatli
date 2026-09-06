@@ -20,11 +20,8 @@ import com.app.hatli.core.model.RequesterHomeSnapshot
 import com.app.hatli.feature.home.R
 import com.app.hatli.feature.home.presentation.components.CurrentRequestCard
 import com.app.hatli.feature.home.presentation.components.HeroCreateCard
-import com.app.hatli.feature.home.presentation.components.HomeHeader
 import com.app.hatli.feature.home.presentation.components.HomeQuickActions
 import com.app.hatli.feature.home.presentation.components.HomeSectionHeader
-import com.app.hatli.feature.home.presentation.components.HomeStatItem
-import com.app.hatli.feature.home.presentation.components.HomeStatsCard
 import com.app.hatli.feature.home.presentation.components.QuickActionChip
 import com.app.hatli.feature.home.presentation.components.RequestRowCard
 
@@ -72,25 +69,25 @@ fun RequesterHomeContent(
             )
         }
 
-        item {
-            HomeStatsCard(
-                firstStat = HomeStatItem(
-                    title = stringResource(
-                        R.string.home_requester_completed_requests,
-                    ),
-                    value = snapshot.recent.count {
-                        it.status == RequestStatus.Delivered
-                    },
-                ),
-                secondStat = HomeStatItem(
-                    title = stringResource(
-                        R.string.home_requester_total_requests,
-                    ),
-                    value = snapshot.recent.size,
-                ),
-                isAr = isAr,
-            )
-        }
+//        item {
+//            HomeStatsCard(
+//                firstStat = HomeStatItem(
+//                    title = stringResource(
+//                        R.string.home_requester_completed_requests,
+//                    ),
+//                    value = snapshot.recent.count {
+//                        it.status == RequestStatus.Delivered
+//                    },
+//                ),
+//                secondStat = HomeStatItem(
+//                    title = stringResource(
+//                        R.string.home_requester_total_requests,
+//                    ),
+//                    value = snapshot.recent.size,
+//                ),
+//                isAr = isAr,
+//            )
+//        }
 
         snapshot.active?.let { active ->
             item {

@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.LocalShipping
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Badge
@@ -25,9 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.feature.home.R
@@ -37,93 +38,133 @@ fun HomeHeader(
     userName: String,
     unreadNotifications: Int,
     isAr: Boolean,
+    completedRequests: Int,
+    totalRequests: Int,
     onNotifications: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .padding(
-                start = HatliSpacing.lg,
-                end = HatliSpacing.lg,
-                top = HatliSpacing.sm,
-                bottom = HatliSpacing.md,
-            ),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(
+            bottomStart = 0.dp,
+            bottomEnd = 32.dp,
+        ),
+        color = MaterialTheme.colorScheme.primaryContainer,
     ) {
-        Surface(
-            modifier = Modifier
-                .size(56.dp)
-                .clip(CircleShape),
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.surfaceVariant,
-        ) {
-            Box(
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Person,
-                    contentDescription = stringResource(
-                        R.string.home_default_profile_image,
-                    ),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(32.dp),
-                )
-            }
-        }
-
         Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp),
-        ) {
-            Text(
-                text = stringResource(
-                    R.string.home_good_morning,
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.statusBars)
+                .padding(
+                    start = HatliSpacing.lg,
+                    end = HatliSpacing.lg,
+                    top = HatliSpacing.sm,
+                    bottom = HatliSpacing.xl,
                 ),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.xl),
+        ) {
 
-            Text(
-                text = userName,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-        }
+            // Header row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+            ) {
 
-        BadgedBox(
-            badge = {
-                if (unreadNotifications > 0) {
-                    Badge {
-                        Text(
-                            text = if (unreadNotifications > 99) {
-                                "99+"
-                            } else {
-                                unreadNotifications.toString()
-                            },
+                Surface(
+                    modifier = Modifier.size(56.dp),
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surface,
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Person,
+                            contentDescription = stringResource(
+                                R.string.home_default_profile_image,
+                            ),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(32.dp),
                         )
                     }
                 }
-            },
-        ) {
-            IconButton(
-                onClick = onNotifications,
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = CircleShape,
-                    ),
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+                ) {
+                    Text(
+                        text = stringResource(
+                            R.string.home_good_morning,
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+
+                    Text(
+                        text = userName,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+
+                BadgedBox(
+                    badge = {
+                        if (unreadNotifications > 0) {
+                            Badge {
+                                Text(
+                                    text = if (unreadNotifications > 99) {
+                                        "99+"
+                                    } else {
+                                        unreadNotifications.toString()
+                                    },
+                                )
+                            }
+                        }
+                    },
+                ) {
+                    IconButton(
+                        onClick = onNotifications,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = CircleShape,
+                            ),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Notifications,
+                            contentDescription = stringResource(
+                                R.string.home_notifications,
+                            ),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                        )
+                    }
+                }
+            }
+
+            // Stats
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = stringResource(
-                        R.string.home_notifications,
+                HomeStat(
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Outlined.CheckCircle,
+                    title = stringResource(
+                        R.string.home_requester_completed_requests,
                     ),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    value = completedRequests,
+                )
+
+                HomeStat(
+                    modifier = Modifier.weight(1f),
+                    icon = Icons.Outlined.LocalShipping,
+                    title = stringResource(
+                        R.string.home_requester_total_requests,
+                    ),
+                    value = totalRequests,
                 )
             }
         }

@@ -55,7 +55,7 @@ fun HomeStatsCard(
 }
 
 @Composable
-private fun HomeStat(
+fun HomeStat(
     modifier: Modifier,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,

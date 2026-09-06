@@ -21,6 +21,7 @@ import com.app.hatli.feature.home.presentation.components.MainTopBar
 import com.app.hatli.feature.home.presentation.components.runner.RunnerHomeContent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.home.R
 import com.app.hatli.feature.home.presentation.components.HomeHeader
@@ -114,6 +115,10 @@ private fun MainShellReady(
                         userName = "Ahmed",
                         unreadNotifications = state.unreadNotifications,
                         isAr = isAr,
+                        completedRequests = state.requesterHome?.recent?.count {
+                            it.status == RequestStatus.Delivered
+                        } ?: 0,
+                        totalRequests = state.requesterHome?.recent?.size ?: 0,
                         onNotifications = {
                             onEvent(MainShellUiEvent.OpenNotifications)
                         },
