@@ -21,6 +21,7 @@ fun HatliTextField(
     isError: Boolean = false,
     supportingText: String? = null,
     singleLine: Boolean = true,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
@@ -34,6 +35,7 @@ fun HatliTextField(
         enabled = enabled,
         isError = isError,
         singleLine = singleLine,
+        maxLines = maxLines,
         textStyle = typography.bodyLarge,
         label = { Text(label, style = typography.bodySmall) },
         supportingText = supportingText?.let {
