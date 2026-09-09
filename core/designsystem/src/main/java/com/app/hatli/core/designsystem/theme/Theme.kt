@@ -83,10 +83,6 @@ private val DarkColors = darkColorScheme(
     surfaceTint = HatliColors.Teal500,
 )
 
-/**
- * Controls which palette [HatliTheme] applies.
- * [FollowSystem] tracks the device dark-mode setting (default).
- */
 enum class HatliThemeMode {
     FollowSystem,
     Light,
@@ -96,6 +92,7 @@ enum class HatliThemeMode {
 private val LocalHatliIsDarkTheme = staticCompositionLocalOf { false }
 
 object HatliTheme {
+
     val extendedColors: HatliExtendedColors
         @Composable
         @ReadOnlyComposable
@@ -106,7 +103,6 @@ object HatliTheme {
         @ReadOnlyComposable
         get() = LocalHatliIsDarkTheme.current
 
-    /** Brand typeface (same as [HatliTypography] / MaterialTheme.typography). */
     val fontFamily: FontFamily
         get() = HatliFontFamily
 }
@@ -118,6 +114,7 @@ fun HatliTheme(
     content: @Composable () -> Unit,
 ) {
     val systemDark = isSystemInDarkTheme()
+
     val darkTheme = when (themeMode) {
         HatliThemeMode.FollowSystem -> systemDark
         HatliThemeMode.Light -> false
@@ -127,18 +124,36 @@ fun HatliTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+
+            if (darkTheme) {
+                dynamicDarkColorScheme(context)
+            } else {
+                dynamicLightColorScheme(context)
+            }
         }
+
         darkTheme -> DarkColors
         else -> LightColors
     }
-    val extendedColors = if (darkTheme) DarkHatliExtendedColors else LightHatliExtendedColors
+
+    val extendedColors = if (darkTheme) {
+        DarkHatliExtendedColors
+    } else {
+        LightHatliExtendedColors
+    }
 
     val view = LocalView.current
+
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as? Activity)?.window ?: return@SideEffect
-            val insetsController = WindowCompat.getInsetsController(window, view)
+            val window = (view.context as? Activity)?.window
+                ?: return@SideEffect
+
+            val insetsController = WindowCompat.getInsetsController(
+                window,
+                view,
+            )
+
             insetsController.isAppearanceLightStatusBars = !darkTheme
             insetsController.isAppearanceLightNavigationBars = !darkTheme
         }
@@ -153,7 +168,6 @@ fun HatliTheme(
             typography = HatliTypography,
             shapes = HatliShapes,
         ) {
-            // Bare Text() / TextField labels inherit Mada even without an explicit style.
             CompositionLocalProvider(
                 LocalTextStyle provides HatliTypography.bodyLarge,
             ) {

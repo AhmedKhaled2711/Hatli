@@ -1,20 +1,25 @@
 package com.app.hatli.feature.home.presentation.components
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.LocalShipping
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.HatliTheme
+import com.app.hatli.feature.home.R
 
 data class HomeStatItem(
     val title: String,
@@ -25,28 +30,34 @@ data class HomeStatItem(
 fun HomeStatsCard(
     firstStat: HomeStatItem,
     secondStat: HomeStatItem,
-    isAr: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.extraLarge,
-        color = MaterialTheme.colorScheme.primaryContainer,
-    ) {
+        modifier = modifier,
+        shape = RoundedCornerShape(20.dp),
+        color = HatliTheme.extendedColors.statsCardBackground,
+        tonalElevation = 2.dp,
+        ) {
         Row(
-            modifier = Modifier.padding(HatliSpacing.lg),
-            horizontalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = HatliSpacing.sm,
+                    vertical = HatliSpacing.xxs,
+                ),
         ) {
             HomeStat(
                 modifier = Modifier.weight(1f),
-                icon = Icons.Outlined.CheckCircle,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                icon = R.drawable.completed_request,
                 title = firstStat.title,
                 value = firstStat.value,
             )
 
             HomeStat(
                 modifier = Modifier.weight(1f),
-                icon = Icons.Outlined.LocalShipping,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                icon = R.drawable.completed_request,
                 title = secondStat.title,
                 value = secondStat.value,
             )
@@ -57,30 +68,34 @@ fun HomeStatsCard(
 @Composable
 fun HomeStat(
     modifier: Modifier,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    @DrawableRes icon: Int,
     title: String,
     value: Int,
+    horizontalAlignment: Alignment.Horizontal,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
+        horizontalAlignment = horizontalAlignment,
+        verticalArrangement = Arrangement.spacedBy(
+            HatliSpacing.sm,
+        ),
     ) {
-        Icon(
-            imageVector = icon,
+        Image(
+            painter = painterResource(id = icon),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+            modifier = Modifier.size(40.dp),
         )
 
         Text(
             text = title,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            style = MaterialTheme.typography.bodySmall,
+            color = HatliTheme.extendedColors.onWhiteAndBlack,
         )
 
         Text(
             text = value.toString(),
             style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = HatliTheme.extendedColors.onStatsCardBackground,
         )
     }
 }
