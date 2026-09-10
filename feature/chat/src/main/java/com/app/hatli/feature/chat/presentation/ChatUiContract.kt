@@ -10,6 +10,7 @@ sealed interface ChatUiEffect : UiEffect {
     data class ShowMessage(val message: String) : ChatUiEffect
 }
 
+
 sealed interface ChatUiEvent : UiEvent {
     data class DraftChanged(val value: String) : ChatUiEvent
     data object Send : ChatUiEvent
@@ -18,8 +19,16 @@ sealed interface ChatUiEvent : UiEvent {
 
 
 data class ChatUiState(
-    val messages: List<ChatMessage> = emptyList(),
+    val messages: List<ChatMessageUi> = emptyList(),
     val draft: String = "",
     val isSending: Boolean = false,
     val myUid: String = "",
 ) : UiState
+
+
+data class ChatMessageUi(
+    val id: String,
+    val text: String,
+    val isMine: Boolean,
+    val senderLabel: String,
+)

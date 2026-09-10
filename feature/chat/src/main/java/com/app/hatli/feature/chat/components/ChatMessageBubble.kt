@@ -22,6 +22,7 @@ import com.app.hatli.core.designsystem.theme.HatliSpacing
 fun ChatMessageBubble(
     text: String,
     isMine: Boolean,
+    senderLabel: String,
 ) {
     val bubbleColor = if (isMine) {
         HatliColors.BrandTeal
@@ -71,7 +72,7 @@ fun ChatMessageBubble(
                 ),
             ) {
                 Text(
-                    text = if (isMine) "You" else "Delivery",
+                    text = senderLabel,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold,
                     color = contentColor.copy(alpha = 0.75f),
