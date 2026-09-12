@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Request Detail Screen -->
+    <string name="request_detail_title">Request Details</string>
+    <string name="request_detail_not_found">Request not found</string>
+    <string name="request_detail_back">Back</string>
+    <string name="request_detail_current_status">Current Status</string>
+    <string name="request_detail_order_progress">Order Progress</string>
+    <string name="request_detail_summary_title">Order &amp; Financial Summary</string>
+    <string name="request_detail_description">Description</string>
+    <string name="request_detail_delivery_fee">Delivery Fee</string>
+    <string name="request_detail_delivery_fee_format">%1$d EGP</string>
+    <string name="request_detail_runner_title">Delivery Captain</string>
+    <string name="request_detail_client_title">Client</string>
+    <string name="request_detail_timeline_title">Status History Timeline</string>
+    <string name="request_detail_open_chat">Open Chat</string>
+    <string name="request_detail_updating">Updating…</string>
+    <string name="request_detail_confirming">Confirming…</string>
+    <string name="request_detail_confirm_delivery">Confirm Delivery</string>
+    <string name="request_detail_rate_runner">Rate Runner</string>
+    <string name="request_detail_cancel_title">Cancel Order Confirmation</string>
+    <string name="request_detail_cancel_reason_label">Cancel reason</string>
+    <string name="request_detail_cancelling">Cancelling…</string>
+    <string name="request_detail_confirm_cancel">Confirm Cancel</string>
+    <string name="request_detail_dismiss">Dismiss</string>
+    <string name="request_detail_cancel_order">Cancel Order</string>
+</resources>

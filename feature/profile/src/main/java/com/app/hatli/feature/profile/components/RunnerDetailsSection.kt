@@ -7,8 +7,6 @@ import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.runtime.Composable
 import com.app.hatli.core.designsystem.theme.LocalHatliExtendedColors
-import com.app.hatli.feature.profile.presentation.ProfileInfoRow
-import com.app.hatli.feature.profile.presentation.ProfileSectionCard
 
 @Composable
 fun RunnerDetailsSection(

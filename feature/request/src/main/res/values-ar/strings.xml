@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Request Detail Screen (Arabic) -->
+    <string name="request_detail_title">تفاصيل الطلب</string>
+    <string name="request_detail_not_found">الطلب غير موجود</string>
+    <string name="request_detail_back">رجوع</string>
+    <string name="request_detail_current_status">الحالة الحالية</string>
+    <string name="request_detail_order_progress">مسار الطلب</string>
+    <string name="request_detail_summary_title">تفاصيل الطلب والرسوم</string>
+    <string name="request_detail_description">الوصف</string>
+    <string name="request_detail_delivery_fee">رسوم التوصيل</string>
+    <string name="request_detail_delivery_fee_format">%1$d جنيه</string>
+    <string name="request_detail_runner_title">الكابتن (Runner)</string>
+    <string name="request_detail_client_title">صاحب الطلب (Requester)</string>
+    <string name="request_detail_timeline_title">الجدول الزمني للطلب</string>
+    <string name="request_detail_open_chat">محادثة مباشر</string>
+    <string name="request_detail_updating">جاري التحديث…</string>
+    <string name="request_detail_confirming">جاري التأكيد…</string>
+    <string name="request_detail_confirm_delivery">تأكيد استلام الطلب</string>
+    <string name="request_detail_rate_runner">تقييم الكابتن</string>
+    <string name="request_detail_cancel_title">هل أنت تأكد من إلغاء الطلب؟</string>
+    <string name="request_detail_cancel_reason_label">سبب الإلغاء</string>
+    <string name="request_detail_cancelling">جاري الإلغاء…</string>
+    <string name="request_detail_confirm_cancel">تأكيد الإلغاء</string>
+    <string name="request_detail_dismiss">التراجع</string>
+    <string name="request_detail_cancel_order">إلغاء الطلب</string>
+</resources>
