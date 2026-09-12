@@ -24,4 +24,59 @@
     <string name="request_detail_confirm_cancel">Confirm Cancel</string>
     <string name="request_detail_dismiss">Dismiss</string>
     <string name="request_detail_cancel_order">Cancel Order</string>
+
+    <!-- Create Request Wizard -->
+    <string name="create_request_screen_title">Create Request</string>
+    <string name="create_request_step_category_title">What do you need?</string>
+    <string name="create_request_step_review_title">Review &amp; fee</string>
+    <string name="create_request_wizard_step_1">Step 1 of 3</string>
+    <string name="create_request_wizard_step_2">Step 2 of 3</string>
+    <string name="create_request_wizard_step_3">Step 3 of 3</string>
+
+    <string name="create_request_cancel">Cancel</string>
+    <string name="create_request_continue">Continue</string>
+    <string name="create_request_back">Back</string>
+    <string name="create_request_confirm">Confirm request</string>
+
+    <!-- Category Labels & Subtitles -->
+    <string name="category_shopping_label">Shopping</string>
+    <string name="category_shopping_subtitle">Supermarket, butcher, bakery, and more</string>
+    <string name="category_pickup_label">Pickup</string>
+    <string name="category_pickup_subtitle">Pick up from A and deliver to B</string>
+    <string name="category_bills_label">Bills</string>
+    <string name="category_bills_subtitle">Pay a bill or subscription</string>
+    <string name="category_custom_label">Custom Request</string>
+    <string name="category_custom_subtitle">Anything else nearby</string>
+
+    <!-- Details Inputs -->
+    <string name="create_request_shop_name_label">Shop name (optional)</string>
+    <string name="create_request_items_label">What do you need?</string>
+    <string name="create_request_items_supporting">e.g. 2kg meat, 3L milk</string>
+    <string name="create_request_notes_label">Notes (optional)</string>
+    <string name="create_request_budget_label">Expected budget EGP (optional)</string>
+
+    <string name="create_request_pickup_address_label">Pickup address</string>
+    <string name="create_request_dropoff_address_label">Drop-off address</string>
+    <string name="create_request_item_desc_label">Item description</string>
+
+    <string name="create_request_bill_type_label">Bill type</string>
+    <string name="create_request_bill_type_supporting">e.g. Electricity, Water, Internet</string>
+    <string name="create_request_account_ref_label">Account / reference number</string>
+    <string name="create_request_bill_amount_label">Amount EGP</string>
+
+    <string name="create_request_custom_title_label">Title</string>
+    <string name="create_request_custom_body_label">Describe your request</string>
+    <string name="create_request_custom_budget_label">Budget EGP (optional)</string>
+
+    <!-- Fee Review Step -->
+    <string name="create_request_suggested_fee_hint">Suggested delivery fee is %1$d EGP. You can change it.</string>
+    <string name="create_request_delivery_fee_label">Delivery fee EGP</string>
+    <string name="create_request_summary_title">Order Summary</string>
+    <string name="create_request_summary_category_label">Category</string>
+    <string name="create_request_summary_details_label">Details</string>
+
+    <string name="create_request_summary_pickup_format">%1$s\n%2$s → %3$s</string>
+    <string name="create_request_summary_bills_format">%1$s · %2$s · %3$s EGP</string>
+    <string name="create_request_summary_custom_format">%1$s\n%2$s</string>
+
 </resources>

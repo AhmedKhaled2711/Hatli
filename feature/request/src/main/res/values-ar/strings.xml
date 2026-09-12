@@ -24,4 +24,60 @@
     <string name="request_detail_confirm_cancel">تأكيد الإلغاء</string>
     <string name="request_detail_dismiss">التراجع</string>
     <string name="request_detail_cancel_order">إلغاء الطلب</string>
+
+    <!-- Create Request Wizard (Arabic) -->
+    <string name="create_request_screen_title">إنشاء طلب جديد</string>
+    <string name="create_request_step_category_title">ماذا تحتاج؟</string>
+    <string name="create_request_step_review_title">المراجعة ورسوم التوصيل</string>
+    <string name="create_request_wizard_step_1">الخطوة 1 من 3</string>
+    <string name="create_request_wizard_step_2">الخطوة 2 من 3</string>
+    <string name="create_request_wizard_step_3">الخطوة 3 من 3</string>
+
+    <string name="create_request_cancel">إلغاء</string>
+    <string name="create_request_continue">متابعة</string>
+    <string name="create_request_back">رجوع</string>
+    <string name="create_request_confirm">تأكيد الطلب</string>
+
+    <!-- Category Labels & Subtitles -->
+    <string name="category_shopping_label">شراء مستلزمات</string>
+    <string name="category_shopping_subtitle">سوبر ماركت، جزارة، مخبز، وأكثر</string>
+    <string name="category_pickup_label">استلام وتوصيل</string>
+    <string name="category_pickup_subtitle">استلام غرض من مكان وتوصيله لمكان آخر</string>
+    <string name="category_bills_label">دفع فواتير</string>
+    <string name="category_bills_subtitle">سداد فاتورة أو اشتراك شهري</string>
+    <string name="category_custom_label">طلب خاص</string>
+    <string name="category_custom_subtitle">أي شيء آخر تحتاجه بالقرب منك</string>
+
+    <!-- Details Inputs -->
+    <string name="create_request_shop_name_label">اسم المتجر (اختياري)</string>
+    <string name="create_request_items_label">ما الذي تريد شراؤه؟</string>
+    <string name="create_request_items_supporting">مثال: 2 كيلو لحم، 3 لتر حليب</string>
+    <string name="create_request_notes_label">ملاحظات (اختياري)</string>
+    <string name="create_request_budget_label">الميزانية المتوقعة بالجنيه (اختياري)</string>
+
+    <string name="create_request_pickup_address_label">عنوان الاستلام</string>
+    <string name="create_request_dropoff_address_label">عنوان التسليم</string>
+    <string name="create_request_item_desc_label">وصف الغرض</string>
+
+    <string name="create_request_bill_type_label">نوع الفاتورة</string>
+    <string name="create_request_bill_type_supporting">مثال: كهرباء، مياه، إنترنت</string>
+    <string name="create_request_account_ref_label">رقم الحساب / المرجع</string>
+    <string name="create_request_bill_amount_label">المبلغ بالجنيه</string>
+
+    <string name="create_request_custom_title_label">عنوان الطلب</string>
+    <string name="create_request_custom_body_label">اشرح تفاصيل طلبك</string>
+    <string name="create_request_custom_budget_label">الميزانية بالجنيه (اختياري)</string>
+
+    <!-- Fee Review Step -->
+    <string name="create_request_suggested_fee_hint">رسوم التوصيل المقترحة هي %1$d جنيه. يمكنك تعديلها.</string>
+    <string name="create_request_delivery_fee_label">رسوم التوصيل بالجنيه</string>
+    <string name="create_request_summary_title">ملخص الطلب</string>
+    <string name="create_request_summary_category_label">الفئة</string>
+    <string name="create_request_summary_details_label">التفاصيل</string>
+
+    <string name="create_request_summary_pickup_format">%1$s\n%2$s ← %3$s</string>
+    <string name="create_request_summary_bills_format">%1$s · %2$s · %3$s جنيه</string>
+    <string name="create_request_summary_custom_format">%1$s\n%2$s</string>
+
+
 </resources>

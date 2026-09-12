@@ -7,7 +7,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.app.hatli.core.ui.navigation.Destination
 import com.app.hatli.core.ui.navigation.Routes
-import com.app.hatli.feature.request.presentation.CreateRequestRoute
+import com.app.hatli.feature.request.presentation.request.CreateRequestRoute
 import com.app.hatli.feature.request.presentation.detail.RequestDetailRoute
 import com.app.hatli.feature.request.presentation.rate.RateRunnerRoute
 
