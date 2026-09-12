@@ -1,28 +1,44 @@
 package com.app.hatli.feature.profile.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
-import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
-import com.app.hatli.core.designsystem.component.HatliSecondaryButton
+import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.LocalHatliExtendedColors
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.CollectUiEffect
+import com.app.hatli.feature.profile.components.ProfileErrorState
+import com.app.hatli.feature.profile.components.ProfileHeader
+import com.app.hatli.feature.profile.components.ProfileInfoRow
+import com.app.hatli.feature.profile.components.ProfileSectionCard
+import com.app.hatli.feature.profile.components.RunnerDetailsSection
+import com.app.hatli.feature.profile.components.UserRoleBadgeCard
 
 @Composable
 fun ProfileRoute(
@@ -52,83 +68,103 @@ fun ProfileScreen(
     onBack: () -> Unit,
     showBack: Boolean = true,
 ) {
-    val typography = MaterialTheme.typography
-    val onVariant = MaterialTheme.colorScheme.onSurfaceVariant
+    val extendedColors = LocalHatliExtendedColors.current
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            // Tab chrome owns nav-bar insets; standalone needs full system bars.
-            .then(if (showBack) Modifier.systemBarsPadding() else Modifier.statusBarsPadding())
-            .verticalScroll(rememberScrollState())
-            .padding(HatliSpacing.lg),
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+            .background(MaterialTheme.colorScheme.background)
     ) {
-        Text("Profile", style = typography.headlineLarge)
-
         when {
-            state.isLoading && state.profile == null -> CircularProgressIndicator()
-            state.profile == null -> {
-                Text(
-                    text = state.errorMessage ?: "No profile found",
-                    style = typography.bodyLarge,
-                    color = onVariant,
+            state.isLoading && state.profile == null -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = HatliColors.BrandTeal
                 )
-                HatliSecondaryButton(text = "Retry", onClick = { onEvent(ProfileUiEvent.Refresh) })
             }
-            else -> {
-                val p = state.profile
-                p.selfieUrl?.takeIf { it.isNotBlank() }?.let { url ->
-                    AsyncImage(model = url, contentDescription = "Profile photo")
-                }
-                HatliCard {
-                    Text(p.fullName, style = typography.titleLarge)
-                    Text("Role: ${p.role.name}", style = typography.bodyMedium, color = onVariant)
-                    Text("Phone: ${p.phone}", style = typography.bodyMedium, color = onVariant)
-                    Text("Email: ${p.email}", style = typography.bodyMedium, color = onVariant)
-                    Text("Gender: ${p.gender.name}", style = typography.bodyMedium, color = onVariant)
-                    p.address?.let { address ->
-                        Text(
-                            text = "Address: ${address.formattedOneLine()}",
-                            style = typography.bodyMedium,
-                            color = onVariant,
-                        )
-                        address.notes?.takeIf { it.isNotBlank() }?.let { notes ->
-                            Text("Notes: $notes", style = typography.bodyMedium, color = onVariant)
-                        }
-                    }
-                    if (p.role == UserRole.Runner) {
-                        Text(
-                            text = "Transport: ${p.transportType?.name.orEmpty()}",
-                            style = typography.bodyMedium,
-                            color = onVariant,
-                        )
-                        Text(
-                            text = "Vehicle: ${p.vehicleInfo.orEmpty()}",
-                            style = typography.bodyMedium,
-                            color = onVariant,
-                        )
-                        Text(
-                            text = "National ID: ${p.nationalId.orEmpty()}",
-                            style = typography.bodyMedium,
-                            color = onVariant,
-                        )
-                        Text(
-                            text = "Verification: ${p.verificationStatus?.name.orEmpty()}",
-                            style = typography.bodyMedium,
-                            color = onVariant,
-                        )
-                    }
-                }
-            }
-        }
 
-        if (showBack) {
-            HatliSecondaryButton(text = "Back", onClick = onBack)
+            state.profile == null -> {
+                ProfileErrorState(
+                    errorMessage = state.errorMessage,
+                    onRetry = { onEvent(ProfileUiEvent.Refresh) }
+                )
+            }
+
+            else -> {
+                val profile = state.profile
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .then(if (showBack) Modifier.systemBarsPadding() else Modifier.statusBarsPadding())
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    ProfileHeader(
+                        fullName = profile.fullName,
+                        selfieUrl = profile.selfieUrl,
+                        showBack = showBack,
+                        onBack = onBack
+                    )
+
+                    Column(
+                        modifier = Modifier.padding(HatliSpacing.lg),
+                        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg)
+                    ) {
+                        UserRoleBadgeCard(role = profile.role)
+
+                        if (profile.role == UserRole.Runner) {
+                            RunnerDetailsSection(
+                                transportType = profile.transportType?.name ?: "N/A",
+                                vehicleInfo = profile.vehicleInfo,
+                                nationalId = profile.nationalId,
+                                verificationStatus = profile.verificationStatus?.name ?: "Pending"
+                            )
+                        }
+
+                        ProfileSectionCard(title = "Personal Information") {
+                            ProfileInfoRow(
+                                icon = Icons.Default.Phone,
+                                label = "Phone Number",
+                                value = profile.phone
+                            )
+                            ProfileInfoRow(
+                                icon = Icons.Default.Email,
+                                label = "Email Address",
+                                value = profile.email
+                            )
+                            ProfileInfoRow(
+                                icon = Icons.Default.Person,
+                                label = "Gender",
+                                value = profile.gender.name
+                            )
+                        }
+
+                        profile.address?.let { address ->
+                            ProfileSectionCard(title = "Primary Delivery Address") {
+                                ProfileInfoRow(
+                                    icon = Icons.Default.LocationOn,
+                                    label = "Location",
+                                    value = address.formattedOneLine()
+                                )
+                                address.notes?.takeIf { it.isNotBlank() }?.let { notes ->
+                                    ProfileInfoRow(
+                                        icon = Icons.Default.Home,
+                                        label = "Address Notes",
+                                        value = notes
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(HatliSpacing.md))
+
+                        HatliPrimaryButton(
+                            text = "Log out",
+                            onClick = { onEvent(ProfileUiEvent.Logout) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+            }
         }
-        HatliPrimaryButton(
-            text = "Log out",
-            onClick = { onEvent(ProfileUiEvent.Logout) },
-        )
     }
 }

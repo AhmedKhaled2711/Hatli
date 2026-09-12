@@ -9,7 +9,6 @@ data class HatliExtendedColors(
     val statsCardBackground: Color,
     val onStatsCardBackground: Color,
     val onWhiteAndBlack: Color,
-    // Keep your existing extended colors here
     val success: Color,
     val successContainer: Color,
     val warning: Color,
@@ -19,6 +18,8 @@ data class HatliExtendedColors(
     val border: Color,
     val disabled: Color,
     val disabledContainer: Color,
+    val surfaceVariant: Color,
+    val onSurfaceVariant: Color,
 )
 
 val LightHatliExtendedColors = HatliExtendedColors(
@@ -36,6 +37,9 @@ val LightHatliExtendedColors = HatliExtendedColors(
     border = HatliColors.Border,
     disabled = HatliColors.Disabled,
     disabledContainer = HatliColors.DisabledContainer,
+    surfaceVariant = HatliColors.Gray100,
+    onSurfaceVariant = HatliColors.Gray600,
+
 )
 
 val DarkHatliExtendedColors = HatliExtendedColors(
@@ -53,6 +57,8 @@ val DarkHatliExtendedColors = HatliExtendedColors(
     border = HatliColors.DarkBorder,
     disabled = HatliColors.Gray500,
     disabledContainer = HatliColors.DarkSurfaceVariant,
+    surfaceVariant = HatliColors.DarkSurfaceVariant,
+    onSurfaceVariant = HatliColors.Gray400,
 )
 
 val LocalHatliExtendedColors = staticCompositionLocalOf {
