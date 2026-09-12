@@ -78,5 +78,8 @@
     <string name="create_request_summary_pickup_format">%1$s\n%2$s → %3$s</string>
     <string name="create_request_summary_bills_format">%1$s · %2$s · %3$s EGP</string>
     <string name="create_request_summary_custom_format">%1$s\n%2$s</string>
+    <string name="create_request_success_title">Request Created!</string>
+    <string name="create_request_success_subtitle">Your request is now live for runners around you.</string>
+    <string name="create_request_return_home">Return to Home</string>
 
 </resources>

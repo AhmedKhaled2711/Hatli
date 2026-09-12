@@ -39,6 +39,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,6 +69,7 @@ import com.app.hatli.feature.request.presentation.detail.components.animateFloat
 import com.app.hatli.feature.request.presentation.request.components.CategoryStep
 import com.app.hatli.feature.request.presentation.request.components.DetailsStep
 import com.app.hatli.feature.request.presentation.request.components.FeeReviewStep
+import com.app.hatli.feature.request.presentation.request.components.RequestCreatedSuccessOverlay
 
 @Composable
 fun CreateRequestRoute(
@@ -75,14 +79,33 @@ fun CreateRequestRoute(
     viewModel: CreateRequestViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    var showSuccessOverlay by remember { mutableStateOf(false) }
+
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
             CreateRequestUiEffect.NavigateBack -> onBack()
-            CreateRequestUiEffect.Submitted -> onSubmitted()
+            CreateRequestUiEffect.Submitted -> {
+                showSuccessOverlay = true
+            }
             is CreateRequestUiEffect.ShowMessage -> onMessage(effect.message)
         }
     }
-    CreateRequestScreen(state = state, onEvent = viewModel::onEvent)
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        CreateRequestScreen(
+            state = state,
+            onEvent = viewModel::onEvent
+        )
+
+        // Full-screen Order Confirmation Screen
+        RequestCreatedSuccessOverlay(
+            isVisible = showSuccessOverlay,
+            onReturnToHome = {
+                showSuccessOverlay = false
+                onSubmitted()
+            }
+        )
+    }
 }
 
 @Composable

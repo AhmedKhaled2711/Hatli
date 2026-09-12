@@ -79,5 +79,8 @@
     <string name="create_request_summary_bills_format">%1$s · %2$s · %3$s جنيه</string>
     <string name="create_request_summary_custom_format">%1$s\n%2$s</string>
 
+    <string name="create_request_success_title">تم إرسال طلبك بنجاح!</string>
+    <string name="create_request_success_subtitle">طلبك متاح الآن للكباتن القريبين منك.</string>
+    <string name="create_request_return_home">العودة للرئيسية</string>
 
 </resources>

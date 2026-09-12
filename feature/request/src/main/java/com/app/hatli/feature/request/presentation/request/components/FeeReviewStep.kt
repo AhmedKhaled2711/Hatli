@@ -27,7 +27,6 @@ import com.app.hatli.core.model.RequestDefaults
 import com.app.hatli.feature.request.R
 import com.app.hatli.feature.request.presentation.request.CreateRequestUiEvent
 import com.app.hatli.feature.request.presentation.request.CreateRequestUiState
-import com.app.hatli.feature.request.presentation.request.ReviewSummaryRow
 import com.app.hatli.feature.request.presentation.request.label
 
 @Composable
