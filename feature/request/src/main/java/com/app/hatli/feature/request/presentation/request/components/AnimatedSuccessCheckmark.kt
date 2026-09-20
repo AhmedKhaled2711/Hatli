@@ -33,9 +33,8 @@ fun AnimatedSuccessCheckmark(
     size: Dp = 96.dp,
     circleColor: Color = HatliColors.BrandTeal,
     checkColor: Color = HatliColors.DeepTeal,
-    repeatCheckmark: Boolean = true // نتحكم إذا كانت علامة الصح تكرر رسمها أم ترسم مرة واحدة
+    repeatCheckmark: Boolean = true
 ) {
-    // 1. انيميشن الـ Pulse الدائم للدائرة الخارجيّة (Breath / Ripple Effect)
     val infiniteTransition = rememberInfiniteTransition(label = "CirclePulseTransition")
     val circleScale by infiniteTransition.animateFloat(
         initialValue = 0.95f,
@@ -47,22 +46,19 @@ fun AnimatedSuccessCheckmark(
         label = "CircleScale"
     )
 
-    // 2. انيميشن رسم علامة الصح نفسها (Stroke Path Progress من 0f لـ 1f)
     val checkProgress = remember { Animatable(0f) }
 
     LaunchedEffect(repeatCheckmark) {
         if (repeatCheckmark) {
-            // رسم متكرر لعلامة الصح (تترسم وتستنى ثانية وتكرر)
             while (true) {
                 checkProgress.snapTo(0f)
                 checkProgress.animateTo(
                     targetValue = 1f,
                     animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
                 )
-                kotlinx.coroutines.delay(1800) // التوقف بين كل رسمة والثانية
+                kotlinx.coroutines.delay(1800)
             }
         } else {
-            // ترسم مرة واحدة فقط بـ Elastic/Spring Feel
             checkProgress.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(durationMillis = 700, easing = FastOutSlowInEasing)
@@ -84,23 +80,17 @@ fun AnimatedSuccessCheckmark(
             val canvasHeight = size.toPx()
             val radius = canvasWidth / 2f
 
-            // أ) رسم الخلفية الدائرية
             drawCircle(
                 color = circleColor,
                 radius = radius
             )
 
-            // ب) بناء مسار (Path) علامة الصح المخصصة
             val checkPath = Path().apply {
-                // بداية الرسم من اليسار (Start of check)
                 moveTo(canvasWidth * 0.28f, canvasHeight * 0.52f)
-                // خط النزول لمنتصف العلامة (Vertex)
                 lineTo(canvasWidth * 0.45f, canvasHeight * 0.68f)
-                // خط الصعود لأعلى اليمين (End of check)
                 lineTo(canvasWidth * 0.72f, canvasHeight * 0.38f)
             }
 
-            // ج) تقطيع المسار بناءً على نسبة الـ progress الكائنة من الأنيميشن
             val pathMeasure = PathMeasure()
             pathMeasure.setPath(checkPath, false)
             val pathSegment = Path()
@@ -111,12 +101,11 @@ fun AnimatedSuccessCheckmark(
                 startWithMoveTo = true
             )
 
-            // د) رسم خط علامة الصح سميك ودائري الحواف
             drawPath(
                 path = pathSegment,
                 color = checkColor,
                 style = Stroke(
-                    width = canvasWidth * 0.08f, // سمك الحافة بالنسبة لقطر الدائرة
+                    width = canvasWidth * 0.08f,
                     cap = StrokeCap.Round,
                     join = StrokeJoin.Round
                 )

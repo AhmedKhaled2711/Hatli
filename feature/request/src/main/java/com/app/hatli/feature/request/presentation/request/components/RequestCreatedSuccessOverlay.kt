@@ -62,8 +62,8 @@ fun RequestCreatedSuccessOverlay(
         Dialog(
             onDismissRequest = { },
             properties = DialogProperties(
-                usePlatformDefaultWidth = false, // Full screen mode
-                decorFitsSystemWindows = false   // Draw under system bars
+                usePlatformDefaultWidth = false,
+                decorFitsSystemWindows = false
             )
         ) {
             AnimatedVisibility(
@@ -78,34 +78,18 @@ fun RequestCreatedSuccessOverlay(
                         .background(MaterialTheme.colorScheme.background)
                         .padding(HatliSpacing.xl)
                 ) {
-                    // Center Content
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 80.dp), // Leaves vertical space for bottom action button
+                            .padding(bottom = 80.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        // Success Animated Circle Icon
-//                        Box(
-//                            modifier = Modifier
-//                                .size(96.dp)
-//                                .background(HatliColors.BrandTeal, shape = CircleShape),
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Default.Check,
-//                                contentDescription = null,
-//                                tint = HatliColors.DeepTeal,
-//                                modifier = Modifier.size(52.dp)
-//                            )
-//                        }
-                        // 🟢 استبدله بـ Component الأنيميشن التفاعلي:
                         AnimatedSuccessCheckmark(
                             size = 100.dp,
                             circleColor = HatliColors.BrandTeal,
                             checkColor = HatliColors.DeepTeal,
-                            repeatCheckmark = true // حتلعب الأنيميشن بشكل متكرر وتفاعلي لطيف
+                            repeatCheckmark = true
                         )
 
                         Spacer(modifier = Modifier.height(HatliSpacing.xl))
@@ -129,7 +113,6 @@ fun RequestCreatedSuccessOverlay(
                         )
                     }
 
-                    // Bottom Explicit Navigation CTA
                     HatliPrimaryButton(
                         text = stringResource(R.string.create_request_return_home),
                         onClick = onReturnToHome,
