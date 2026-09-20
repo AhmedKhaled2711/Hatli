@@ -1,20 +1,42 @@
-package com.app.hatli.feature.home.presentation.components.runner
+package com.app.hatli.feature.home.presentation.runner
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Inbox
+import androidx.compose.material.icons.outlined.PowerOff
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.component.HatliSecondaryButton
 import com.app.hatli.core.designsystem.theme.HatliSpacing
@@ -22,11 +44,12 @@ import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RunnerHomeSnapshot
 import com.app.hatli.feature.home.R
 import com.app.hatli.feature.home.presentation.components.CurrentJobCard
+import com.app.hatli.feature.home.presentation.components.HomeSectionHeader
 import com.app.hatli.feature.home.presentation.components.RunnerPresenceCard
 import com.app.hatli.feature.home.presentation.components.RunnerStatsRow
-import com.app.hatli.feature.home.presentation.runner.PendingJobCard
 import com.app.hatli.feature.home.presentation.runnerNextAction
 import com.app.hatli.feature.home.presentation.runnerNextStatus
+
 
 @Composable
 fun RunnerHomeContent(
@@ -38,31 +61,33 @@ fun RunnerHomeContent(
     onChat: (String) -> Unit,
     onDetails: (String) -> Unit,
     onAdvance: (String, RequestStatus) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (snapshot == null) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            CircularProgressIndicator()
-        }
-
+        RunnerHomeSkeleton(modifier = modifier)
         return
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(HatliSpacing.lg),
+        modifier = modifier
+            .fillMaxSize()
+            .animateContentSize(),
+        contentPadding = PaddingValues(
+            horizontal = HatliSpacing.lg,
+            vertical = HatliSpacing.lg
+        ),
         verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
     ) {
-        item {
+        // Presence Header Card
+        item(key = "presence_card") {
             RunnerPresenceCard(
                 isOnline = snapshot.presence.isOnline,
                 onToggle = onToggleOnline,
             )
         }
 
-        item {
+        // Operational Stats
+        item(key = "stats_row") {
             RunnerStatsRow(
                 earnings = snapshot.stats.dailyEarnings,
                 jobs = snapshot.stats.todayJobsCount,
@@ -70,111 +95,174 @@ fun RunnerHomeContent(
             )
         }
 
-        snapshot.activeJob?.let { active ->
-            val nextAction = active.runnerNextAction()
-
-            item {
-                CurrentJobCard(
-                    summary = active,
-                    nextAction = nextAction,
-                    onNextStatus = active.runnerNextStatus()?.let { status ->
-                        {
-                            onAdvance(active.id, status)
-                        }
-                    },
-                    onChat = {
-                        onChat(active.id)
-                    },
-                    onDetails = {
-                        onDetails(active.id)
-                    },
-                    isAr = isAr,
-                )
-            }
-        } ?: item {
-            HatliCard {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(
-                        HatliSpacing.xs,
-                    ),
-                ) {
-                    Text(
-                        text = stringResource(
-                            R.string.home_runner_no_active_job,
-                        ),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
+        // Active Job Section
+        item(key = "active_job_section") {
+            AnimatedContent(
+                targetState = snapshot.activeJob,
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                label = "ActiveJobTransition"
+            ) { active ->
+                if (active != null) {
+                    val nextAction = active.runnerNextAction()
+                    CurrentJobCard(
+                        summary = active,
+                        nextAction = nextAction,
+                        onNextStatus = active.runnerNextStatus()?.let { status ->
+                            { onAdvance(active.id, status) }
+                        },
+                        onChat = { onChat(active.id) },
+                        onDetails = { onDetails(active.id) },
+                        isAr = isAr,
                     )
-
-                    Text(
-                        text = stringResource(
-                            R.string.home_runner_no_active_job_description,
-                        ),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                } else {
+                    RunnerEmptyStateCard(
+                        icon = Icons.Outlined.CheckCircle,
+                        title = stringResource(R.string.home_runner_no_active_job),
+                        description = stringResource(R.string.home_runner_no_active_job_description)
                     )
                 }
             }
         }
 
+        // Nearby Jobs Section
         when {
             !snapshot.presence.isOnline -> {
-                item {
-                    Text(
-                        text = stringResource(
-                            R.string.home_runner_go_online,
-                        ),
-                        style = MaterialTheme.typography.bodyLarge,
+                item(key = "offline_state") {
+                    RunnerEmptyStateCard(
+                        icon = Icons.Outlined.PowerOff,
+                        title = stringResource(R.string.home_runner_go_online),
+                        description = null
                     )
                 }
             }
 
             snapshot.nearby.isEmpty() -> {
-                item {
-                    Text(
-                        text = stringResource(
-                            R.string.home_runner_no_nearby_requests,
-                        ),
-                        style = MaterialTheme.typography.bodyLarge,
+                item(key = "no_nearby_state") {
+                    RunnerEmptyStateCard(
+                        icon = Icons.Outlined.Inbox,
+                        title = stringResource(R.string.home_runner_no_nearby_requests),
+                        description = null
                     )
                 }
             }
 
             else -> {
-                item {
-                    Text(
-                        text = stringResource(
-                            R.string.home_runner_nearby_requests,
-                        ),
-                        style = MaterialTheme.typography.titleMedium,
+                item(key = "nearby_header") {
+                    HomeSectionHeader(
+                        title = stringResource(R.string.home_runner_nearby_requests),
+                        actionLabel = stringResource(R.string.home_runner_view_all_jobs),
+                        onAction = onViewAll
                     )
                 }
 
                 items(
                     items = snapshot.nearby.take(3),
-                    key = { it.id },
+                    key = { "job_${it.id}" },
                 ) { job ->
                     PendingJobCard(
                         summary = job,
                         isAr = isAr,
-                        onAccept = {
-                            onAccept(job.id)
-                        },
-                        onDetails = {
-                            onDetails(job.id)
-                        },
+                        onAccept = { onAccept(job.id) },
+                        onDetails = { onDetails(job.id) },
                     )
                 }
 
-                item {
+                item(key = "view_all_button") {
                     HatliSecondaryButton(
-                        text = stringResource(
-                            R.string.home_runner_view_all_jobs,
-                        ),
+                        text = stringResource(R.string.home_runner_view_all_jobs),
                         onClick = onViewAll,
+                        modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
         }
+    }
+}
+
+/**
+ * Clean, lightweight Empty State Component adhering to production design standards.
+ */
+@Composable
+private fun RunnerEmptyStateCard(
+    icon: ImageVector,
+    title: String,
+    description: String?,
+    modifier: Modifier = Modifier,
+) {
+    HatliCard(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(HatliSpacing.sm),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(HatliSpacing.md))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                if (!description.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Lightweight Skeleton Loader to avoid disruptive progress indicators.
+ */
+@Composable
+private fun RunnerHomeSkeleton(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(HatliSpacing.lg),
+        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(140.dp)
+                .clip(RoundedCornerShape(16.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+        )
     }
 }

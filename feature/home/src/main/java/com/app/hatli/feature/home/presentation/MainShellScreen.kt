@@ -18,7 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.app.hatli.feature.home.presentation.components.MainBottomBar
 import com.app.hatli.feature.home.presentation.components.MainTopBar
-import com.app.hatli.feature.home.presentation.components.runner.RunnerHomeContent
+import com.app.hatli.feature.home.presentation.runner.RunnerHomeContent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import com.app.hatli.core.model.RequestStatus
@@ -190,6 +190,7 @@ private fun MainShellReady(
                 },
             )
         },
+
     ) { paddingValues ->
 
         Box(
