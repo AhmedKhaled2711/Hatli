@@ -5,30 +5,25 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.app.hatli.feature.home.presentation.components.MainBottomBar
-import com.app.hatli.feature.home.presentation.components.MainTopBar
-import com.app.hatli.feature.home.presentation.runner.RunnerHomeContent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.home.R
 import com.app.hatli.feature.home.presentation.components.HomeHeader
 import com.app.hatli.feature.home.presentation.components.JobsListContent
-import com.app.hatli.feature.home.presentation.messages.MessagesContent
+import com.app.hatli.feature.home.presentation.components.MainBottomBar
+import com.app.hatli.feature.home.presentation.components.MainTopBar
 import com.app.hatli.feature.home.presentation.components.RequestsListContent
+import com.app.hatli.feature.home.presentation.messages.MessagesContent
 import com.app.hatli.feature.home.presentation.requester.RequesterHomeContent
+import com.app.hatli.feature.home.presentation.runner.RunnerHomeContent
 
 @Composable
 fun MainShellRoute(
@@ -152,30 +147,6 @@ private fun MainShellReady(
                 }
 
                 MainTab.Profile -> Unit
-            }
-        },
-
-        floatingActionButton = {
-            if (
-                state.showFab &&
-                state.selectedTab != MainTab.Profile
-            ) {
-                FloatingActionButton(
-                    onClick = {
-                        onEvent(
-                            MainShellUiEvent.CreateRequest,
-                        )
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Add,
-                        contentDescription = stringResource(
-                            R.string.home_create_request,
-                        ),
-                    )
-                }
             }
         },
 

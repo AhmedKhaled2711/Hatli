@@ -48,17 +48,10 @@ fun HomeHeader(
         modifier = modifier.fillMaxWidth(),
     ) {
 
-        /*
-         * Header background.
-         *
-         * Extra bottom space is intentionally reserved for the
-         * floating statistics card. This keeps the card inside
-         * the measured bounds of the Scaffold topBar.
-         */
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 70.dp),
+                .padding(bottom = 0.dp),
             shape = RoundedCornerShape(
                 bottomStart = 0.dp,
                 bottomEnd = 32.dp,
@@ -73,14 +66,13 @@ fun HomeHeader(
                         start = HatliSpacing.lg,
                         end = HatliSpacing.lg,
                         top = HatliSpacing.sm,
-                        bottom = 96.dp,
+                        bottom = HatliSpacing.sm,
                     ),
                 verticalArrangement = Arrangement.spacedBy(
                     HatliSpacing.xl,
                 ),
             ) {
 
-                // Header row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -89,7 +81,6 @@ fun HomeHeader(
                     ),
                 ) {
 
-                    // Profile
                     Surface(
                         modifier = Modifier.size(56.dp),
                         shape = CircleShape,
@@ -109,7 +100,6 @@ fun HomeHeader(
                         }
                     }
 
-                    // Greeting + name
                     Column(
                         modifier = Modifier.weight(1f),
                         verticalArrangement = Arrangement.spacedBy(
@@ -129,7 +119,6 @@ fun HomeHeader(
                             color = HatliTheme.extendedColors.onHeaderBackground,                        )
                     }
 
-                    // Notifications
                     BadgedBox(
                         badge = {
                             if (unreadNotifications > 0) {
@@ -167,30 +156,6 @@ fun HomeHeader(
             }
         }
 
-        /*
-         * Floating statistics card.
-         *
-         * It overlaps the bottom of the header visually while
-         * remaining part of the HomeHeader layout.
-         */
-        HomeStatsCard(
-            firstStat = HomeStatItem(
-                title = stringResource(
-                    R.string.home_requester_completed_requests,
-                ),
-                value = completedRequests,
-            ),
-            secondStat = HomeStatItem(
-                title = stringResource(
-                    R.string.home_requester_total_requests,
-                ),
-                value = totalRequests,
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = HatliSpacing.lg)
-                .align(Alignment.BottomCenter),
-        )
     }
 }
 
