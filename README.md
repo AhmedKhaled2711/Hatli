@@ -193,7 +193,7 @@ Hatli is styled with an energetic, modern brand palette designed for high contra
 ## 👤 Author & Engineering Contact
 
 **Ahmed Khaled**  
-*Senior Android Engineer & Mobile UI/UX Specialist*
+* Android Engineer & Mobile UI/UX Specialist*
 
 * 📧 **Email:** [ahmedkhaled.dev@gmail.com](mailto:ahmedkhaled.dev@gmail.com)
 * 🐙 **GitHub:** [@AhmedKhaled2711](https://github.com/AhmedKhaled2711)
