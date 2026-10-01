@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
     id("hatli.android.library")
 }
 
@@ -8,4 +8,7 @@ android {
 
 dependencies {
     implementation(project(":core:common"))
+
+    testImplementation(libs.findLibrary("junit").get())
+    testImplementation(libs.findLibrary("truth").get())
 }

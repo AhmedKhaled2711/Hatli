@@ -1,11 +1,16 @@
 package com.app.hatli.feature.auth.navigation
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.app.hatli.core.ui.navigation.Routes
+import com.app.hatli.core.ui.navigation.AuthGraph
+import com.app.hatli.core.ui.navigation.CreateProfileRoute as CreateProfileRouteKey
+import com.app.hatli.core.ui.navigation.LoginRoute as LoginRouteKey
+import com.app.hatli.core.ui.navigation.OnboardingRoute as OnboardingRouteKey
+import com.app.hatli.core.ui.navigation.OtpRoute as OtpRouteKey
+import com.app.hatli.core.ui.navigation.RoleSelectRoute as RoleSelectRouteKey
+import com.app.hatli.core.ui.navigation.SplashRoute as SplashRouteKey
+import com.app.hatli.core.ui.navigation.StartRoute as StartRouteKey
 import com.app.hatli.feature.auth.presentation.login.LoginRoute
 import com.app.hatli.feature.auth.presentation.onboarding.OnboardingRoute
 import com.app.hatli.feature.auth.presentation.otp.OtpRoute
@@ -23,11 +28,10 @@ fun NavGraphBuilder.authGraph(
     onNavigateCreateProfile: () -> Unit,
     onNavigateOtp: (verificationId: String, phone: String) -> Unit,
 ) {
-    navigation(
-        route = Routes.AUTH_GRAPH,
-        startDestination = Routes.SPLASH,
+    navigation<AuthGraph>(
+        startDestination = SplashRouteKey,
     ) {
-        composable(Routes.SPLASH) {
+        composable<SplashRouteKey> {
             SplashRoute(
                 onOnboarding = onNavigateOnboarding,
                 onStart = onNavigateStart,
@@ -37,37 +41,27 @@ fun NavGraphBuilder.authGraph(
             )
         }
 
-        composable(Routes.ONBOARDING) {
+        composable<OnboardingRouteKey> {
             OnboardingRoute(
                 onStart = onNavigateStart,
             )
         }
 
-        composable(Routes.START) {
+        composable<StartRouteKey> {
             StartRoute(
                 onBack = onNavigateOnboarding,
                 onPhoneLogin = onNavigateLogin,
             )
         }
 
-        composable(Routes.LOGIN) {
+        composable<LoginRouteKey> {
             LoginRoute(
                 onBack = onNavigateStart,
                 onOtp = onNavigateOtp,
             )
         }
 
-        composable(
-            route = Routes.OTP,
-            arguments = listOf(
-                navArgument("verificationId") {
-                    type = NavType.StringType
-                },
-                navArgument("phone") {
-                    type = NavType.StringType
-                },
-            ),
-        ) {
+        composable<OtpRouteKey> {
             OtpRoute(
                 onBack = onNavigateLogin,
                 onRoleSelect = onNavigateRole,
@@ -76,13 +70,13 @@ fun NavGraphBuilder.authGraph(
             )
         }
 
-        composable(Routes.ROLE_SELECT) {
+        composable<RoleSelectRouteKey> {
             RoleRoute(
                 onCreateProfile = onNavigateCreateProfile,
             )
         }
 
-        composable(Routes.CREATE_PROFILE) {
+        composable<CreateProfileRouteKey> {
             CreateProfileRoute(
                 onHome = onNavigateHome,
             )

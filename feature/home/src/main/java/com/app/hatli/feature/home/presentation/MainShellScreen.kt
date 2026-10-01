@@ -98,7 +98,7 @@ private fun MainShellReady(
     onEvent: (MainShellUiEvent) -> Unit,
     profileTab: @Composable () -> Unit,
 ) {
-    val isAr = LocalConfiguration.current.locales[0]?.language == "ar"
+    val isAr = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),

@@ -74,7 +74,7 @@ fun RequestDetailScreen(
     onEvent: (RequestDetailUiEvent) -> Unit,
     onBack: () -> Unit = { onEvent(RequestDetailUiEvent.Back) }
 ) {
-    val isAr = LocalConfiguration.current.locales[0]?.language == "ar"
+    val isAr = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
 
     Box(
         modifier = Modifier

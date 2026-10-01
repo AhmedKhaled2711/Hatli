@@ -1,6 +1,7 @@
-﻿plugins {
+plugins {
     id("hatli.android.library")
     id("hatli.android.compose")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -14,5 +15,6 @@ dependencies {
     implementation(libs.findLibrary("androidx-lifecycle-viewmodel-compose").get())
     implementation(libs.findLibrary("androidx-lifecycle-viewmodel-ktx").get())
     implementation(libs.findLibrary("androidx-navigation-compose").get())
+    implementation(libs.findLibrary("kotlinx-serialization-json").get())
     implementation(libs.findLibrary("kotlinx-coroutines-android").get())
 }

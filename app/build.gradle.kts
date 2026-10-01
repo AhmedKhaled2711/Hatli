@@ -1,7 +1,8 @@
-﻿plugins {
+plugins {
     id("hatli.android.application")
     id("hatli.android.compose")
     id("hatli.android.hilt")
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
 }
@@ -37,11 +38,7 @@ android {
 
 dependencies {
     implementation(project(":feature:home"))
-    implementation(project(":feature:menu"))
     implementation(project(":feature:auth"))
-    implementation(project(":feature:cart"))
-    implementation(project(":feature:checkout"))
-    implementation(project(":feature:orders"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:request"))
     implementation(project(":feature:chat"))
@@ -60,6 +57,7 @@ dependencies {
     implementation(libs.findLibrary("androidx-lifecycle-runtime-ktx").get())
     implementation(libs.findLibrary("androidx-navigation-compose").get())
     implementation(libs.findLibrary("hilt-navigation-compose").get())
+    implementation(libs.findLibrary("kotlinx-serialization-json").get())
 
     implementation(platform(libs.findLibrary("firebase-bom").get()))
     implementation(libs.findLibrary("firebase-analytics").get())

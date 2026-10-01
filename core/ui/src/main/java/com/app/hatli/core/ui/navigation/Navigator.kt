@@ -3,19 +3,18 @@ package com.app.hatli.core.ui.navigation
 import androidx.navigation.NavHostController
 
 /**
- * Thin navigation facade — keeps NavController out of ViewModels when possible.
- * Prefer emitting UiEffect.Navigate and handling it in the Screen/NavHost.
+ * Thin navigation facade supporting Type-Safe Navigation.
  */
 class Navigator(
     private val navController: NavHostController,
 ) {
-    fun navigate(route: String) {
+    fun <T : Any> navigate(route: T) {
         navController.navigate(route) {
             launchSingleTop = true
         }
     }
 
-    fun navigateAndClearBackStack(route: String) {
+    fun <T : Any> navigateAndClearBackStack(route: T) {
         navController.navigate(route) {
             popUpTo(navController.graph.id) { inclusive = true }
             launchSingleTop = true
