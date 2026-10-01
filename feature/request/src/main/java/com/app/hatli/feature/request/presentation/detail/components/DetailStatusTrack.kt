@@ -12,13 +12,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,7 +35,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.app.hatli.core.designsystem.component.HatliCard
+import com.app.hatli.core.designsystem.theme.BrandCoral
+import com.app.hatli.core.designsystem.theme.BrandTeal
+import com.app.hatli.core.designsystem.theme.CharcoalDark
+import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.LocalHatliExtendedColors
@@ -51,21 +59,21 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
     val steps = lifecycleSteps(req.category)
     val current = req.status.stepperIndex(req.category).coerceIn(0, steps.lastIndex)
 
-    val infiniteTransition = rememberInfiniteTransition(label = "RadarPulse")
+    val infiniteTransition = rememberInfiniteTransition(label = "PulseTransition")
     val pulseScale by infiniteTransition.animateFloat(
         initialValue = 1f,
-        targetValue = 1.7f,
+        targetValue = 1.6f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = FastOutSlowInEasing),
+            animation = tween(1000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "pulseScale"
     )
     val pulseAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.6f,
+        initialValue = 0.5f,
         targetValue = 0f,
         animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = FastOutSlowInEasing),
+            animation = tween(1000, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Restart
         ),
         label = "pulseAlpha"
@@ -77,11 +85,12 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
             verticalArrangement = Arrangement.spacedBy(HatliSpacing.md)
         ) {
             Text(
-                text = stringResource(R.string.request_detail_order_progress),
+                text = if (isAr) "مراحل الطلب" else stringResource(R.string.request_detail_order_progress),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSurface
+                color = CharcoalDark
             )
 
+            // Horizontal visual track
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -96,25 +105,25 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
                         if (isCurrent) {
                             Box(
                                 modifier = Modifier
-                                    .size(16.dp)
+                                    .size(22.dp)
                                     .graphicsLayer {
                                         scaleX = pulseScale
                                         scaleY = pulseScale
                                         alpha = pulseAlpha
                                     }
                                     .clip(CircleShape)
-                                    .background(HatliColors.BrandTeal)
+                                    .background(BrandCoral)
                             )
                         }
 
                         Box(
                             modifier = Modifier
-                                .size(if (isCurrent) 14.dp else 10.dp)
+                                .size(if (isCurrent) 16.dp else 12.dp)
                                 .clip(CircleShape)
                                 .background(
                                     when {
-                                        isCurrent -> HatliColors.BrandTeal
-                                        reached -> HatliColors.Teal700
+                                        isCurrent -> BrandCoral
+                                        reached -> BrandTeal
                                         else -> extendedColors.border
                                     }
                                 ),
@@ -125,7 +134,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
                                     imageVector = Icons.Default.Check,
                                     contentDescription = null,
                                     tint = Color.White,
-                                    modifier = Modifier.size(7.dp)
+                                    modifier = Modifier.size(8.dp)
                                 )
                             }
                         }
@@ -133,20 +142,21 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
 
                     if (index < steps.lastIndex) {
                         val barColor by animateColorAsState(
-                            targetValue = if (index < current) HatliColors.Teal700 else extendedColors.border,
-                            animationSpec = tween(500),
+                            targetValue = if (index < current) BrandTeal else extendedColors.border,
+                            animationSpec = tween(400),
                             label = "progressBarColor"
                         )
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(3.dp)
+                                .height(4.dp)
                                 .background(barColor)
                         )
                     }
                 }
             }
 
+            // Step text labels
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -155,8 +165,12 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
                     val label = if (isAr) step.shortLabelAr() else step.shortLabelEn()
                     Text(
                         text = label,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (index <= current) MaterialTheme.colorScheme.onSurface else extendedColors.onSurfaceVariant,
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
+                        color = when {
+                            index == current -> BrandCoral
+                            index < current -> CharcoalDark
+                            else -> CharcoalMuted
+                        },
                         fontWeight = if (index == current) FontWeight.Bold else FontWeight.Normal
                     )
                 }

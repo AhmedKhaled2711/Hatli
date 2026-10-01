@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,10 +25,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.app.hatli.core.designsystem.theme.BrandTeal
+import com.app.hatli.core.designsystem.theme.CharcoalDark
+import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.LocalHatliExtendedColors
@@ -43,17 +49,17 @@ fun ProfileHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(220.dp)
+            .height(210.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(140.dp)
+                .height(130.dp)
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            extendedColors.headerBackground,
-                            HatliColors.DeepTeal
+                            HatliColors.DeepTeal,
+                            BrandTeal
                         )
                     )
                 )
@@ -62,13 +68,13 @@ fun ProfileHeader(
                 IconButton(
                     onClick = onBack,
                     modifier = Modifier
-                        .padding(HatliSpacing.md)
+                        .padding(HatliSpacing.sm)
                         .align(Alignment.TopStart)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = extendedColors.onHeaderBackground
+                        tint = Color.White
                     )
                 }
             }
@@ -79,37 +85,49 @@ fun ProfileHeader(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .border(3.dp, HatliColors.BrandTeal, CircleShape)
-                    .background(MaterialTheme.colorScheme.surface)
+                contentAlignment = Alignment.BottomEnd
             ) {
-                if (!selfieUrl.isNullOrBlank()) {
-                    AsyncImage(
-                        model = selfieUrl,
-                        contentDescription = "Profile photo",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .align(Alignment.Center),
-                        tint = extendedColors.onSurfaceVariant
-                    )
+                Box(
+                    modifier = Modifier
+                        .size(90.dp)
+                        .clip(CircleShape)
+                        .border(3.dp, Color.White, CircleShape)
+                        .background(MaterialTheme.colorScheme.surface)
+                ) {
+                    if (!selfieUrl.isNullOrBlank()) {
+                        AsyncImage(
+                            model = selfieUrl,
+                            contentDescription = "Profile photo",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(48.dp)
+                                .align(Alignment.Center),
+                            tint = BrandTeal
+                        )
+                    }
                 }
+                Icon(
+                    imageVector = Icons.Default.Verified,
+                    contentDescription = "Verified Profile",
+                    tint = BrandTeal,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .background(Color.White, CircleShape)
+                )
             }
 
             Spacer(modifier = Modifier.height(HatliSpacing.xs))
 
             Text(
-                text = fullName,
+                text = fullName.ifBlank { "مستخدم هاتلي" },
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSurface
+                color = CharcoalDark
             )
         }
     }
