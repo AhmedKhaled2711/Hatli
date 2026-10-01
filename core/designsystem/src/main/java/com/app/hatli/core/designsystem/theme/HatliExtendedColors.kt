@@ -20,6 +20,11 @@ data class HatliExtendedColors(
     val disabledContainer: Color,
     val surfaceVariant: Color,
     val onSurfaceVariant: Color,
+    val coralPrimary: Color = HatliColors.BrandCoral,
+    val coralContainer: Color = HatliColors.CoralContainer,
+    val amberPending: Color = HatliColors.AmberPending,
+    val mintAccent: Color = HatliColors.BrandTeal,
+    val offWhiteCanvas: Color = HatliColors.OffWhiteCanvas,
 )
 
 val LightHatliExtendedColors = HatliExtendedColors(
@@ -27,7 +32,7 @@ val LightHatliExtendedColors = HatliExtendedColors(
     onHeaderBackground = HatliColors.DeepTeal,
     statsCardBackground = HatliColors.StatsCardLight,
     onStatsCardBackground = HatliColors.OnStatsCardLight,
-    onWhiteAndBlack = HatliColors.White ,
+    onWhiteAndBlack = HatliColors.White,
     success = HatliColors.Success,
     successContainer = HatliColors.SuccessContainer,
     warning = HatliColors.Warning,
@@ -38,8 +43,12 @@ val LightHatliExtendedColors = HatliExtendedColors(
     disabled = HatliColors.Disabled,
     disabledContainer = HatliColors.DisabledContainer,
     surfaceVariant = HatliColors.Gray100,
-    onSurfaceVariant = HatliColors.Gray600,
-
+    onSurfaceVariant = HatliColors.CharcoalMuted,
+    coralPrimary = HatliColors.BrandCoral,
+    coralContainer = HatliColors.CoralContainer,
+    amberPending = HatliColors.AmberPending,
+    mintAccent = HatliColors.BrandTeal,
+    offWhiteCanvas = HatliColors.OffWhiteCanvas,
 )
 
 val DarkHatliExtendedColors = HatliExtendedColors(
@@ -59,6 +68,11 @@ val DarkHatliExtendedColors = HatliExtendedColors(
     disabledContainer = HatliColors.DarkSurfaceVariant,
     surfaceVariant = HatliColors.DarkSurfaceVariant,
     onSurfaceVariant = HatliColors.Gray400,
+    coralPrimary = HatliColors.BrandCoral,
+    coralContainer = Color(0xFF4A1F12),
+    amberPending = HatliColors.AmberPending,
+    mintAccent = HatliColors.BrandTeal,
+    offWhiteCanvas = HatliColors.DarkBackground,
 )
 
 val LocalHatliExtendedColors = staticCompositionLocalOf {

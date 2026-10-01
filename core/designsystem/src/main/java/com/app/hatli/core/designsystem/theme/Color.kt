@@ -5,33 +5,26 @@ import androidx.compose.ui.graphics.Color
 /**
  * Hatli production color system.
  *
- * Brand direction: mint teal primary `#35F9D1` + charcoal neutrals.
- *
- * Material 3 [ColorScheme] is derived from these semantic tokens.
- * Use [HatliTheme.extendedColors] for success / warning / info / border / disabled.
+ * Brand direction: Warm Coral primary (#FF6B35) + Mint Teal (#30E6C1) + Off-White canvas (#F8F9FA).
  */
 object HatliColors {
 
     // -------------------------------------------------------------------------
-    // Brand
+    // Brand Tokens
     // -------------------------------------------------------------------------
 
-    /** Figma Light Header */
-    val HeaderLight = Color(0xFF30E6C1)
+    val BrandCoral = Color(0xFFFF6B35)
+    val CoralContainer = Color(0xFFFFEFEA)
+    val BrandTeal = Color(0xFF30E6C1)
+    val TealContainer = Color(0xFFEAFDF9)
 
-    /** Figma Dark Header */
+    val HeaderLight = BrandTeal
     val HeaderDark = Color(0xFF121418)
 
-    /** Home Stats Card background in Light mode. */
     val StatsCardLight = Color(0xFF07362D)
-
-    /** Hatli brand teal — Figma Light Mode */
-    val BrandTeal = Color(0xFF30E6C1)
-
     val OnStatsCardDark = Color(0xFF181A20)
     val OnStatsCardLight = BrandTeal
 
-    /** Dark mode app background — Figma */
     val DarkBackground = Color(0xFF121418)
 
     val Teal900 = Color(0xFF063D36)
@@ -48,6 +41,9 @@ object HatliColors {
     // -------------------------------------------------------------------------
 
     val White = Color(0xFFFFFFFF)
+    val OffWhiteCanvas = Color(0xFFF8F9FA)
+    val CharcoalDark = Color(0xFF1E2022)
+    val CharcoalMuted = Color(0xFF686E74)
 
     val Gray50 = Color(0xFFF7F7F7)
     val Gray100 = Color(0xFFEEEEEE)
@@ -63,7 +59,7 @@ object HatliColors {
     val DeepTeal = Color(0xFF063D36)
 
     // -------------------------------------------------------------------------
-    // Semantic - Light
+    // Semantic Tokens - Light
     // -------------------------------------------------------------------------
 
     val Primary = BrandTeal
@@ -73,10 +69,10 @@ object HatliColors {
     val OnSecondary = White
 
     val Surface = White
-    val Background = Gray50
+    val Background = OffWhiteCanvas
 
     // -------------------------------------------------------------------------
-    // Semantic - Dark
+    // Semantic Tokens - Dark
     // -------------------------------------------------------------------------
 
     val DarkSurface = Color(0xFF1C1F24)
@@ -84,7 +80,7 @@ object HatliColors {
     val DarkBorder = Color(0xFF363A40)
 
     // -------------------------------------------------------------------------
-    // Error
+    // Error & Warnings
     // -------------------------------------------------------------------------
 
     val Error = Color(0xFFB3261E)
@@ -92,36 +88,28 @@ object HatliColors {
     val ErrorContainer = Color(0xFFF9DEDC)
     val OnErrorContainer = Color(0xFF410E0B)
 
-    // -------------------------------------------------------------------------
-    // Warning
-    // -------------------------------------------------------------------------
-
     val Warning = Color(0xFFC47F0A)
     val WarningContainer = Color(0xFFFFF4D6)
-    val OnWarning = Color(0xFF2A1C00)
+    val AmberPending = Color(0xFFFFB800)
 
     // -------------------------------------------------------------------------
-    // Success
+    // Success & Info
     // -------------------------------------------------------------------------
 
     val Success = Teal700
     val SuccessContainer = Teal100
     val OnSuccess = White
 
-    // -------------------------------------------------------------------------
-    // Info
-    // -------------------------------------------------------------------------
-
     val Info = Color(0xFF2F6FED)
     val InfoContainer = Color(0xFFDCE8FF)
     val OnInfo = White
 
     // -------------------------------------------------------------------------
-    // Text
+    // Typography Tones
     // -------------------------------------------------------------------------
 
-    val TextPrimary = Gray800
-    val TextSecondary = Gray500
+    val TextPrimary = CharcoalDark
+    val TextSecondary = CharcoalMuted
 
     // -------------------------------------------------------------------------
     // Borders / Disabled
