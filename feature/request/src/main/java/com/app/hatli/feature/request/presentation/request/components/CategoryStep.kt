@@ -1,84 +1,159 @@
 package com.app.hatli.feature.request.presentation.request.components
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.app.hatli.core.designsystem.component.HatliCard
-import com.app.hatli.core.designsystem.theme.HatliColors
+import androidx.compose.ui.unit.sp
+import com.app.hatli.core.designsystem.theme.BrandCoral
+import com.app.hatli.core.designsystem.theme.BrandTeal
+import com.app.hatli.core.designsystem.theme.CharcoalDark
+import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.LocalHatliExtendedColors
 import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.feature.request.presentation.request.CreateRequestUiEvent
 import com.app.hatli.feature.request.presentation.request.icon
 import com.app.hatli.feature.request.presentation.request.label
 import com.app.hatli.feature.request.presentation.request.subtitle
 
+private data class CategoryVisual(
+    val category: RequestCategory,
+    val containerColor: Color,
+    val iconColor: Color,
+)
+
+private val CategoryVisuals = listOf(
+    CategoryVisual(
+        category = RequestCategory.Shopping,
+        containerColor = Color(0xFFFFF4F0),
+        iconColor = BrandCoral,
+    ),
+    CategoryVisual(
+        category = RequestCategory.Pickup,
+        containerColor = Color(0xFFEAFDF9),
+        iconColor = BrandTeal,
+    ),
+    CategoryVisual(
+        category = RequestCategory.Bills,
+        containerColor = Color(0xFFEBF3FE),
+        iconColor = Color(0xFF2F6FED),
+    ),
+    CategoryVisual(
+        category = RequestCategory.Custom,
+        containerColor = Color(0xFFF5EEFE),
+        iconColor = Color(0xFF9333EA),
+    ),
+)
+
 @Composable
 fun CategoryStep(onEvent: (CreateRequestUiEvent) -> Unit) {
-    val extendedColors = LocalHatliExtendedColors.current
-
-    RequestCategory.entries.forEach { category ->
-        HatliCard(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = { onEvent(CreateRequestUiEvent.CategorySelected(category)) },
-        ) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+    ) {
+        CategoryVisuals.chunked(2).forEach { rowItems ->
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(HatliSpacing.sm),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(HatliSpacing.md),
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape)
-                        .background(HatliColors.Teal900),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = category.icon(),
-                        contentDescription = null,
-                        tint = HatliColors.BrandTeal,
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(HatliSpacing.md))
-
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs)
-                ) {
-                    Text(
-                        text = category.label(),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = category.subtitle(),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = extendedColors.onSurfaceVariant
+                rowItems.forEach { visual ->
+                    CategoryMatrixCard(
+                        category = visual.category,
+                        containerColor = visual.containerColor,
+                        iconColor = visual.iconColor,
+                        modifier = Modifier.weight(1f),
+                        onClick = { onEvent(CreateRequestUiEvent.CategorySelected(visual.category)) },
                     )
                 }
             }
         }
     }
 }
+
+@Composable
+private fun CategoryMatrixCard(
+    category: RequestCategory,
+    containerColor: Color,
+    iconColor: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(containerColor)
+            .border(1.dp, iconColor.copy(alpha = 0.2f), RoundedCornerShape(20.dp))
+            .shadow(2.dp, RoundedCornerShape(20.dp), spotColor = iconColor.copy(alpha = 0.15f))
+            .clickable(onClick = onClick)
+            .padding(HatliSpacing.md),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(iconColor.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = category.icon(),
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier.size(24.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
+
+            Text(
+                text = category.label(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = CharcoalDark,
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                ),
+            )
+
+            Text(
+                text = category.subtitle(),
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = CharcoalMuted,
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp,
+                ),
+            )
+        }
+    }
+}
+

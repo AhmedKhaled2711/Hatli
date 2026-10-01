@@ -17,6 +17,7 @@ fun HatliTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
+    placeholder: String? = null,
     enabled: Boolean = true,
     isError: Boolean = false,
     supportingText: String? = null,
@@ -40,11 +41,15 @@ fun HatliTextField(
         maxLines = maxLines,
         textStyle = typography.bodyLarge,
         label = { Text(label, style = typography.bodySmall) },
+        placeholder = placeholder?.let {
+            { Text(it, style = typography.bodySmall, color = scheme.onSurfaceVariant.copy(alpha = 0.6f)) }
+        },
         supportingText = supportingText?.let {
             { Text(it, style = typography.bodySmall) }
         },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
+
         keyboardOptions = keyboardOptions,
         visualTransformation = visualTransformation,
         shape = MaterialTheme.shapes.medium,
