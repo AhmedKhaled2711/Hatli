@@ -5,41 +5,31 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Inbox
 import androidx.compose.material.icons.outlined.PowerOff
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.component.HatliSecondaryButton
+import com.app.hatli.core.designsystem.theme.CharcoalDark
+import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RunnerHomeSnapshot
 import com.app.hatli.feature.home.R
@@ -49,7 +39,6 @@ import com.app.hatli.feature.home.presentation.components.RunnerPresenceCard
 import com.app.hatli.feature.home.presentation.components.RunnerStatsRow
 import com.app.hatli.feature.home.presentation.runnerNextAction
 import com.app.hatli.feature.home.presentation.runnerNextStatus
-
 
 @Composable
 fun RunnerHomeContent(
@@ -68,201 +57,165 @@ fun RunnerHomeContent(
         return
     }
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .animateContentSize(),
-        contentPadding = PaddingValues(
-            horizontal = HatliSpacing.lg,
-            vertical = HatliSpacing.lg
-        ),
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
+    Surface(
+        modifier = modifier.fillMaxSize(),
+        color = OffWhiteCanvas,
     ) {
-        // Presence Header Card
-        item(key = "presence_card") {
-            RunnerPresenceCard(
-                isOnline = snapshot.presence.isOnline,
-                onToggle = onToggleOnline,
-            )
-        }
-
-        // Operational Stats
-        item(key = "stats_row") {
-            RunnerStatsRow(
-                earnings = snapshot.stats.dailyEarnings,
-                jobs = snapshot.stats.todayJobsCount,
-                rating = snapshot.stats.rating,
-            )
-        }
-
-        // Active Job Section
-        item(key = "active_job_section") {
-            AnimatedContent(
-                targetState = snapshot.activeJob,
-                transitionSpec = { fadeIn() togetherWith fadeOut() },
-                label = "ActiveJobTransition"
-            ) { active ->
-                if (active != null) {
-                    val nextAction = active.runnerNextAction()
-                    CurrentJobCard(
-                        summary = active,
-                        nextAction = nextAction,
-                        onNextStatus = active.runnerNextStatus()?.let { status ->
-                            { onAdvance(active.id, status) }
-                        },
-                        onChat = { onChat(active.id) },
-                        onDetails = { onDetails(active.id) },
-                        isAr = isAr,
-                    )
-                } else {
-                    RunnerEmptyStateCard(
-                        icon = Icons.Outlined.CheckCircle,
-                        title = stringResource(R.string.home_runner_no_active_job),
-                        description = stringResource(R.string.home_runner_no_active_job_description)
-                    )
-                }
-            }
-        }
-
-        // Nearby Jobs Section
-        when {
-            !snapshot.presence.isOnline -> {
-                item(key = "offline_state") {
-                    RunnerEmptyStateCard(
-                        icon = Icons.Outlined.PowerOff,
-                        title = stringResource(R.string.home_runner_go_online),
-                        description = null
-                    )
-                }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .animateContentSize(),
+            contentPadding = PaddingValues(
+                start = HatliSpacing.lg,
+                end = HatliSpacing.lg,
+                top = HatliSpacing.md,
+                bottom = 110.dp, // Content scrolls cleanly above floating bottom bar
+            ),
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
+        ) {
+            // Online / Offline Duty Presence Banner Card
+            item(key = "presence_card") {
+                RunnerPresenceCard(
+                    isOnline = snapshot.presence.isOnline,
+                    onToggle = onToggleOnline,
+                )
             }
 
-            snapshot.nearby.isEmpty() -> {
-                item(key = "no_nearby_state") {
-                    RunnerEmptyStateCard(
-                        icon = Icons.Outlined.Inbox,
-                        title = stringResource(R.string.home_runner_no_nearby_requests),
-                        description = null
-                    )
+            // Daily Operational Stats Row
+            item(key = "stats_row") {
+                RunnerStatsRow(
+                    earnings = snapshot.stats.dailyEarnings,
+                    jobs = snapshot.stats.todayJobsCount,
+                    rating = snapshot.stats.rating,
+                )
+            }
+
+            // Active Job Operational Priority Card
+            item(key = "active_job_section") {
+                AnimatedContent(
+                    targetState = snapshot.activeJob,
+                    transitionSpec = { fadeIn() togetherWith fadeOut() },
+                    label = "ActiveJobTransition",
+                ) { active ->
+                    if (active != null) {
+                        val nextAction = active.runnerNextAction()
+                        CurrentJobCard(
+                            summary = active,
+                            nextAction = nextAction,
+                            onNextStatus = active.runnerNextStatus()?.let { status ->
+                                { onAdvance(active.id, status) }
+                            },
+                            onChat = { onChat(active.id) },
+                            onDetails = { onDetails(active.id) },
+                            isAr = isAr,
+                        )
+                    } else {
+                        RunnerEmptyStateCard(
+                            icon = Icons.Outlined.CheckCircle,
+                            title = "لا يوجود طلب قيد التنفيذ حالياً",
+                            description = "تصفّح الطلبات القريبة أدناه وقدم عرض التوصيل الآن.",
+                        )
+                    }
                 }
             }
 
-            else -> {
-                item(key = "nearby_header") {
-                    HomeSectionHeader(
-                        title = stringResource(R.string.home_runner_nearby_requests),
-                        actionLabel = stringResource(R.string.home_runner_view_all_jobs),
-                        onAction = onViewAll
-                    )
+            // Nearby Jobs Real-time Stream Section
+            when {
+                !snapshot.presence.isOnline -> {
+                    item(key = "offline_state") {
+                        RunnerEmptyStateCard(
+                            icon = Icons.Outlined.PowerOff,
+                            title = "أنت غير متاح لـ استلام الطلبات",
+                            description = "قم بتفعيل مفتاح التواجد بالعلّى للبدء في استقبال طلبات التوصيل.",
+                        )
+                    }
                 }
 
-                items(
-                    items = snapshot.nearby.take(3),
-                    key = { "job_${it.id}" },
-                ) { job ->
-                    PendingJobCard(
-                        summary = job,
-                        isAr = isAr,
-                        onAccept = { onAccept(job.id) },
-                        onDetails = { onDetails(job.id) },
-                    )
+                snapshot.nearby.isEmpty() -> {
+                    item(key = "no_nearby_state") {
+                        RunnerEmptyStateCard(
+                            icon = Icons.Outlined.Inbox,
+                            title = "لا توجد طلبات قريبة حالياً",
+                            description = "سنخطر فور إدراج طلب توصيل جديد في منطقتك الجغرافية.",
+                        )
+                    }
                 }
 
-                item(key = "view_all_button") {
-                    HatliSecondaryButton(
-                        text = stringResource(R.string.home_runner_view_all_jobs),
-                        onClick = onViewAll,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                else -> {
+                    item(key = "nearby_header") {
+                        HomeSectionHeader(
+                            title = "الطلبات القريبة المتاحة",
+                            actionLabel = stringResource(R.string.home_runner_view_all_jobs),
+                            onAction = onViewAll,
+                        )
+                    }
+
+                    items(
+                        items = snapshot.nearby.take(5),
+                        key = { "job_${it.id}" },
+                    ) { job ->
+                        PendingJobCard(
+                            summary = job,
+                            isAr = isAr,
+                            onAccept = { onAccept(job.id) },
+                            onDetails = { onDetails(job.id) },
+                        )
+                    }
+
+                    item(key = "view_all_button") {
+                        HatliSecondaryButton(
+                            text = stringResource(R.string.home_runner_view_all_jobs),
+                            onClick = onViewAll,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-/**
- * Clean, lightweight Empty State Component adhering to production design standards.
- */
 @Composable
 private fun RunnerEmptyStateCard(
-    icon: ImageVector,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
     description: String?,
     modifier: Modifier = Modifier,
 ) {
     HatliCard(modifier = modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.padding(HatliSpacing.sm),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier.padding(HatliSpacing.md),
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
         ) {
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.width(HatliSpacing.md))
-
-            Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = CharcoalDark,
+                ),
+            )
+            if (!description.isNullOrBlank()) {
                 Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    text = description,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = CharcoalMuted,
+                    ),
                 )
-
-                if (!description.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
             }
         }
     }
 }
 
-/**
- * Lightweight Skeleton Loader to avoid disruptive progress indicators.
- */
 @Composable
 private fun RunnerHomeSkeleton(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(HatliSpacing.lg),
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg)
+        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(140.dp)
-                .clip(RoundedCornerShape(16.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-        )
+        HatliCard(modifier = Modifier.fillMaxWidth()) {
+            Column(modifier = Modifier.padding(32.dp)) {}
+        }
     }
 }
+
