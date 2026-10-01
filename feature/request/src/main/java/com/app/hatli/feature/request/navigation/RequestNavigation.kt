@@ -2,7 +2,9 @@ package com.app.hatli.feature.request.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
+import com.app.hatli.core.ui.navigation.DeepLinkConstants
 import com.app.hatli.core.ui.navigation.CreateRequestRoute as CreateRequestRouteKey
 import com.app.hatli.core.ui.navigation.RateRunnerRoute as RateRunnerRouteKey
 import com.app.hatli.core.ui.navigation.RequestDetailRoute as RequestDetailRouteKey
@@ -28,7 +30,13 @@ fun NavGraphBuilder.requestGraph(
                 onMessage = onMessage,
             )
         }
-        composable<RequestDetailRouteKey> {
+        composable<RequestDetailRouteKey>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${DeepLinkConstants.SCHEME}://${DeepLinkConstants.HOST}/request/{requestId}"
+                },
+            ),
+        ) {
             RequestDetailRoute(
                 onBack = onBack,
                 onOpenChat = onOpenChat,
@@ -36,7 +44,13 @@ fun NavGraphBuilder.requestGraph(
                 onMessage = onMessage,
             )
         }
-        composable<RateRunnerRouteKey> {
+        composable<RateRunnerRouteKey>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${DeepLinkConstants.SCHEME}://${DeepLinkConstants.HOST}/rate/{requestId}"
+                },
+            ),
+        ) {
             RateRunnerRoute(
                 onDone = onBack,
                 onMessage = onMessage,

@@ -2,9 +2,11 @@ package com.app.hatli.feature.chat.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.app.hatli.core.ui.navigation.ChatGraph
 import com.app.hatli.core.ui.navigation.ChatRoute as ChatRouteKey
+import com.app.hatli.core.ui.navigation.DeepLinkConstants
 import com.app.hatli.feature.chat.presentation.ChatRoute
 
 fun NavGraphBuilder.chatGraph(
@@ -14,7 +16,13 @@ fun NavGraphBuilder.chatGraph(
     navigation<ChatGraph>(
         startDestination = ChatRouteKey(""),
     ) {
-        composable<ChatRouteKey> {
+        composable<ChatRouteKey>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${DeepLinkConstants.SCHEME}://${DeepLinkConstants.HOST}/chat/{requestId}"
+                },
+            ),
+        ) {
             ChatRoute(onBack = onBack, onMessage = onMessage)
         }
     }

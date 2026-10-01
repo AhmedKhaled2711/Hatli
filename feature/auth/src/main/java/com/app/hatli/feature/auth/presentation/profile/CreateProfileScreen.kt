@@ -1,13 +1,13 @@
 package com.app.hatli.feature.auth.presentation.profile
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,25 +15,36 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.HatliSecondaryButton
+import com.app.hatli.core.designsystem.theme.BrandCoral
+import com.app.hatli.core.designsystem.theme.CharcoalDark
+import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
+import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.CollectUiEffect
 
 @Composable
@@ -61,115 +72,143 @@ fun CreateProfileScreen(
         label = "profileSetupProgress",
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .systemBarsPadding()
-            .padding(HatliSpacing.lg),
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = OffWhiteCanvas,
     ) {
-        ProfileSetupHeader(
-            roleLabel = state.role.name,
-            stepTitle = state.stepTitle,
-            stepDescription = state.stepDescription,
-            stepNumber = state.stepNumber,
-            totalSteps = state.totalSteps,
-            progress = animatedProgress,
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .systemBarsPadding()
+                .imePadding()
+                .padding(horizontal = HatliSpacing.lg, vertical = HatliSpacing.md),
+        ) {
+            ProfileSetupHeader(
+                isRunner = state.isRunner,
+                stepTitle = localizedStepTitle(state.step),
+                stepDescription = localizedStepDescription(state.step),
+                stepNumber = state.stepNumber,
+                totalSteps = state.totalSteps,
+                progress = animatedProgress,
+            )
 
-        Spacer(modifier = Modifier.height(HatliSpacing.lg))
+            Spacer(modifier = Modifier.height(HatliSpacing.md))
 
-        AnimatedContent(
-            targetState = state.step,
-            transitionSpec = {
-                val forward = targetState.ordinal >= initialState.ordinal
-                if (forward) {
-                    (slideInHorizontally { it / 3 } + fadeIn()) togetherWith
-                        (slideOutHorizontally { -it / 3 } + fadeOut())
-                } else {
-                    (slideInHorizontally { -it / 3 } + fadeIn()) togetherWith
-                        (slideOutHorizontally { it / 3 } + fadeOut())
-                }
-            },
-            label = "profileSetupStep",
-            modifier = Modifier.weight(1f),
-        ) { step ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
-            ) {
-                when (step) {
-                    ProfileSetupStep.Personal -> PersonalInfoStep(state = state, onEvent = onEvent)
-                    ProfileSetupStep.Address -> AddressStep(state = state, onEvent = onEvent)
-                    ProfileSetupStep.Transport -> TransportStep(state = state, onEvent = onEvent)
-                    ProfileSetupStep.Verification -> VerificationStep(state = state, onEvent = onEvent)
+            AnimatedContent(
+                targetState = state.step,
+                transitionSpec = {
+                    val forward = targetState.ordinal >= initialState.ordinal
+                    if (forward) {
+                        (slideInHorizontally { it / 3 } + fadeIn()) togetherWith
+                            (slideOutHorizontally { -it / 3 } + fadeOut())
+                    } else {
+                        (slideInHorizontally { -it / 3 } + fadeIn()) togetherWith
+                            (slideOutHorizontally { it / 3 } + fadeOut())
+                    }
+                },
+                label = "profileSetupStep",
+                modifier = Modifier.weight(1f),
+            ) { step ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+                ) {
+                    when (step) {
+                        ProfileSetupStep.Personal -> PersonalInfoStep(state = state, onEvent = onEvent)
+                        ProfileSetupStep.Address -> AddressStep(state = state, onEvent = onEvent)
+                        ProfileSetupStep.Transport -> TransportStep(state = state, onEvent = onEvent)
+                        ProfileSetupStep.Verification -> VerificationStep(state = state, onEvent = onEvent)
+                    }
                 }
             }
-        }
 
-        state.errorMessage?.let { message ->
-            Text(
-                text = message,
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = HatliSpacing.sm),
+            state.errorMessage?.let { message ->
+                Text(
+                    text = message,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = HatliSpacing.sm),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(HatliSpacing.md))
+
+            ProfileSetupFooter(
+                isFirstStep = state.isFirstStep,
+                isLastStep = state.isLastStep,
+                isLoading = state.isLoading,
+                onBack = { onEvent(CreateProfileUiEvent.Back) },
+                onNext = {
+                    if (state.isLastStep) onEvent(CreateProfileUiEvent.Submit)
+                    else onEvent(CreateProfileUiEvent.Next)
+                },
             )
         }
-
-        Spacer(modifier = Modifier.height(HatliSpacing.md))
-
-        ProfileSetupFooter(
-            isFirstStep = state.isFirstStep,
-            isLastStep = state.isLastStep,
-            isLoading = state.isLoading,
-            onBack = { onEvent(CreateProfileUiEvent.Back) },
-            onNext = {
-                if (state.isLastStep) onEvent(CreateProfileUiEvent.Submit)
-                else onEvent(CreateProfileUiEvent.Next)
-            },
-        )
     }
 }
 
 @Composable
 private fun ProfileSetupHeader(
-    roleLabel: String,
+    isRunner: Boolean,
     stepTitle: String,
     stepDescription: String,
     stepNumber: Int,
     totalSteps: Int,
     progress: Float,
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-        Text(
-            text = "Setting up as $roleLabel",
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-        )
+    Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = if (isRunner) "إعداد حساب كابتن توصيل" else "إعداد حساب طالب خدمة",
+                style = MaterialTheme.typography.labelLarge.copy(
+                    color = BrandCoral,
+                    fontWeight = FontWeight.Bold,
+                ),
+            )
+            Text(
+                text = "الخطوة $stepNumber من $totalSteps",
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = CharcoalMuted,
+                    fontSize = 13.sp,
+                ),
+            )
+        }
+
         LinearProgressIndicator(
             progress = { progress },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp)
+                .clip(RoundedCornerShape(3.dp))
                 .semantics {
-                    contentDescription = "Step $stepNumber of $totalSteps"
+                    contentDescription = "الخطوة $stepNumber من $totalSteps"
                 },
-            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            color = BrandCoral,
+            trackColor = BrandCoral.copy(alpha = 0.15f),
         )
-        Text(
-            text = "Step $stepNumber of $totalSteps",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+
+        Spacer(modifier = Modifier.height(HatliSpacing.xxs))
+
         Text(
             text = stepTitle,
-            style = MaterialTheme.typography.headlineLarge,
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontWeight = FontWeight.Bold,
+                color = CharcoalDark,
+                fontSize = 22.sp,
+            ),
         )
         Text(
             text = stepDescription,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = CharcoalMuted,
+                lineHeight = 20.sp,
+            ),
         )
     }
 }
@@ -189,7 +228,7 @@ private fun ProfileSetupFooter(
     ) {
         if (!isFirstStep) {
             HatliSecondaryButton(
-                text = "Back",
+                text = "السابق",
                 onClick = onBack,
                 modifier = Modifier.weight(1f),
                 enabled = !isLoading,
@@ -197,9 +236,9 @@ private fun ProfileSetupFooter(
         }
         HatliPrimaryButton(
             text = when {
-                isLoading -> "Saving…"
-                isLastStep -> "Finish"
-                else -> "Next"
+                isLoading -> "جاري الحفظ..."
+                isLastStep -> "إكمال التسجيل"
+                else -> "التالي"
             },
             onClick = onNext,
             modifier = Modifier.weight(1f),
@@ -207,3 +246,18 @@ private fun ProfileSetupFooter(
         )
     }
 }
+
+private fun localizedStepTitle(step: ProfileSetupStep): String = when (step) {
+    ProfileSetupStep.Personal -> "البيانات الشخصية"
+    ProfileSetupStep.Address -> "عنوان السكن والإقامة"
+    ProfileSetupStep.Transport -> "وسيلة التوصيل"
+    ProfileSetupStep.Verification -> "توثيق الهوية"
+}
+
+private fun localizedStepDescription(step: ProfileSetupStep): String = when (step) {
+    ProfileSetupStep.Personal -> "أدخل اسمك وبياناتك الأساسية لتخصيص تجربتك في هاتلي."
+    ProfileSetupStep.Address -> "أضف عنوانك لتسهيل استلام واستلام الطلبات بدقة."
+    ProfileSetupStep.Transport -> "اختر وسيلة التنقل التي تستخدمها لتحديد نوع الطلبات المناسبة."
+    ProfileSetupStep.Verification -> "أدخل رقم الهوية الوطنية لإتمام تفعيل حسابك."
+}
+

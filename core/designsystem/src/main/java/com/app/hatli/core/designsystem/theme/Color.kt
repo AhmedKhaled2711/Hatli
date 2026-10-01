@@ -119,3 +119,14 @@ object HatliColors {
     val Disabled = Gray400
     val DisabledContainer = Gray100
 }
+
+// Top-level aliases for direct imports across features
+val BrandCoral = HatliColors.BrandCoral
+val CoralContainer = HatliColors.CoralContainer
+val BrandTeal = HatliColors.BrandTeal
+val TealContainer = HatliColors.TealContainer
+val OffWhiteCanvas = HatliColors.OffWhiteCanvas
+val CharcoalDark = HatliColors.CharcoalDark
+val CharcoalMuted = HatliColors.CharcoalMuted
+val AmberPending = HatliColors.AmberPending
+

@@ -15,10 +15,16 @@ object HatliSpacing {
 }
 
 object HatliRadius {
+    val chip: Dp = 8.dp
     val sm: Dp = 8.dp
+    val input: Dp = 12.dp
+    val button: Dp = 12.dp
     val md: Dp = 12.dp
     val lg: Dp = 16.dp
+    val card: Dp = 20.dp
     val xl: Dp = 24.dp
+    val modal: Dp = 28.dp
+    val pill: Dp = 32.dp
 }
 
 object HatliElevation {

@@ -24,6 +24,8 @@ fun HatliTextField(
     maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val extended = HatliTheme.extendedColors
     val scheme = MaterialTheme.colorScheme
@@ -41,6 +43,8 @@ fun HatliTextField(
         supportingText = supportingText?.let {
             { Text(it, style = typography.bodySmall) }
         },
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
         keyboardOptions = keyboardOptions,
         visualTransformation = visualTransformation,
         shape = MaterialTheme.shapes.medium,
