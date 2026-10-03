@@ -1,12 +1,10 @@
 package com.app.hatli.feature.auth.presentation.login
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -24,12 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
@@ -39,6 +37,7 @@ import com.app.hatli.core.designsystem.theme.HatliRadius
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.ui.base.CollectUiEffect
+import com.app.hatli.core.ui.util.findActivity
 import com.app.hatli.feature.auth.R
 
 @Composable
@@ -48,6 +47,8 @@ fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    val activity = context.findActivity()
 
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
@@ -112,6 +113,7 @@ fun LoginScreen(
                     value = state.phone,
                     onValueChange = { onEvent(LoginUiEvent.PhoneChanged(it)) },
                     label = stringResource(R.string.auth_phone_number),
+                    placeholder = "01007394856",
                     isError = state.errorMessage != null,
                     supportingText = state.errorMessage,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),

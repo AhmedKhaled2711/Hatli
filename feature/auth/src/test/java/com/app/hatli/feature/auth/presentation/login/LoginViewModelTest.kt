@@ -1,12 +1,15 @@
 package com.app.hatli.feature.auth.presentation.login
 
+import android.util.Log
 import app.cash.turbine.test
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.domain.usecase.auth.SendOtpUseCase
 import com.app.hatli.core.model.OtpSession
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -27,6 +30,11 @@ class LoginViewModelTest {
 
     @Before
     fun setUp() {
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
+        every { Log.e(any(), any()) } returns 0
+        every { Log.e(any(), any(), any()) } returns 0
+
         Dispatchers.setMain(testDispatcher)
         viewModel = LoginViewModel(sendOtpUseCase)
     }
@@ -47,9 +55,10 @@ class LoginViewModelTest {
 
     @Test
     fun `Submit success sends GoOtp effect`() = runTest {
-        val phone = "+201012345678"
-        val session = OtpSession("ver_id", phone)
-        coEvery { sendOtpUseCase(phone) } returns Result.Success(session)
+        val phone = "01012345678"
+        val sanitized = "+201012345678"
+        val session = OtpSession("ver_id", sanitized)
+        coEvery { sendOtpUseCase(sanitized) } returns Result.Success(session)
 
         viewModel.onEvent(LoginUiEvent.PhoneChanged(phone))
 
@@ -58,7 +67,7 @@ class LoginViewModelTest {
             testDispatcher.scheduler.advanceUntilIdle()
 
             val effect = awaitItem()
-            assertThat(effect).isEqualTo(LoginUiEffect.GoOtp("ver_id", phone))
+            assertThat(effect).isEqualTo(LoginUiEffect.GoOtp("ver_id", sanitized))
         }
     }
 }

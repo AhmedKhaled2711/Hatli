@@ -32,6 +32,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (::authActivityHolder.isInitialized) {
+            authActivityHolder.set(this)
+        }
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.auto(
                 lightScrim = AndroidColor.TRANSPARENT,
@@ -43,16 +46,15 @@ class MainActivity : ComponentActivity() {
             ),
         )
         setContent {
-            DisposableEffect(Unit) {
+            DisposableEffect(this) {
                 authActivityHolder.set(this@MainActivity)
-                onDispose { authActivityHolder.set(null) }
+                onDispose {
+                    // Do not clear activity reference on simple compose disposal if activity is still valid
+                }
             }
-            // FollowSystem applies light + dark from device setting.
             HatliTheme(themeMode = HatliThemeMode.FollowSystem) {
                 val snackbarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
-                // Zero insets here — each destination owns status/nav bar padding once.
-                // Nesting Scaffold + TopAppBar insets caused a large empty band above Home.
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -71,6 +73,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (::authActivityHolder.isInitialized) {
+            authActivityHolder.set(this)
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         if (::authActivityHolder.isInitialized) {
@@ -78,10 +87,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onPause() {
+    override fun onDestroy() {
         if (::authActivityHolder.isInitialized) {
             authActivityHolder.set(null)
         }
-        super.onPause()
+        super.onDestroy()
     }
 }

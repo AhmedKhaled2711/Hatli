@@ -1,6 +1,8 @@
 package com.app.hatli.core.data.firebase
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,5 +23,17 @@ class AuthActivityHolder @Inject constructor() {
     fun getOrNull(): Activity? = activityRef?.get()
 
     fun require(): Activity =
-        getOrNull() ?: error("No Activity bound for phone authentication")
+        getOrNull() ?: error("No Activity bound for phone authentication. Ensure MainActivity is active.")
+}
+
+/**
+ * Helper extension to safely unwrap an Activity from any Context/ContextWrapper in Jetpack Compose.
+ */
+fun Context.findActivity(): Activity? {
+    var current = this
+    while (current is ContextWrapper) {
+        if (current is Activity) return current
+        current = current.baseContext
+    }
+    return null
 }
