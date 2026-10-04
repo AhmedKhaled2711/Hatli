@@ -42,6 +42,7 @@ import com.app.hatli.core.designsystem.theme.BrandCoral
 import com.app.hatli.core.designsystem.theme.BrandTeal
 import com.app.hatli.core.designsystem.theme.CharcoalDark
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
 import com.app.hatli.core.model.Request
 import com.app.hatli.core.model.RequestStatus
 
@@ -55,21 +56,21 @@ fun StatusHeroCard(req: Request, isAr: Boolean) {
 
     val containerBg by animateColorAsState(
         targetValue = when {
-            isPending -> Color(0xFFFFF4D6)
-            isAcceptedOrProgress || isCompleted -> Color(0xFFEAFDF9)
-            isOnTheWay -> Color(0xFFFFF4F0)
-            isCancelled -> Color(0xFFFDE8E8)
-            else -> Color(0xFFF8F9FA)
+            isPending -> MaterialTheme.colorScheme.tertiaryContainer
+            isAcceptedOrProgress || isCompleted -> BrandTeal.copy(alpha = 0.12f)
+            isOnTheWay -> BrandCoral.copy(alpha = 0.10f)
+            isCancelled -> MaterialTheme.colorScheme.errorContainer
+            else -> OffWhiteCanvas
         },
         animationSpec = tween(durationMillis = 500, easing = FastOutSlowInEasing),
         label = "heroColorMorph",
     )
 
     val accentColor = when {
-        isPending -> Color(0xFFD97706)
+        isPending -> MaterialTheme.colorScheme.tertiary
         isAcceptedOrProgress || isCompleted -> BrandTeal
         isOnTheWay -> BrandCoral
-        isCancelled -> Color(0xFFE53E3E)
+        isCancelled -> MaterialTheme.colorScheme.error
         else -> CharcoalDark
     }
 

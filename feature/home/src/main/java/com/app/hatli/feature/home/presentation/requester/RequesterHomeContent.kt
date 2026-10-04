@@ -77,40 +77,49 @@ private data class QuickServiceCategory(
     val iconColor: Color,
 )
 
-private val QuickServiceCategories = listOf(
-    QuickServiceCategory(
-        id = "grocery",
-        title = "سوبر ماركت",
-        subtitle = "بقالة ومستلزمات منزلية",
-        icon = Icons.Default.ShoppingBag,
-        containerColor = Color(0xFFFFF4F0),
-        iconColor = BrandCoral,
-    ),
-    QuickServiceCategory(
-        id = "pharmacy",
-        title = "صيدلية ورعاية",
-        subtitle = "أدوية ومستلزمات طبية",
-        icon = Icons.Default.LocalPharmacy,
-        containerColor = Color(0xFFEAFDF9),
-        iconColor = BrandTeal,
-    ),
-    QuickServiceCategory(
-        id = "courier",
-        title = "طرد ومستندات",
-        subtitle = "نقل أوراق وأغراض",
-        icon = Icons.Default.LocalShipping,
-        containerColor = Color(0xFFEBF3FE),
-        iconColor = Color(0xFF2F6FED),
-    ),
-    QuickServiceCategory(
-        id = "custom_errand",
-        title = "مشوار مخصص",
-        subtitle = "اطلب أي شيء تريد",
-        icon = Icons.Default.MoreHoriz,
-        containerColor = Color(0xFFF5EEFE),
-        iconColor = Color(0xFF9333EA),
-    ),
-)
+@Composable
+private fun rememberQuickServiceCategories(): List<QuickServiceCategory> {
+    val primaryContainer = MaterialTheme.colorScheme.primaryContainer
+    val primary = MaterialTheme.colorScheme.primary
+    val tertiaryContainer = MaterialTheme.colorScheme.tertiaryContainer
+    val tertiary = MaterialTheme.colorScheme.tertiary
+    return androidx.compose.runtime.remember(primaryContainer, primary, tertiaryContainer, tertiary) {
+        listOf(
+            QuickServiceCategory(
+                id = "grocery",
+                title = "سوبر ماركت",
+                subtitle = "بقالة ومستلزمات منزلية",
+                icon = Icons.Default.ShoppingBag,
+                containerColor = CoralContainer,
+                iconColor = BrandCoral,
+            ),
+            QuickServiceCategory(
+                id = "pharmacy",
+                title = "صيدلية ورعاية",
+                subtitle = "أدوية ومستلزمات طبية",
+                icon = Icons.Default.LocalPharmacy,
+                containerColor = BrandTeal.copy(alpha = 0.12f),
+                iconColor = BrandTeal,
+            ),
+            QuickServiceCategory(
+                id = "courier",
+                title = "طرد ومستندات",
+                subtitle = "نقل أوراق وأغراض",
+                icon = Icons.Default.LocalShipping,
+                containerColor = primaryContainer,
+                iconColor = primary,
+            ),
+            QuickServiceCategory(
+                id = "custom_errand",
+                title = "مشوار مخصص",
+                subtitle = "اطلب أي شيء تريد",
+                icon = Icons.Default.MoreHoriz,
+                containerColor = tertiaryContainer,
+                iconColor = tertiary,
+            ),
+        )
+    }
+}
 
 @Composable
 fun RequesterHomeContent(
@@ -129,6 +138,8 @@ fun RequesterHomeContent(
         RequesterHomeSkeleton(modifier = modifier)
         return
     }
+
+    val quickServiceCategories = rememberQuickServiceCategories()
 
     Surface(
         modifier = modifier.fillMaxSize(),
@@ -176,7 +187,7 @@ fun RequesterHomeContent(
                         contentPadding = PaddingValues(horizontal = 2.dp),
                     ) {
                         items(
-                            items = QuickServiceCategories,
+                            items = quickServiceCategories,
                             key = { it.id },
                         ) { cat ->
                             CategoryCard(category = cat, onClick = { onQuickAction(cat.id) })

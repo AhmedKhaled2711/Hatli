@@ -48,36 +48,46 @@ private data class CategoryVisual(
     val iconColor: Color,
 )
 
-private val CategoryVisuals = listOf(
-    CategoryVisual(
-        category = RequestCategory.Shopping,
-        containerColor = Color(0xFFFFF4F0),
-        iconColor = BrandCoral,
-    ),
-    CategoryVisual(
-        category = RequestCategory.Pickup,
-        containerColor = Color(0xFFEAFDF9),
-        iconColor = BrandTeal,
-    ),
-    CategoryVisual(
-        category = RequestCategory.Bills,
-        containerColor = Color(0xFFEBF3FE),
-        iconColor = Color(0xFF2F6FED),
-    ),
-    CategoryVisual(
-        category = RequestCategory.Custom,
-        containerColor = Color(0xFFF5EEFE),
-        iconColor = Color(0xFF9333EA),
-    ),
-)
+@Composable
+private fun rememberCategoryVisuals(): List<CategoryVisual> {
+    val secondaryContainer = MaterialTheme.colorScheme.secondaryContainer
+    val secondary = MaterialTheme.colorScheme.secondary
+    val tertiaryContainer = MaterialTheme.colorScheme.tertiaryContainer
+    val tertiary = MaterialTheme.colorScheme.tertiary
+    return androidx.compose.runtime.remember(secondaryContainer, secondary, tertiaryContainer, tertiary) {
+        listOf(
+            CategoryVisual(
+                category = RequestCategory.Shopping,
+                containerColor = BrandCoral.copy(alpha = 0.10f),
+                iconColor = BrandCoral,
+            ),
+            CategoryVisual(
+                category = RequestCategory.Pickup,
+                containerColor = BrandTeal.copy(alpha = 0.12f),
+                iconColor = BrandTeal,
+            ),
+            CategoryVisual(
+                category = RequestCategory.Bills,
+                containerColor = secondaryContainer,
+                iconColor = secondary,
+            ),
+            CategoryVisual(
+                category = RequestCategory.Custom,
+                containerColor = tertiaryContainer,
+                iconColor = tertiary,
+            ),
+        )
+    }
+}
 
 @Composable
 fun CategoryStep(onEvent: (CreateRequestUiEvent) -> Unit) {
+    val categoryVisuals = rememberCategoryVisuals()
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
     ) {
-        CategoryVisuals.chunked(2).forEach { rowItems ->
+        categoryVisuals.chunked(2).forEach { rowItems ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(HatliSpacing.md),

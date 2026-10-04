@@ -115,7 +115,7 @@ fun FeeReviewStep(
                             modifier = Modifier
                                 .padding(horizontal = HatliSpacing.lg)
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(Color(0xFFFFF4F0))
+                                .background(BrandCoral.copy(alpha = 0.10f))
                                 .padding(horizontal = 20.dp, vertical = 10.dp),
                             contentAlignment = Alignment.Center,
                         ) {

@@ -28,10 +28,10 @@ data class HatliExtendedColors(
 )
 
 val LightHatliExtendedColors = HatliExtendedColors(
-    headerBackground = HatliColors.HeaderLight,
-    onHeaderBackground = HatliColors.DeepTeal,
-    statsCardBackground = HatliColors.StatsCardLight,
-    onStatsCardBackground = HatliColors.OnStatsCardLight,
+    headerBackground = HatliColors.BrandCoral,
+    onHeaderBackground = HatliColors.White,
+    statsCardBackground = HatliColors.CoralContainer,
+    onStatsCardBackground = HatliColors.CharcoalDark,
     onWhiteAndBlack = HatliColors.White,
     success = HatliColors.Success,
     successContainer = HatliColors.SuccessContainer,
@@ -47,18 +47,18 @@ val LightHatliExtendedColors = HatliExtendedColors(
     coralPrimary = HatliColors.BrandCoral,
     coralContainer = HatliColors.CoralContainer,
     amberPending = HatliColors.AmberPending,
-    mintAccent = HatliColors.BrandTeal,
+    mintAccent = HatliColors.Success,
     offWhiteCanvas = HatliColors.OffWhiteCanvas,
 )
 
 val DarkHatliExtendedColors = HatliExtendedColors(
     headerBackground = HatliColors.HeaderDark,
     onHeaderBackground = HatliColors.White,
-    statsCardBackground = HatliColors.BrandTeal,
-    onStatsCardBackground = HatliColors.OnStatsCardDark,
+    statsCardBackground = Color(0xFF4A1F12),
+    onStatsCardBackground = HatliColors.White,
     onWhiteAndBlack = HatliColors.OnStatsCardDark,
     success = HatliColors.Success,
-    successContainer = HatliColors.Teal900,
+    successContainer = Color(0xFF07362D),
     warning = HatliColors.Warning,
     warningContainer = HatliColors.WarningContainer,
     info = HatliColors.Info,
@@ -71,7 +71,7 @@ val DarkHatliExtendedColors = HatliExtendedColors(
     coralPrimary = HatliColors.BrandCoral,
     coralContainer = Color(0xFF4A1F12),
     amberPending = HatliColors.AmberPending,
-    mintAccent = HatliColors.BrandTeal,
+    mintAccent = HatliColors.Success,
     offWhiteCanvas = HatliColors.DarkBackground,
 )
 

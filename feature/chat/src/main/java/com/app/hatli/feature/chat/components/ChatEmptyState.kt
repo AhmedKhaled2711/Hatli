@@ -30,7 +30,7 @@ fun ChatEmptyState(
         Surface(
             modifier = Modifier.size(64.dp),
             shape = CircleShape,
-            color = HatliColors.Teal100,
+            color = MaterialTheme.colorScheme.primaryContainer,
         ) {
             Box(
                 contentAlignment = Alignment.Center,

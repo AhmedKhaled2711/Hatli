@@ -5,35 +5,39 @@ import androidx.compose.ui.graphics.Color
 /**
  * Hatli production color system.
  *
- * Brand direction: Warm Coral primary (#FF6B35) + Mint Teal (#30E6C1) + Off-White canvas (#F8F9FA).
+ * Brand direction: Warm Coral primary (#FF6B35) + Charcoal (#1E2022) + Off-White canvas (#F8F9FA).
+ * Semantic Green: Success (#0F9F55) & SuccessContainer (#E8F8F0).
  */
 object HatliColors {
 
     // -------------------------------------------------------------------------
-    // Brand Tokens
+    // Definitive Primary Brand Tokens
     // -------------------------------------------------------------------------
 
     val BrandCoral = Color(0xFFFF6B35)
     val CoralContainer = Color(0xFFFFEFEA)
-    val BrandTeal = Color(0xFF30E6C1)
-    val TealContainer = Color(0xFFEAFDF9)
 
-    val HeaderLight = BrandTeal
+    // Backwards-compatible Brand Teal aliases mapped to Warm Coral & Success Green
+    val BrandTeal = Color(0xFF0F9F55)
+    val TealContainer = Color(0xFFE8F8F0)
+
+    val HeaderLight = BrandCoral
     val HeaderDark = Color(0xFF121418)
 
-    val StatsCardLight = Color(0xFF07362D)
+    val StatsCardLight = Color(0xFFFF6B35)
     val OnStatsCardDark = Color(0xFF181A20)
-    val OnStatsCardLight = BrandTeal
+    val OnStatsCardLight = Color(0xFFFFFFFF)
 
     val DarkBackground = Color(0xFF121418)
 
-    val Teal900 = Color(0xFF063D36)
+    // Legacy Teal scale aliases for backwards compatibility
+    val Teal900 = Color(0xFF1E2022)
     val Teal800 = Color(0xFF075C50)
-    val Teal700 = Color(0xFF0F9F89)
-    val Teal500 = BrandTeal
+    val Teal700 = Color(0xFF0F9F55)
+    val Teal500 = BrandCoral
     val Teal400 = Color(0xFF2FE0BD)
-    val Teal300 = Color(0xFF72F4DC)
-    val Teal100 = Color(0xFFD4FBF3)
+    val Teal300 = BrandCoral
+    val Teal100 = Color(0xFFFFEFEA)
     val Teal50 = Color(0xFFEDFFFB)
 
     // -------------------------------------------------------------------------
@@ -56,16 +60,16 @@ object HatliColors {
     val Gray800 = Color(0xFF1E1E1E)
     val Gray900 = Color(0xFF121212)
 
-    val DeepTeal = Color(0xFF063D36)
+    val DeepTeal = Color(0xFF0F9F55)
 
     // -------------------------------------------------------------------------
     // Semantic Tokens - Light
     // -------------------------------------------------------------------------
 
-    val Primary = BrandTeal
-    val OnPrimary = DeepTeal
+    val Primary = BrandCoral
+    val OnPrimary = White
 
-    val Secondary = Gray700
+    val Secondary = CharcoalDark
     val OnSecondary = White
 
     val Surface = White
@@ -93,11 +97,11 @@ object HatliColors {
     val AmberPending = Color(0xFFFFB800)
 
     // -------------------------------------------------------------------------
-    // Success & Info
+    // Semantic Success (Exclusive Green Domain) & Info
     // -------------------------------------------------------------------------
 
-    val Success = Teal700
-    val SuccessContainer = Teal100
+    val Success = Color(0xFF0F9F55)
+    val SuccessContainer = Color(0xFFE8F8F0)
     val OnSuccess = White
 
     val Info = Color(0xFF2F6FED)
@@ -123,10 +127,11 @@ object HatliColors {
 // Top-level aliases for direct imports across features
 val BrandCoral = HatliColors.BrandCoral
 val CoralContainer = HatliColors.CoralContainer
-val BrandTeal = HatliColors.BrandTeal
-val TealContainer = HatliColors.TealContainer
+val BrandTeal = HatliColors.Success
+val TealContainer = HatliColors.SuccessContainer
 val OffWhiteCanvas = HatliColors.OffWhiteCanvas
 val CharcoalDark = HatliColors.CharcoalDark
 val CharcoalMuted = HatliColors.CharcoalMuted
 val AmberPending = HatliColors.AmberPending
-
+val SuccessGreen = HatliColors.Success
+val SuccessContainerGreen = HatliColors.SuccessContainer
