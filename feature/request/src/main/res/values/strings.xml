@@ -13,37 +13,61 @@
     <string name="request_detail_runner_title">Delivery Captain</string>
     <string name="request_detail_client_title">Client</string>
     <string name="request_detail_timeline_title">Status History Timeline</string>
-    <string name="request_detail_open_chat">Open Chat</string>
+    <string name="request_detail_open_chat">Chat with Captain</string>
     <string name="request_detail_updating">Updating…</string>
     <string name="request_detail_confirming">Confirming…</string>
     <string name="request_detail_confirm_delivery">Confirm Delivery</string>
-    <string name="request_detail_rate_runner">Rate Runner</string>
+    <string name="request_detail_rate_runner">Rate Captain</string>
     <string name="request_detail_cancel_title">Cancel Order Confirmation</string>
     <string name="request_detail_cancel_reason_label">Cancel reason</string>
     <string name="request_detail_cancelling">Cancelling…</string>
     <string name="request_detail_confirm_cancel">Confirm Cancel</string>
     <string name="request_detail_dismiss">Dismiss</string>
     <string name="request_detail_cancel_order">Cancel Order</string>
+    <string name="request_detail_pickup_location">Pickup Address / Shop</string>
+    <string name="request_detail_dropoff_location">Delivery Address</string>
+    <string name="request_detail_verified_captain">• Verified Captain</string>
+    <string name="request_detail_close">Close</string>
+
+    <!-- Status Hero Copy -->
+    <string name="status_hero_pending_title">Searching for a Captain…</string>
+    <string name="status_hero_pending_desc">You will be notified as soon as a nearby Captain accepts your request.</string>
+    <string name="status_hero_accepted_title">Request Accepted</string>
+    <string name="status_hero_accepted_desc">Captain %1$s is preparing to execute your request.</string>
+    <string name="status_hero_in_progress_title">In Progress</string>
+    <string name="status_hero_in_progress_desc">Captain %1$s is actively working on your request.</string>
+    <string name="status_hero_on_the_way_title">Captain is On The Way</string>
+    <string name="status_hero_on_the_way_desc">Track your delivery and chat with your Captain in real time.</string>
+    <string name="status_hero_delivered_title">Order Delivered</string>
+    <string name="status_hero_delivered_desc">Please inspect your order and confirm delivery.</string>
+    <string name="status_hero_completed_title">Order Completed</string>
+    <string name="status_hero_completed_desc">Thank you for using Hatli! Have a great day.</string>
+    <string name="status_hero_cancelled_title">Order Cancelled</string>
+    <string name="status_hero_cancelled_desc">This order has been cancelled.</string>
 
     <!-- Create Request Wizard -->
-    <string name="create_request_screen_title">Create Request</string>
-    <string name="create_request_step_category_title">What do you need?</string>
-    <string name="create_request_step_review_title">Review &amp; fee</string>
+    <string name="create_request_screen_title">New Request</string>
+    <string name="create_request_step_category_title">Select Service Type</string>
+    <string name="create_request_step_details_title">Order Details</string>
+    <string name="create_request_step_review_title">Review &amp; Fee</string>
     <string name="create_request_wizard_step_1">Step 1 of 3</string>
     <string name="create_request_wizard_step_2">Step 2 of 3</string>
     <string name="create_request_wizard_step_3">Step 3 of 3</string>
+    <string name="create_request_step_1_name">Category</string>
+    <string name="create_request_step_2_name">Details</string>
+    <string name="create_request_step_3_name">Review</string>
 
     <string name="create_request_cancel">Cancel</string>
-    <string name="create_request_continue">Continue</string>
+    <string name="create_request_continue">Continue to Details</string>
     <string name="create_request_back">Back</string>
-    <string name="create_request_confirm">Confirm request</string>
+    <string name="create_request_confirm">Confirm &amp; Send Request</string>
 
     <!-- Category Labels & Subtitles -->
     <string name="category_shopping_label">Shopping</string>
     <string name="category_shopping_subtitle">Supermarket, butcher, bakery, and more</string>
-    <string name="category_pickup_label">Pickup</string>
+    <string name="category_pickup_label">Pickup &amp; Delivery</string>
     <string name="category_pickup_subtitle">Pick up from A and deliver to B</string>
-    <string name="category_bills_label">Bills</string>
+    <string name="category_bills_label">Pay Bills</string>
     <string name="category_bills_subtitle">Pay a bill or subscription</string>
     <string name="category_custom_label">Custom Request</string>
     <string name="category_custom_subtitle">Anything else nearby</string>
@@ -81,5 +105,16 @@
     <string name="create_request_success_title">Request Created!</string>
     <string name="create_request_success_subtitle">Your request is now live for runners around you.</string>
     <string name="create_request_return_home">Return to Home</string>
+
+    <!-- Rating Screen -->
+    <string name="rate_runner_title">Rate Delivery Captain</string>
+    <string name="rate_runner_subtitle">How was your delivery experience with your Captain?</string>
+    <string name="rate_feedback_5">Excellent! 🔥</string>
+    <string name="rate_feedback_4">Very Good 👍</string>
+    <string name="rate_feedback_3">Average 😐</string>
+    <string name="rate_feedback_2">Poor 😞</string>
+    <string name="rate_feedback_1">Very Poor ❌</string>
+    <string name="rate_runner_comment_hint">Add optional feedback for your Captain…</string>
+    <string name="rate_runner_submit">Submit Rating</string>
 
 </resources>

@@ -37,6 +37,10 @@ internal fun CreateRequestInput.toFirestoreMap(
     put(FirestoreRequestDataSource.FIELD_DELIVERY_FEE, deliveryFee)
     put(FirestoreRequestDataSource.FIELD_PICKUP_LABEL, pickupLabel)
     put(FirestoreRequestDataSource.FIELD_DROPOFF_LABEL, dropoffLabel)
+    put(FirestoreRequestDataSource.FIELD_PICKUP_LATITUDE, pickupLatitude)
+    put(FirestoreRequestDataSource.FIELD_PICKUP_LONGITUDE, pickupLongitude)
+    put(FirestoreRequestDataSource.FIELD_DROPOFF_LATITUDE, dropoffLatitude)
+    put(FirestoreRequestDataSource.FIELD_DROPOFF_LONGITUDE, dropoffLongitude)
     put(FirestoreRequestDataSource.FIELD_SHOPPING, shopping?.let {
         mapOf("shopName" to it.shopName, "itemsText" to it.itemsText, "notes" to it.notes)
     })
@@ -79,6 +83,14 @@ internal fun DocumentSnapshot.toRequest(): Request? {
             ?: 0.0,
         pickupLabel = getString(FirestoreRequestDataSource.FIELD_PICKUP_LABEL),
         dropoffLabel = getString(FirestoreRequestDataSource.FIELD_DROPOFF_LABEL),
+        pickupLatitude = getDouble(FirestoreRequestDataSource.FIELD_PICKUP_LATITUDE)
+            ?: getLong(FirestoreRequestDataSource.FIELD_PICKUP_LATITUDE)?.toDouble(),
+        pickupLongitude = getDouble(FirestoreRequestDataSource.FIELD_PICKUP_LONGITUDE)
+            ?: getLong(FirestoreRequestDataSource.FIELD_PICKUP_LONGITUDE)?.toDouble(),
+        dropoffLatitude = getDouble(FirestoreRequestDataSource.FIELD_DROPOFF_LATITUDE)
+            ?: getLong(FirestoreRequestDataSource.FIELD_DROPOFF_LATITUDE)?.toDouble(),
+        dropoffLongitude = getDouble(FirestoreRequestDataSource.FIELD_DROPOFF_LONGITUDE)
+            ?: getLong(FirestoreRequestDataSource.FIELD_DROPOFF_LONGITUDE)?.toDouble(),
         shopping = (get(FirestoreRequestDataSource.FIELD_SHOPPING) as? Map<String, Any?>)?.let { m ->
             val items = m["itemsText"] as? String ?: return@let null
             ShoppingDetails(m["shopName"] as? String, items, m["notes"] as? String)

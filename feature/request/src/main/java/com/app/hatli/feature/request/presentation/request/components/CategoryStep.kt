@@ -1,8 +1,5 @@
 package com.app.hatli.feature.request.presentation.request.components
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,20 +18,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.BrandTeal
-import com.app.hatli.core.designsystem.theme.CharcoalDark
-import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.feature.request.presentation.request.CreateRequestUiEvent
@@ -50,31 +41,36 @@ private data class CategoryVisual(
 
 @Composable
 private fun rememberCategoryVisuals(): List<CategoryVisual> {
+    val primaryContainer = MaterialTheme.colorScheme.primaryContainer
+    val primary = MaterialTheme.colorScheme.primary
     val secondaryContainer = MaterialTheme.colorScheme.secondaryContainer
     val secondary = MaterialTheme.colorScheme.secondary
     val tertiaryContainer = MaterialTheme.colorScheme.tertiaryContainer
     val tertiary = MaterialTheme.colorScheme.tertiary
-    return androidx.compose.runtime.remember(secondaryContainer, secondary, tertiaryContainer, tertiary) {
+    val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
+    val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
+
+    return androidx.compose.runtime.remember(primaryContainer, primary, secondaryContainer, secondary, tertiaryContainer, tertiary, surfaceVariant, onSurfaceVariant) {
         listOf(
             CategoryVisual(
                 category = RequestCategory.Shopping,
-                containerColor = BrandCoral.copy(alpha = 0.10f),
-                iconColor = BrandCoral,
+                containerColor = primaryContainer,
+                iconColor = primary,
             ),
             CategoryVisual(
                 category = RequestCategory.Pickup,
-                containerColor = BrandTeal.copy(alpha = 0.12f),
-                iconColor = BrandTeal,
-            ),
-            CategoryVisual(
-                category = RequestCategory.Bills,
                 containerColor = secondaryContainer,
                 iconColor = secondary,
             ),
             CategoryVisual(
-                category = RequestCategory.Custom,
+                category = RequestCategory.Bills,
                 containerColor = tertiaryContainer,
                 iconColor = tertiary,
+            ),
+            CategoryVisual(
+                category = RequestCategory.Custom,
+                containerColor = surfaceVariant,
+                iconColor = onSurfaceVariant,
             ),
         )
     }
@@ -118,7 +114,7 @@ private fun CategoryMatrixCard(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(containerColor)
-            .border(1.dp, iconColor.copy(alpha = 0.2f), RoundedCornerShape(20.dp))
+            .border(1.dp, iconColor.copy(alpha = 0.25f), RoundedCornerShape(20.dp))
             .shadow(2.dp, RoundedCornerShape(20.dp), spotColor = iconColor.copy(alpha = 0.15f))
             .clickable(onClick = onClick)
             .padding(HatliSpacing.md),
@@ -149,21 +145,20 @@ private fun CategoryMatrixCard(
                 text = category.label(),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
-                    color = CharcoalDark,
                     fontSize = 14.sp,
                     lineHeight = 18.sp,
                 ),
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             Text(
                 text = category.subtitle(),
                 style = MaterialTheme.typography.bodyMedium.copy(
-                    color = CharcoalMuted,
                     fontSize = 11.sp,
                     lineHeight = 14.sp,
                 ),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }
 }
-

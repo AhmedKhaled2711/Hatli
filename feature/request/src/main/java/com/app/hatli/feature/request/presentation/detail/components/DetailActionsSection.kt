@@ -24,19 +24,7 @@ fun DetailActionsSection(
     isAdvancing: Boolean,
     onEvent: (RequestDetailUiEvent) -> Unit,
 ) {
-    val canChat = req.status != RequestStatus.Pending && req.status != RequestStatus.Cancelled
-
     Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-        if (canChat) {
-            BounceScaleClickable {
-                HatliPrimaryButton(
-                    text = stringResource(R.string.request_detail_open_chat),
-                    onClick = { onEvent(RequestDetailUiEvent.OpenChat) },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-        }
-
         if (isRunner && nextCta != null) {
             BounceScaleClickable {
                 HatliPrimaryButton(
@@ -45,7 +33,7 @@ fun DetailActionsSection(
                     } else nextCta,
                     onClick = { onEvent(RequestDetailUiEvent.AdvanceStatus) },
                     enabled = !isAdvancing,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -60,17 +48,17 @@ fun DetailActionsSection(
                     },
                     onClick = { onEvent(RequestDetailUiEvent.ConfirmDelivery) },
                     enabled = !isConfirming,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
 
         if (isRequester && req.status == RequestStatus.Completed && req.rating == null) {
             BounceScaleClickable {
-                HatliSecondaryButton(
+                HatliPrimaryButton(
                     text = stringResource(R.string.request_detail_rate_runner),
                     onClick = { onEvent(RequestDetailUiEvent.OpenRate) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }

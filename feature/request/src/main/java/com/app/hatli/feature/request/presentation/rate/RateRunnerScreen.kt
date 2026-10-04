@@ -6,8 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsBike
+import androidx.compose.material.icons.automirrored.filled.DirectionsBike
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material.icons.filled.Verified
@@ -31,12 +29,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,22 +48,16 @@ import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.HatliSecondaryButton
 import com.app.hatli.core.designsystem.component.HatliTextField
+import com.app.hatli.core.designsystem.component.auth.HatliAuthTopBar
 import com.app.hatli.core.designsystem.theme.AmberPending
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.BrandTeal
-import com.app.hatli.core.designsystem.theme.CharcoalDark
-import com.app.hatli.core.designsystem.theme.CharcoalMuted
-import com.app.hatli.core.designsystem.theme.CoralContainer
-import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
-import com.app.hatli.core.designsystem.theme.TealContainer
 import com.app.hatli.core.domain.usecase.request.SubmitRatingUseCase
 import com.app.hatli.core.ui.base.BaseViewModel
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.core.ui.base.UiEffect
 import com.app.hatli.core.ui.base.UiEvent
 import com.app.hatli.core.ui.base.UiState
+import com.app.hatli.feature.request.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -98,17 +89,12 @@ class RateRunnerViewModel @Inject constructor(
 
     override fun handleEvent(event: RateUiEvent) {
         when (event) {
-            is RateUiEvent.StarsChanged -> setState { copy(stars = event.stars.coerceIn(1, 5)) }
+            is RateUiEvent.StarsChanged -> setState { copy(stars = event.stars) }
             is RateUiEvent.CommentChanged -> setState { copy(comment = event.value) }
             RateUiEvent.Submit -> viewModelScope.launch {
                 setState { copy(isSubmitting = true) }
-                when (
-                    val result = submitRating(
-                        requestId,
-                        uiState.value.stars,
-                        uiState.value.comment,
-                    )
-                ) {
+                val current = uiState.value
+                when (val result = submitRating(requestId, current.stars, current.comment.ifBlank { null })) {
                     is Result.Success -> {
                         setState { copy(isSubmitting = false) }
                         sendEffect(RateUiEffect.Done)
@@ -125,14 +111,6 @@ class RateRunnerViewModel @Inject constructor(
     }
 }
 
-private val COMPLIMENT_TAGS = listOf(
-    "سريع جداً ⚡",
-    "أمين ومحترم 🤝",
-    "حافظ الأماكن 📍",
-    "تواصل ممتاز 📞"
-)
-
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RateRunnerRoute(
     onDone: () -> Unit,
@@ -140,7 +118,6 @@ fun RateRunnerRoute(
     viewModel: RateRunnerViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val selectedTags = remember { mutableStateListOf<String>() }
 
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
@@ -149,80 +126,86 @@ fun RateRunnerRoute(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(OffWhiteCanvas)
-            .systemBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(HatliSpacing.lg),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
+    RateRunnerScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+        onBack = onDone,
+    )
+}
+
+@Composable
+fun RateRunnerScreen(
+    state: RateUiState,
+    onEvent: (RateUiEvent) -> Unit,
+    onBack: () -> Unit,
+) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
     ) {
-        Spacer(modifier = Modifier.height(HatliSpacing.sm))
-
-        // Screen Header
-        Text(
-            text = "تقييم الكابتن",
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            color = CharcoalDark,
-            textAlign = TextAlign.Center
-        )
-
-        // Main Centered Rating Card
-        HatliCard(
-            modifier = Modifier.fillMaxWidth()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .systemBarsPadding(),
         ) {
+            HatliAuthTopBar(
+                title = stringResource(R.string.rate_runner_title),
+                onBack = onBack,
+            )
+
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
                     .padding(HatliSpacing.lg),
+                verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(HatliSpacing.md)
             ) {
-                // 80dp Runner Avatar in Mint Frame with Captain Badge
+                Spacer(modifier = Modifier.height(HatliSpacing.xs))
+
+                // Avatar with Captain Badge
                 Box(contentAlignment = Alignment.BottomEnd) {
                     Box(
                         modifier = Modifier
                             .size(80.dp)
                             .clip(CircleShape)
-                            .background(TealContainer),
-                        contentAlignment = Alignment.Center
+                            .background(MaterialTheme.colorScheme.primaryContainer),
+                        contentAlignment = Alignment.Center,
                     ) {
                         Icon(
-                            imageVector = Icons.Default.DirectionsBike,
+                            imageVector = Icons.AutoMirrored.Filled.DirectionsBike,
                             contentDescription = null,
-                            tint = BrandTeal,
-                            modifier = Modifier.size(44.dp)
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(44.dp),
                         )
                     }
                     Icon(
                         imageVector = Icons.Default.Verified,
-                        contentDescription = "Verified",
-                        tint = BrandTeal,
+                        contentDescription = stringResource(R.string.request_detail_verified_captain),
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .size(24.dp)
-                            .background(Color.White, CircleShape)
+                            .background(MaterialTheme.colorScheme.surface, CircleShape),
                     )
                 }
 
                 Text(
-                    text = "كيف كانت تجربتك مع كابتن التوصيل؟",
+                    text = stringResource(R.string.rate_runner_subtitle),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = CharcoalDark,
-                    textAlign = TextAlign.Center
+                    color = MaterialTheme.colorScheme.onBackground,
+                    textAlign = TextAlign.Center,
                 )
 
                 // Interactive 5-Star Row
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     (1..5).forEach { star ->
                         val isFilled = star <= state.stars
                         val starColor by animateColorAsState(
-                            targetValue = if (isFilled) AmberPending else CharcoalMuted.copy(alpha = 0.4f),
-                            label = "starColor"
+                            targetValue = if (isFilled) AmberPending else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                            label = "starColor",
                         )
 
                         Icon(
@@ -230,94 +213,63 @@ fun RateRunnerRoute(
                             contentDescription = "Star $star",
                             tint = starColor,
                             modifier = Modifier
-                                .size(40.dp)
-                                .clickable { viewModel.onEvent(RateUiEvent.StarsChanged(star)) }
+                                .size(44.dp)
+                                .clickable { onEvent(RateUiEvent.StarsChanged(star)) },
                         )
                     }
                 }
 
-                // Dynamic Arabic Micro-Copy Feedback
+                // Dynamic Rating Feedback
                 val ratingFeedback = when (state.stars) {
-                    5 -> "ممتاز جداً 🔥"
-                    4 -> "جيد جداً 👍"
-                    3 -> "متوسط 😐"
-                    2 -> "سيء 😞"
-                    else -> "سيء جداً ❌"
+                    5 -> stringResource(R.string.rate_feedback_5)
+                    4 -> stringResource(R.string.rate_feedback_4)
+                    3 -> stringResource(R.string.rate_feedback_3)
+                    2 -> stringResource(R.string.rate_feedback_2)
+                    else -> stringResource(R.string.rate_feedback_1)
                 }
 
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = CoralContainer
+                    color = MaterialTheme.colorScheme.primaryContainer,
                 ) {
                     Text(
                         text = ratingFeedback,
                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                        color = BrandCoral,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp),
                     )
                 }
 
-                // Multi-select Compliment Tag Chips
-                Text(
-                    text = "ما الذي أعجبك في الكابتن؟",
-                    style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                    color = CharcoalMuted,
-                    modifier = Modifier.padding(top = HatliSpacing.xs)
-                )
-
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    COMPLIMENT_TAGS.forEach { tag ->
-                        val isSelected = selectedTags.contains(tag)
-                        Surface(
-                            shape = RoundedCornerShape(16.dp),
-                            color = if (isSelected) BrandTeal else OffWhiteCanvas,
-                            modifier = Modifier.clickable {
-                                if (isSelected) selectedTags.remove(tag) else selectedTags.add(tag)
-                            }
-                        ) {
-                            Text(
-                                text = tag,
-                                style = MaterialTheme.typography.labelMedium,
-                                color = if (isSelected) Color.White else CharcoalDark,
-                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp)
-                            )
-                        }
+                HatliCard(modifier = Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier.padding(HatliSpacing.md),
+                        verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
+                    ) {
+                        HatliTextField(
+                            value = state.comment,
+                            onValueChange = { onEvent(RateUiEvent.CommentChanged(it)) },
+                            label = stringResource(R.string.rate_runner_comment_hint),
+                            placeholder = stringResource(R.string.rate_runner_comment_hint),
+                            modifier = Modifier.fillMaxWidth(),
+                        )
                     }
                 }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                HatliPrimaryButton(
+                    text = stringResource(R.string.rate_runner_submit),
+                    onClick = { onEvent(RateUiEvent.Submit) },
+                    enabled = !state.isSubmitting,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+
+                HatliSecondaryButton(
+                    text = stringResource(R.string.create_request_back),
+                    onClick = onBack,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
-        }
-
-        // Multiline Optional Feedback Input
-        HatliTextField(
-            value = state.comment,
-            onValueChange = { viewModel.onEvent(RateUiEvent.CommentChanged(it)) },
-            label = "ملاحظات إضافية (اختياري)",
-            placeholder = "اكتب رأيك أو أسرار تجربتك معنا...",
-            maxLines = 4,
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        // Actions
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)
-        ) {
-            HatliPrimaryButton(
-                text = if (state.isSubmitting) "جاري إرسال التقييم..." else "إرسال التقييم",
-                onClick = { viewModel.onEvent(RateUiEvent.Submit) },
-                enabled = !state.isSubmitting,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            HatliSecondaryButton(
-                text = "تخطي الآن",
-                onClick = { viewModel.onEvent(RateUiEvent.Back) },
-                modifier = Modifier.fillMaxWidth()
-            )
         }
     }
 }

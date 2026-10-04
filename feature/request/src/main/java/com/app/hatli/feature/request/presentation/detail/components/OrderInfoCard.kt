@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Navigation
-import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,12 +24,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.component.HatliCard
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.BrandTeal
-import com.app.hatli.core.designsystem.theme.CharcoalDark
-import com.app.hatli.core.designsystem.theme.CharcoalMuted
-import com.app.hatli.core.designsystem.theme.CoralContainer
-import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.Request
 import com.app.hatli.feature.request.R
@@ -39,81 +33,81 @@ fun OrderInfoCard(req: Request) {
     HatliCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(HatliSpacing.md),
-            verticalArrangement = Arrangement.spacedBy(HatliSpacing.md)
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(R.string.request_detail_summary_title),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                    color = CharcoalDark
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
 
                 Surface(
                     shape = RoundedCornerShape(8.dp),
-                    color = CoralContainer,
-                    modifier = Modifier.padding(2.dp)
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.padding(2.dp),
                 ) {
                     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         Text(
                             text = "${req.deliveryFee.toInt()} EGP",
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                            color = BrandCoral,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                         )
                     }
                 }
             }
 
             DetailRowItem(
-                icon = Icons.Default.ReceiptLong,
+                icon = Icons.AutoMirrored.Filled.ReceiptLong,
                 label = stringResource(R.string.request_detail_description),
-                value = req.description
+                value = req.description,
             )
 
             if (!req.pickupLabel.isNullOrBlank()) {
                 DetailRowItem(
                     icon = Icons.Default.LocationOn,
-                    label = "مكان الاستلام / المحل",
+                    label = stringResource(R.string.request_detail_pickup_location),
                     value = req.pickupLabel ?: "",
-                    valueColor = BrandTeal
+                    valueColor = MaterialTheme.colorScheme.primary,
                 )
             }
 
             if (!req.dropoffLabel.isNullOrBlank()) {
                 DetailRowItem(
                     icon = Icons.Default.Navigation,
-                    label = "عنوان التوصيل",
-                    value = req.dropoffLabel ?: ""
+                    label = stringResource(R.string.request_detail_dropoff_location),
+                    value = req.dropoffLabel ?: "",
                 )
             }
 
             HorizontalDivider(
-                color = HatliColors.OffWhiteCanvas,
-                thickness = 1.dp
+                color = MaterialTheme.colorScheme.outlineVariant,
+                thickness = 1.dp,
             )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = stringResource(R.string.request_detail_delivery_fee),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = CharcoalMuted
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                     Text(
                         text = stringResource(
                             R.string.request_detail_delivery_fee_format,
-                            req.deliveryFee.toInt()
+                            req.deliveryFee.toInt(),
                         ),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = BrandCoral
+                        color = MaterialTheme.colorScheme.primary,
                     )
                 }
             }

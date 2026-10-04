@@ -13,24 +13,26 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.hatli.core.designsystem.component.HatliSecondaryButton
 import com.app.hatli.core.designsystem.component.auth.HatliAuthTopBar
-import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.request.R
 import com.app.hatli.feature.request.presentation.detail.components.BounceScaleClickable
@@ -47,11 +49,12 @@ import com.app.hatli.feature.request.presentation.detail.components.TimelineCard
 fun RequestDetailRoute(
     onBack: () -> Unit,
     onOpenChat: (String) -> Unit,
-    onOpenRate: (String) -> Unit = {},
+    onOpenRate: (String) -> Unit,
     onMessage: (String) -> Unit,
     viewModel: RequestDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
             RequestDetailUiEffect.NavigateBack -> onBack()
@@ -60,10 +63,11 @@ fun RequestDetailRoute(
             is RequestDetailUiEffect.ShowMessage -> onMessage(effect.message)
         }
     }
+
     RequestDetailScreen(
         state = state,
         onEvent = viewModel::onEvent,
-        onBack = onBack
+        onBack = onBack,
     )
 }
 
@@ -71,135 +75,146 @@ fun RequestDetailRoute(
 fun RequestDetailScreen(
     state: RequestDetailUiState,
     onEvent: (RequestDetailUiEvent) -> Unit,
-    onBack: () -> Unit = { onEvent(RequestDetailUiEvent.Back) }
+    onBack: () -> Unit,
 ) {
-    val isAr = androidx.compose.ui.platform.LocalLayoutDirection.current == androidx.compose.ui.unit.LayoutDirection.Rtl
+    val isAr = java.util.Locale.getDefault().language == "ar"
+    val req = state.request
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+    val hasPrimaryAction = (state.isRunner && state.runnerNextCta != null) ||
+            (state.isRequester && req?.status == RequestStatus.Delivered) ||
+            (state.isRequester && req?.status == RequestStatus.Completed && req.rating == null)
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
     ) {
-        AnimatedContent(
-            targetState = Pair(state.isLoading, state.request == null),
-            transitionSpec = {
-                fadeIn(animationSpec = tween(400)) togetherWith
-                        fadeOut(animationSpec = tween(200))
-            },
-            label = "ScreenStateTransition"
-        ) { (isLoading, isNull) ->
-            when {
-                isLoading -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(
-                            color = HatliColors.BrandTeal
-                        )
-                    }
-                }
-
-                isNull -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.request_detail_not_found),
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-                }
-
-                else -> {
-                    val req = state.request!!
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .systemBarsPadding()
-                    ) {
-                        // Fixed Top Bar
-                        HatliAuthTopBar(
-                            title = stringResource(R.string.request_detail_title),
-                            onBack = onBack
-                        )
-
-                        // Scrollable Content
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .verticalScroll(rememberScrollState())
-                                .padding(HatliSpacing.lg),
-                            verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .systemBarsPadding(),
+        ) {
+            AnimatedContent(
+                targetState = Pair(state.isLoading, state.request == null),
+                transitionSpec = {
+                    fadeIn(animationSpec = tween(400)) togetherWith
+                            fadeOut(animationSpec = tween(200))
+                },
+                label = "ScreenStateTransition",
+            ) { (isLoading, isNull) ->
+                when {
+                    isLoading -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
                         ) {
-                            EntranceAnimatedContainer(delayMillis = 0) {
-                                StatusHeroCard(
-                                    req = req,
-                                    isAr = isAr
-                                )
-                            }
+                            CircularProgressIndicator(
+                                color = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
 
-                            EntranceAnimatedContainer(delayMillis = 100) {
-                                DetailStatusTrack(
-                                    req = req,
-                                    isAr = isAr
-                                )
-                            }
+                    isNull -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.request_detail_not_found),
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.titleMedium,
+                            )
+                        }
+                    }
 
-                            EntranceAnimatedContainer(delayMillis = 200) {
-                                OrderInfoCard(req = req)
-                            }
+                    else -> {
+                        val activeReq = req!!
 
-                            EntranceAnimatedContainer(delayMillis = 300) {
-                                CounterpartCard(
-                                    req = req,
-                                    isRequester = state.isRequester
-                                )
-                            }
-
-                            if (req.statusHistory.isNotEmpty()) {
-                                EntranceAnimatedContainer(delayMillis = 400) {
-                                    TimelineCard(
-                                        req = req,
-                                        isAr = isAr
-                                    )
-                                }
-                            }
-
-                            EntranceAnimatedContainer(delayMillis = 500) {
-                                DetailActionsSection(
-                                    req = req,
-                                    isRequester = state.isRequester,
-                                    isRunner = state.isRunner,
-                                    nextCta = state.runnerNextCta,
-                                    isConfirming = state.isConfirming,
-                                    isAdvancing = state.isAdvancing,
-                                    onEvent = onEvent
-                                )
-                            }
-
-                            EntranceAnimatedContainer(delayMillis = 600) {
-                                CancelWorkflowSection(
-                                    state = state,
-                                    onEvent = onEvent
-                                )
-                            }
-
-                            Spacer(
-                                modifier = Modifier.height(HatliSpacing.sm)
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                        ) {
+                            // Fixed Top Bar
+                            HatliAuthTopBar(
+                                title = stringResource(R.string.request_detail_title),
+                                onBack = onBack,
                             )
 
-                            BounceScaleClickable {
-                                HatliSecondaryButton(
-                                    text = stringResource(R.string.request_detail_back),
-                                    onClick = {
-                                        onEvent(RequestDetailUiEvent.Back)
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                )
+                            // Scrollable Content
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .verticalScroll(rememberScrollState())
+                                    .padding(horizontal = HatliSpacing.lg, vertical = HatliSpacing.sm),
+                                verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+                            ) {
+                                EntranceAnimatedContainer(delayMillis = 0) {
+                                    StatusHeroCard(
+                                        req = activeReq,
+                                        isAr = isAr,
+                                    )
+                                }
+
+                                EntranceAnimatedContainer(delayMillis = 100) {
+                                    DetailStatusTrack(
+                                        req = activeReq,
+                                        isAr = isAr,
+                                    )
+                                }
+
+                                EntranceAnimatedContainer(delayMillis = 200) {
+                                    CounterpartCard(
+                                        req = activeReq,
+                                        isRequester = state.isRequester,
+                                        onOpenChat = { onEvent(RequestDetailUiEvent.OpenChat) },
+                                    )
+                                }
+
+                                EntranceAnimatedContainer(delayMillis = 300) {
+                                    OrderInfoCard(req = activeReq)
+                                }
+
+                                if (activeReq.statusHistory.isNotEmpty()) {
+                                    EntranceAnimatedContainer(delayMillis = 400) {
+                                        TimelineCard(
+                                            req = activeReq,
+                                            isAr = isAr,
+                                        )
+                                    }
+                                }
+
+                                EntranceAnimatedContainer(delayMillis = 500) {
+                                    CancelWorkflowSection(
+                                        state = state,
+                                        onEvent = onEvent,
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.height(HatliSpacing.sm))
+                            }
+
+                            // Sticky Action Bar Footer when primary CTA exists
+                            if (hasPrimaryAction) {
+                                Surface(
+                                    shadowElevation = 8.dp,
+                                    color = MaterialTheme.colorScheme.surface,
+                                    modifier = Modifier.fillMaxWidth(),
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(HatliSpacing.md)
+                                            .navigationBarsPadding(),
+                                    ) {
+                                        DetailActionsSection(
+                                            req = activeReq,
+                                            isRequester = state.isRequester,
+                                            isRunner = state.isRunner,
+                                            nextCta = state.runnerNextCta,
+                                            isConfirming = state.isConfirming,
+                                            isAdvancing = state.isAdvancing,
+                                            onEvent = onEvent,
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

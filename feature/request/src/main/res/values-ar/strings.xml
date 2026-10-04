@@ -13,7 +13,7 @@
     <string name="request_detail_runner_title">الكابتن (Runner)</string>
     <string name="request_detail_client_title">صاحب الطلب (Requester)</string>
     <string name="request_detail_timeline_title">الجدول الزمني للطلب</string>
-    <string name="request_detail_open_chat">محادثة مباشر</string>
+    <string name="request_detail_open_chat">محادثة الكابتن</string>
     <string name="request_detail_updating">جاري التحديث…</string>
     <string name="request_detail_confirming">جاري التأكيد…</string>
     <string name="request_detail_confirm_delivery">تأكيد استلام الطلب</string>
@@ -24,19 +24,43 @@
     <string name="request_detail_confirm_cancel">تأكيد الإلغاء</string>
     <string name="request_detail_dismiss">التراجع</string>
     <string name="request_detail_cancel_order">إلغاء الطلب</string>
+    <string name="request_detail_pickup_location">عنوان الاستلام / المحل</string>
+    <string name="request_detail_dropoff_location">عنوان التسليم</string>
+    <string name="request_detail_verified_captain">• كابتن معتمد</string>
+    <string name="request_detail_close">إغلاق</string>
+
+    <!-- Status Hero Copy (Arabic) -->
+    <string name="status_hero_pending_title">جاري البحث عن كابتن…</string>
+    <string name="status_hero_pending_desc">سيتم إبلاغك فور قبول أحد الكباتن القريبين لطلبك.</string>
+    <string name="status_hero_accepted_title">تم قبول الطلب</string>
+    <string name="status_hero_accepted_desc">الكابتن %1$s يستعد لتنفيذ طلبك.</string>
+    <string name="status_hero_in_progress_title">جاري التنفيذ</string>
+    <string name="status_hero_in_progress_desc">الكابتن %1$s يعمل حالياً على تنفيذ طلبك.</string>
+    <string name="status_hero_on_the_way_title">الكابتن في الطريق إليك</string>
+    <string name="status_hero_on_the_way_desc">يمكنك تتبع الخريطة والتواصل المباشر مع الكابتن.</string>
+    <string name="status_hero_delivered_title">تم وصل الطلب</string>
+    <string name="status_hero_delivered_desc">يرجى فحص طلبك وتأكيد استلامه.</string>
+    <string name="status_hero_completed_title">طلب مكتمل</string>
+    <string name="status_hero_completed_desc">شكراً لاستخدامك هاتلي! نتمنى لك يوماً سعيداً.</string>
+    <string name="status_hero_cancelled_title">طلب ملغي</string>
+    <string name="status_hero_cancelled_desc">تم إلغاء هذا الطلب.</string>
 
     <!-- Create Request Wizard (Arabic) -->
-    <string name="create_request_screen_title">إنشاء طلب جديد</string>
-    <string name="create_request_step_category_title">ماذا تحتاج؟</string>
-    <string name="create_request_step_review_title">المراجعة ورسوم التوصيل</string>
+    <string name="create_request_screen_title">طلب جديد</string>
+    <string name="create_request_step_category_title">اختر نوع الخدمة المطلوب</string>
+    <string name="create_request_step_details_title">تفاصيل الطلب</string>
+    <string name="create_request_step_review_title">مراجعة وحساب التكلفة</string>
     <string name="create_request_wizard_step_1">الخطوة 1 من 3</string>
     <string name="create_request_wizard_step_2">الخطوة 2 من 3</string>
     <string name="create_request_wizard_step_3">الخطوة 3 من 3</string>
+    <string name="create_request_step_1_name">الخدمة</string>
+    <string name="create_request_step_2_name">التفاصيل</string>
+    <string name="create_request_step_3_name">المراجعة</string>
 
     <string name="create_request_cancel">إلغاء</string>
-    <string name="create_request_continue">متابعة</string>
+    <string name="create_request_continue">متابعة وإدخال التفاصيل</string>
     <string name="create_request_back">رجوع</string>
-    <string name="create_request_confirm">تأكيد الطلب</string>
+    <string name="create_request_confirm">تأكيد وإرسال الطلب الآن</string>
 
     <!-- Category Labels & Subtitles -->
     <string name="category_shopping_label">شراء مستلزمات</string>
@@ -78,9 +102,19 @@
     <string name="create_request_summary_pickup_format">%1$s\n%2$s ← %3$s</string>
     <string name="create_request_summary_bills_format">%1$s · %2$s · %3$s جنيه</string>
     <string name="create_request_summary_custom_format">%1$s\n%2$s</string>
-
     <string name="create_request_success_title">تم إرسال طلبك بنجاح!</string>
     <string name="create_request_success_subtitle">طلبك متاح الآن للكباتن القريبين منك.</string>
     <string name="create_request_return_home">العودة للرئيسية</string>
+
+    <!-- Rating Screen (Arabic) -->
+    <string name="rate_runner_title">تقييم كابتن التوصيل</string>
+    <string name="rate_runner_subtitle">كيف كانت تجربتك مع كابتن التوصيل؟</string>
+    <string name="rate_feedback_5">ممتاز جداً 🔥</string>
+    <string name="rate_feedback_4">جيد جداً 👍</string>
+    <string name="rate_feedback_3">متوسط 😐</string>
+    <string name="rate_feedback_2">سيء 😞</string>
+    <string name="rate_feedback_1">سيء جداً ❌</string>
+    <string name="rate_runner_comment_hint">أضف ملاحظاتك للكابتن (اختياري)…</string>
+    <string name="rate_runner_submit">إرسال التقييم</string>
 
 </resources>

@@ -12,16 +12,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,13 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.hatli.core.designsystem.component.HatliCard
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.BrandTeal
-import com.app.hatli.core.designsystem.theme.CharcoalDark
-import com.app.hatli.core.designsystem.theme.CharcoalMuted
-import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.LocalHatliExtendedColors
 import com.app.hatli.core.model.Request
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.lifecycleSteps
@@ -52,12 +43,18 @@ import com.app.hatli.core.model.shortLabelEn
 import com.app.hatli.core.model.stepperIndex
 import com.app.hatli.feature.request.R
 
+private val SuccessGreen = Color(0xFF0F9F55)
+
 @Composable
 fun DetailStatusTrack(req: Request, isAr: Boolean) {
-    if (req.status == RequestStatus.Pending || req.status == RequestStatus.Cancelled) return
-    val extendedColors = LocalHatliExtendedColors.current
+    if (req.status == RequestStatus.Cancelled) return
+
     val steps = lifecycleSteps(req.category)
-    val current = req.status.stepperIndex(req.category).coerceIn(0, steps.lastIndex)
+    val current = if (req.status == RequestStatus.Pending) {
+        0
+    } else {
+        req.status.stepperIndex(req.category).coerceIn(0, steps.lastIndex)
+    }
 
     val infiniteTransition = rememberInfiniteTransition(label = "PulseTransition")
     val pulseScale by infiniteTransition.animateFloat(
@@ -65,42 +62,42 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
         targetValue = 1.6f,
         animationSpec = infiniteRepeatable(
             animation = tween(1000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Restart
+            repeatMode = RepeatMode.Restart,
         ),
-        label = "pulseScale"
+        label = "pulseScale",
     )
     val pulseAlpha by infiniteTransition.animateFloat(
         initialValue = 0.5f,
         targetValue = 0f,
         animationSpec = infiniteRepeatable(
             animation = tween(1000, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Restart
+            repeatMode = RepeatMode.Restart,
         ),
-        label = "pulseAlpha"
+        label = "pulseAlpha",
     )
 
     HatliCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(HatliSpacing.md),
-            verticalArrangement = Arrangement.spacedBy(HatliSpacing.md)
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
         ) {
             Text(
-                text = if (isAr) "مراحل الطلب" else stringResource(R.string.request_detail_order_progress),
+                text = if (isAr) "مسار تنفيذ الطلب" else stringResource(R.string.request_detail_order_progress),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = CharcoalDark
+                color = MaterialTheme.colorScheme.onSurface,
             )
 
             // Horizontal visual track
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 steps.forEachIndexed { index, _ ->
                     val reached = index <= current
                     val isCurrent = index == current
 
                     Box(
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         if (isCurrent) {
                             Box(
@@ -112,7 +109,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
                                         alpha = pulseAlpha
                                     }
                                     .clip(CircleShape)
-                                    .background(BrandCoral)
+                                    .background(MaterialTheme.colorScheme.primary),
                             )
                         }
 
@@ -122,19 +119,19 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
                                 .clip(CircleShape)
                                 .background(
                                     when {
-                                        isCurrent -> BrandCoral
-                                        reached -> BrandTeal
-                                        else -> extendedColors.border
-                                    }
+                                        isCurrent -> MaterialTheme.colorScheme.primary
+                                        reached -> SuccessGreen
+                                        else -> MaterialTheme.colorScheme.outlineVariant
+                                    },
                                 ),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             if (reached && !isCurrent) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = null,
                                     tint = Color.White,
-                                    modifier = Modifier.size(8.dp)
+                                    modifier = Modifier.size(8.dp),
                                 )
                             }
                         }
@@ -142,15 +139,15 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
 
                     if (index < steps.lastIndex) {
                         val barColor by animateColorAsState(
-                            targetValue = if (index < current) BrandTeal else extendedColors.border,
+                            targetValue = if (index < current) SuccessGreen else MaterialTheme.colorScheme.outlineVariant,
                             animationSpec = tween(400),
-                            label = "progressBarColor"
+                            label = "progressBarColor",
                         )
                         Box(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(4.dp)
-                                .background(barColor)
+                                .background(barColor),
                         )
                     }
                 }
@@ -159,7 +156,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
             // Step text labels
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 steps.forEachIndexed { index, step ->
                     val label = if (isAr) step.shortLabelAr() else step.shortLabelEn()
@@ -167,11 +164,11 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
                         text = label,
                         style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
                         color = when {
-                            index == current -> BrandCoral
-                            index < current -> CharcoalDark
-                            else -> CharcoalMuted
+                            index == current -> MaterialTheme.colorScheme.primary
+                            index < current -> SuccessGreen
+                            else -> MaterialTheme.colorScheme.onSurfaceVariant
                         },
-                        fontWeight = if (index == current) FontWeight.Bold else FontWeight.Normal
+                        fontWeight = if (index == current) FontWeight.Bold else FontWeight.Normal,
                     )
                 }
             }

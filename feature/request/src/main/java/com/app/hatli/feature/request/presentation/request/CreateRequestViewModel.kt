@@ -109,6 +109,7 @@ class CreateRequestViewModel @Inject constructor(
 
     private fun submit() {
         val state = uiState.value
+        if (state.isSubmitting) return
         val fee = state.deliveryFeeText.toDoubleOrNull()
         if (fee == null || fee < 0) {
             setState { copy(fieldError = "Enter a valid delivery fee.") }
