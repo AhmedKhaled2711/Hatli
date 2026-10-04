@@ -195,4 +195,43 @@
     </string>
 
     <string name="home_runner_for_requester">طلب %1$s</string>
+
+    <!-- ============================== -->
+    <!-- Home - Production Refinements -->
+    <!-- ============================== -->
+    <string name="home_location_select_prompt">حدد موقع التوصيل</string>
+    <string name="home_direct_delivery_services">خدمات التوصيل المباشرة</string>
+    <string name="home_quick_services">الخدمات السريعة</string>
+    <string name="home_hero_badge_title">خدمة التوصيل السريع</string>
+    <string name="home_hero_banner_title">اطلب أي حاجة من أي مكان في مدينتك</string>
+    <string name="home_hero_banner_description">حدد المشتريات والموقع، وسيتولى الكابتن التوصيل حتى باب بيتك.</string>
+    <string name="home_category_grocery_title">سوبر ماركت</string>
+    <string name="home_category_grocery_subtitle">بقالة ومستلزمات منزلية</string>
+    <string name="home_category_pharmacy_title">صيدلية ورعاية</string>
+    <string name="home_category_pharmacy_subtitle">أدوية ومستلزمات طبية</string>
+    <string name="home_category_courier_title">طرد ومستندات</string>
+    <string name="home_category_courier_subtitle">نقل أوراق وأغراض</string>
+    <string name="home_category_custom_title">مشوار مخصص</string>
+    <string name="home_category_custom_subtitle">اطلب أي شيء تريد</string>
+    <string name="home_runner_no_active_job_title">لا يوجد طلب قيد التنفيذ حالياً</string>
+    <string name="home_runner_no_active_job_sub">تصفّح الطلبات القريبة أدناه وقدم عرض التوصيل الآن.</string>
+    <string name="home_runner_offline_title">أنت غير متاح لاستلام الطلبات</string>
+    <string name="home_runner_offline_sub">قم بتفعيل مفتاح التواجد بالأعلى للبدء في استقبال طلبات التوصيل.</string>
+    <string name="home_runner_no_nearby_title">لا توجد طلبات قريبة حالياً</string>
+    <string name="home_runner_no_nearby_sub">سنخطرك فور إدراج طلب توصيل جديد في منطقتك الجغرافية.</string>
+    <string name="home_runner_nearby_title">الطلبات القريبة المتاحة</string>
+    <string name="home_runner_dashboard_title">لوحة الكابتن</string>
+    <string name="home_runner_status_online">متاح</string>
+    <string name="home_runner_status_offline">غير متاح</string>
+    <string name="home_runner_online_desc">أنت متاح وتستقبل الطلبات القريبة. تظل وظيفتك الحالية ظاهرة في كل الأحوال.</string>
+    <string name="home_runner_offline_desc">قم بالتفعيل للبدء في رؤية الطلبات القريبة. تظل الوظائف المقبولة ظاهرة تحت الوظيفة الحالية.</string>
+    <string name="home_runner_action_go_offline">إيقاف التواجد</string>
+    <string name="home_runner_action_go_online">تفعيل التواجد</string>
+    <string name="home_runner_stat_today">اليوم</string>
+    <string name="home_runner_stat_jobs">الطلبات</string>
+    <string name="home_runner_stat_rating">التقييم</string>
+    <string name="home_fab_create_request">طلب جديد</string>
+    <string name="home_tip_title">نصيحة هامة</string>
+    <string name="home_error_generic">حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.</string>
+    <string name="home_action_retry">إعادة المحاولة</string>
 </resources>

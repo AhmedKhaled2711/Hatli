@@ -121,16 +121,7 @@ private fun MainShellReady(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             when (state.selectedTab) {
-                MainTab.Home -> {
-                    if (!state.isRequester) {
-                        MainTopBar(
-                            title = "لوحة المندوب (كابتن)",
-                            unread = state.unreadNotifications,
-                            onNotifications = { onEvent(MainShellUiEvent.OpenNotifications) },
-                            showNotifications = true,
-                        )
-                    }
-                }
+                MainTab.Home -> Unit
                 MainTab.RequestsOrJobs -> {
                     MainTopBar(
                         title = if (state.isRequester) {
@@ -196,6 +187,7 @@ private fun MainShellReady(
                                     onChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
                                     onDetails = { onEvent(MainShellUiEvent.OpenDetail(it)) },
                                     onAdvance = { id, status -> onEvent(MainShellUiEvent.AdvanceStatus(id, status)) },
+                                    onNotifications = { onEvent(MainShellUiEvent.OpenNotifications) },
                                 )
                             }
                         }
@@ -235,47 +227,6 @@ private fun MainShellReady(
 
                     MainTab.Profile -> {
                         profileTab()
-                    }
-                }
-            }
-
-            // Requester Floating Action Button (FAB) - Visible ONLY on Home tab for Requester
-            if (state.showFab && state.selectedTab == MainTab.Home) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(bottom = 90.dp, end = 20.dp),
-                ) {
-                    Surface(
-                        modifier = Modifier
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = RoundedCornerShape(28.dp),
-                                spotColor = BrandCoral.copy(alpha = 0.35f),
-                            )
-                            .clip(RoundedCornerShape(28.dp))
-                            .clickable { onEvent(MainShellUiEvent.CreateRequest) },
-                        color = BrandCoral,
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                tint = Color.White,
-                            )
-                            Text(
-                                text = "طلب جديد",
-                                style = MaterialTheme.typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    fontSize = 15.sp,
-                                ),
-                                modifier = Modifier.padding(start = 6.dp),
-                            )
-                        }
                     }
                 }
             }

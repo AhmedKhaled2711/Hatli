@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -27,10 +28,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.DirectionsBike
 import androidx.compose.material.icons.filled.LocalPharmacy
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.LocalShipping
+import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.outlined.Lightbulb
@@ -56,11 +56,8 @@ import androidx.compose.ui.unit.sp
 import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.theme.BrandCoral
 import com.app.hatli.core.designsystem.theme.BrandTeal
-import com.app.hatli.core.designsystem.theme.CharcoalDark
-import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.CoralContainer
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequesterHomeSnapshot
 import com.app.hatli.feature.home.R
@@ -83,36 +80,50 @@ private fun rememberQuickServiceCategories(): List<QuickServiceCategory> {
     val primary = MaterialTheme.colorScheme.primary
     val tertiaryContainer = MaterialTheme.colorScheme.tertiaryContainer
     val tertiary = MaterialTheme.colorScheme.tertiary
-    return androidx.compose.runtime.remember(primaryContainer, primary, tertiaryContainer, tertiary) {
+
+    val groceryTitle = stringResource(R.string.home_category_grocery_title)
+    val grocerySub = stringResource(R.string.home_category_grocery_subtitle)
+    val pharmacyTitle = stringResource(R.string.home_category_pharmacy_title)
+    val pharmacySub = stringResource(R.string.home_category_pharmacy_subtitle)
+    val courierTitle = stringResource(R.string.home_category_courier_title)
+    val courierSub = stringResource(R.string.home_category_courier_subtitle)
+    val customTitle = stringResource(R.string.home_category_custom_title)
+    val customSub = stringResource(R.string.home_category_custom_subtitle)
+
+    return androidx.compose.runtime.remember(
+        primaryContainer, primary, tertiaryContainer, tertiary,
+        groceryTitle, grocerySub, pharmacyTitle, pharmacySub,
+        courierTitle, courierSub, customTitle, customSub,
+    ) {
         listOf(
             QuickServiceCategory(
                 id = "grocery",
-                title = "سوبر ماركت",
-                subtitle = "بقالة ومستلزمات منزلية",
+                title = groceryTitle,
+                subtitle = grocerySub,
                 icon = Icons.Default.ShoppingBag,
                 containerColor = CoralContainer,
                 iconColor = BrandCoral,
             ),
             QuickServiceCategory(
                 id = "pharmacy",
-                title = "صيدلية ورعاية",
-                subtitle = "أدوية ومستلزمات طبية",
+                title = pharmacyTitle,
+                subtitle = pharmacySub,
                 icon = Icons.Default.LocalPharmacy,
                 containerColor = BrandTeal.copy(alpha = 0.12f),
                 iconColor = BrandTeal,
             ),
             QuickServiceCategory(
                 id = "courier",
-                title = "طرد ومستندات",
-                subtitle = "نقل أوراق وأغراض",
+                title = courierTitle,
+                subtitle = courierSub,
                 icon = Icons.Default.LocalShipping,
                 containerColor = primaryContainer,
                 iconColor = primary,
             ),
             QuickServiceCategory(
                 id = "custom_errand",
-                title = "مشوار مخصص",
-                subtitle = "اطلب أي شيء تريد",
+                title = customTitle,
+                subtitle = customSub,
                 icon = Icons.Default.MoreHoriz,
                 containerColor = tertiaryContainer,
                 iconColor = tertiary,
@@ -140,10 +151,17 @@ fun RequesterHomeContent(
     }
 
     val quickServiceCategories = rememberQuickServiceCategories()
+    val displayLocation = if (snapshot.neighborhood.isNotBlank()) {
+        "📍 ${snapshot.neighborhood}"
+    } else {
+        stringResource(R.string.home_location_select_prompt)
+    }
 
     Surface(
-        modifier = modifier.fillMaxSize(),
-        color = OffWhiteCanvas,
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding(),
+        color = MaterialTheme.colorScheme.background,
     ) {
         LazyColumn(
             modifier = Modifier
@@ -153,14 +171,14 @@ fun RequesterHomeContent(
                 start = HatliSpacing.lg,
                 end = HatliSpacing.lg,
                 top = HatliSpacing.md,
-                bottom = 110.dp, // Content scrolls cleanly above bottom bar & FAB
+                bottom = 128.dp, // Content scrolls cleanly above bottom navigation bar
             ),
             verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
         ) {
             // Localized Neighborhood Dropdown & Notifications Header
             item(key = "requester_location_header") {
                 LocationAndNotificationHeader(
-                    locationName = "📍 المحلة الكبرى · حي الأشجار",
+                    locationName = displayLocation,
                     unreadCount = snapshot.unreadNotifications,
                     onNotificationsClick = { /* Handle notification click */ },
                 )
@@ -175,10 +193,10 @@ fun RequesterHomeContent(
             item(key = "quick_service_categories") {
                 Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
                     Text(
-                        text = "خدمات التوصيل المباشرة",
+                        text = stringResource(R.string.home_direct_delivery_services),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            color = CharcoalDark,
+                            color = MaterialTheme.colorScheme.onBackground,
                         ),
                     )
 
@@ -274,11 +292,11 @@ private fun LocationAndNotificationHeader(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // Location Selector Pill
+        // Location Selector Pill (Theme-Aware Surface)
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(20.dp))
-                .background(Color.White)
+                .background(MaterialTheme.colorScheme.surface)
                 .clickable { /* Trigger neighborhood picker modal */ }
                 .padding(horizontal = 14.dp, vertical = 8.dp),
         ) {
@@ -296,20 +314,20 @@ private fun LocationAndNotificationHeader(
                     text = locationName,
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = CharcoalDark,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 13.sp,
                     ),
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = null,
-                    tint = CharcoalMuted,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(20.dp),
                 )
             }
         }
 
-        // Notification Bell Badge Button
+        // Notification Bell Badge Button (Theme-Aware Surface)
         BadgedBox(
             badge = {
                 if (unreadCount > 0) {
@@ -327,12 +345,12 @@ private fun LocationAndNotificationHeader(
                 modifier = Modifier
                     .size(44.dp)
                     .clip(CircleShape)
-                    .background(Color.White),
+                    .background(MaterialTheme.colorScheme.surface),
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "التنبيهات",
-                    tint = CharcoalDark,
+                    contentDescription = stringResource(R.string.home_notifications),
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(22.dp),
                 )
             }
@@ -367,7 +385,7 @@ private fun HeroCreateBanner(onCreate: () -> Unit) {
                         .padding(horizontal = 8.dp, vertical = 3.dp),
                 ) {
                     Text(
-                        text = "خدمة التوصيل السريع",
+                        text = stringResource(R.string.home_hero_badge_title),
                         style = MaterialTheme.typography.labelMedium.copy(
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
@@ -376,7 +394,7 @@ private fun HeroCreateBanner(onCreate: () -> Unit) {
                 }
 
                 Text(
-                    text = "اطلب أي حاجة من أي مكان في مدينتك",
+                    text = stringResource(R.string.home_hero_banner_title),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = Color.White,
@@ -385,7 +403,7 @@ private fun HeroCreateBanner(onCreate: () -> Unit) {
                 )
 
                 Text(
-                    text = "حدد المشتريات والموقع، وسيتولى الكابتن التوصيل حتى باب بيتك.",
+                    text = stringResource(R.string.home_hero_banner_description),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 12.sp,
@@ -421,20 +439,22 @@ private fun CategoryCard(
     Box(
         modifier = Modifier
             .width(140.dp)
+            .height(128.dp)
             .clip(RoundedCornerShape(18.dp))
             .background(category.containerColor)
             .clickable(onClick = onClick)
             .padding(HatliSpacing.md),
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.Start,
         ) {
             Box(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(category.iconColor.copy(alpha = 0.15f)),
+                    .background(category.iconColor.copy(alpha = 0.18f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -445,22 +465,28 @@ private fun CategoryCard(
                 )
             }
 
-            Text(
-                text = category.title,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = CharcoalDark,
-                    fontSize = 14.sp,
-                ),
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(
+                    text = category.title,
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 14.sp,
+                    ),
+                )
 
-            Text(
-                text = category.subtitle,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = CharcoalMuted,
-                    fontSize = 11.sp,
-                ),
-            )
+                Text(
+                    text = category.subtitle,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 11.sp,
+                    ),
+                )
+            }
         }
     }
 }
@@ -491,17 +517,17 @@ private fun RequesterTipCard(tipText: String) {
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "نصيحة هامة",
+                    text = stringResource(R.string.home_tip_title),
                     style = MaterialTheme.typography.titleSmall.copy(
                         fontWeight = FontWeight.Bold,
-                        color = CharcoalDark,
+                        color = MaterialTheme.colorScheme.onSurface,
                     ),
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = tipText,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = CharcoalMuted,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp,
                     ),
                 )
@@ -533,4 +559,4 @@ private fun RequesterHomeSkeleton(modifier: Modifier = Modifier) {
                 .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
         )
     }
-}
+}

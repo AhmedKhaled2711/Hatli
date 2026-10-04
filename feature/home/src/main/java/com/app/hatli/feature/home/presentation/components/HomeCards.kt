@@ -419,23 +419,23 @@ fun RunnerPresenceCard(
     HatliCard(modifier = modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.md)) {
             Text(
-                text = if (isOnline) "Online" else "Offline",
+                text = if (isOnline) stringResource(R.string.home_runner_status_online) else stringResource(R.string.home_runner_status_offline),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
             )
             Text(
                 text = if (isOnline) {
-                    "You're receiving nearby requests. Your Active Job stays visible either way."
+                    stringResource(R.string.home_runner_online_desc)
                 } else {
-                    "Go online to see nearby requests. Accepted jobs still appear under Active Job."
+                    stringResource(R.string.home_runner_offline_desc)
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             if (isOnline) {
-                HatliSecondaryButton(text = "Go Offline", onClick = onToggle)
+                HatliSecondaryButton(text = stringResource(R.string.home_runner_action_go_offline), onClick = onToggle)
             } else {
-                HatliPrimaryButton(text = "Go Online", onClick = onToggle)
+                HatliPrimaryButton(text = stringResource(R.string.home_runner_action_go_online), onClick = onToggle)
             }
         }
     }
@@ -455,17 +455,17 @@ fun RunnerStatsRow(
         StatChip(
             modifier = Modifier.weight(1f),
             title = "${earnings.toInt()} EGP",
-            subtitle = "Today",
+            subtitle = stringResource(R.string.home_runner_stat_today),
         )
         StatChip(
             modifier = Modifier.weight(1f),
             title = "$jobs",
-            subtitle = "Jobs",
+            subtitle = stringResource(R.string.home_runner_stat_jobs),
         )
         StatChip(
             modifier = Modifier.weight(1f),
             title = "$rating ★",
-            subtitle = "Rating",
+            subtitle = stringResource(R.string.home_runner_stat_rating),
         )
     }
 }

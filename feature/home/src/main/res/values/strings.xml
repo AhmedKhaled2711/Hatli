@@ -195,7 +195,42 @@
 
     <string name="home_runner_for_requester">For %1$s</string>
 
-
-
-
+    <!-- ============================== -->
+    <!-- Home - Production Refinements -->
+    <!-- ============================== -->
+    <string name="home_location_select_prompt">Select delivery location</string>
+    <string name="home_direct_delivery_services">Direct Delivery Services</string>
+    <string name="home_quick_services">Quick Services</string>
+    <string name="home_hero_badge_title">Express Delivery</string>
+    <string name="home_hero_banner_title">Order anything from anywhere in your city</string>
+    <string name="home_hero_banner_description">Set your items and location, and a runner will deliver to your doorstep.</string>
+    <string name="home_category_grocery_title">Supermarket</string>
+    <string name="home_category_grocery_subtitle">Groceries &amp; Household Supplies</string>
+    <string name="home_category_pharmacy_title">Pharmacy &amp; Care</string>
+    <string name="home_category_pharmacy_subtitle">Medicine &amp; Medical Supplies</string>
+    <string name="home_category_courier_title">Parcel &amp; Documents</string>
+    <string name="home_category_courier_subtitle">Transport papers &amp; items</string>
+    <string name="home_category_custom_title">Custom Errand</string>
+    <string name="home_category_custom_subtitle">Order anything you need</string>
+    <string name="home_runner_no_active_job_title">No active job right now</string>
+    <string name="home_runner_no_active_job_sub">Browse nearby requests below and accept to start.</string>
+    <string name="home_runner_offline_title">You are offline</string>
+    <string name="home_runner_offline_sub">Turn on availability above to start receiving delivery requests.</string>
+    <string name="home_runner_no_nearby_title">No nearby requests right now</string>
+    <string name="home_runner_no_nearby_sub">We will notify you as soon as a new delivery request is posted.</string>
+    <string name="home_runner_nearby_title">Available Nearby Requests</string>
+    <string name="home_runner_dashboard_title">Captain Dashboard</string>
+    <string name="home_runner_status_online">Online</string>
+    <string name="home_runner_status_offline">Offline</string>
+    <string name="home_runner_online_desc">You are receiving nearby requests. Your Active Job stays visible either way.</string>
+    <string name="home_runner_offline_desc">Go online to see nearby requests. Accepted jobs still appear under Active Job.</string>
+    <string name="home_runner_action_go_offline">Go Offline</string>
+    <string name="home_runner_action_go_online">Go Online</string>
+    <string name="home_runner_stat_today">Today</string>
+    <string name="home_runner_stat_jobs">Jobs</string>
+    <string name="home_runner_stat_rating">Rating</string>
+    <string name="home_fab_create_request">New Order</string>
+    <string name="home_tip_title">Important Tip</string>
+    <string name="home_error_generic">Failed to load data. Please try again.</string>
+    <string name="home_action_retry">Retry</string>
 </resources>

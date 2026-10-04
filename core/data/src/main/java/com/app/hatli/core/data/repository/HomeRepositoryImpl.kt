@@ -21,6 +21,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 import javax.inject.Singleton
+import com.app.hatli.core.domain.repository.UserRepository
+
 
 /**
  * Home aggregation over Firestore [RequestRepository] + local runner presence.
@@ -30,6 +32,7 @@ import javax.inject.Singleton
 class HomeRepositoryImpl @Inject constructor(
     private val requestRepository: RequestRepository,
     private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
 ) : HomeRepository {
 
     private val isOnline = MutableStateFlow(false)
@@ -53,7 +56,13 @@ class HomeRepositoryImpl @Inject constructor(
             if (uid.isBlank()) {
                 flowOf(emptyRequesterHome)
             } else {
-                requestRepository.observeRequesterRequests(uid).map { list ->
+                combine(
+                    requestRepository.observeRequesterRequests(uid),
+                    userRepository.observeProfile(uid),
+                ) { list, profile ->
+                    val city = profile?.address?.city?.takeIf { it.isNotBlank() }
+                    val area = profile?.address?.area?.takeIf { it.isNotBlank() }
+                    val locationStr = listOfNotNull(city, area).joinToString(" · ")
                     val summaries = list.map { req ->
                         req.toSummary().copy(unreadCount = req.requesterUnreadCount)
                     }
@@ -61,6 +70,7 @@ class HomeRepositoryImpl @Inject constructor(
                     val active = summaries.firstOrNull { it.status.isActiveForRequester() }
                         ?: summaries.firstOrNull { it.status == RequestStatus.Completed && !it.hasRating }
                     emptyRequesterHome.copy(
+                        neighborhood = locationStr,
                         active = active,
                         recent = summaries.take(5),
                         unreadNotifications = active?.unreadCount ?: 0,

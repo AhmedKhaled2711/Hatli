@@ -40,6 +40,26 @@ import com.app.hatli.feature.home.presentation.components.RunnerStatsRow
 import com.app.hatli.feature.home.presentation.runnerNextAction
 import com.app.hatli.feature.home.presentation.runnerNextStatus
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.DirectionsBike
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.app.hatli.core.designsystem.theme.BrandCoral
+
 @Composable
 fun RunnerHomeContent(
     snapshot: RunnerHomeSnapshot?,
@@ -50,6 +70,7 @@ fun RunnerHomeContent(
     onChat: (String) -> Unit,
     onDetails: (String) -> Unit,
     onAdvance: (String, RequestStatus) -> Unit,
+    onNotifications: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     if (snapshot == null) {
@@ -58,8 +79,10 @@ fun RunnerHomeContent(
     }
 
     Surface(
-        modifier = modifier.fillMaxSize(),
-        color = OffWhiteCanvas,
+        modifier = modifier
+            .fillMaxSize()
+            .statusBarsPadding(),
+        color = MaterialTheme.colorScheme.background,
     ) {
         LazyColumn(
             modifier = Modifier
@@ -69,10 +92,18 @@ fun RunnerHomeContent(
                 start = HatliSpacing.lg,
                 end = HatliSpacing.lg,
                 top = HatliSpacing.md,
-                bottom = 110.dp, // Content scrolls cleanly above floating bottom bar
+                bottom = 128.dp, // Content scrolls cleanly above floating bottom bar
             ),
             verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
         ) {
+            // Localized Runner Dashboard Persona Pill & Notifications Header
+            item(key = "runner_header") {
+                RunnerHeaderRow(
+                    unreadCount = snapshot.unreadNotifications,
+                    onNotificationsClick = onNotifications,
+                )
+            }
+
             // Online / Offline Duty Presence Banner Card
             item(key = "presence_card") {
                 RunnerPresenceCard(
@@ -112,8 +143,8 @@ fun RunnerHomeContent(
                     } else {
                         RunnerEmptyStateCard(
                             icon = Icons.Outlined.CheckCircle,
-                            title = "لا يوجود طلب قيد التنفيذ حالياً",
-                            description = "تصفّح الطلبات القريبة أدناه وقدم عرض التوصيل الآن.",
+                            title = stringResource(R.string.home_runner_no_active_job_title),
+                            description = stringResource(R.string.home_runner_no_active_job_sub),
                         )
                     }
                 }
@@ -125,8 +156,8 @@ fun RunnerHomeContent(
                     item(key = "offline_state") {
                         RunnerEmptyStateCard(
                             icon = Icons.Outlined.PowerOff,
-                            title = "أنت غير متاح لـ استلام الطلبات",
-                            description = "قم بتفعيل مفتاح التواجد بالعلّى للبدء في استقبال طلبات التوصيل.",
+                            title = stringResource(R.string.home_runner_offline_title),
+                            description = stringResource(R.string.home_runner_offline_sub),
                         )
                     }
                 }
@@ -135,8 +166,8 @@ fun RunnerHomeContent(
                     item(key = "no_nearby_state") {
                         RunnerEmptyStateCard(
                             icon = Icons.Outlined.Inbox,
-                            title = "لا توجد طلبات قريبة حالياً",
-                            description = "سنخطر فور إدراج طلب توصيل جديد في منطقتك الجغرافية.",
+                            title = stringResource(R.string.home_runner_no_nearby_title),
+                            description = stringResource(R.string.home_runner_no_nearby_sub),
                         )
                     }
                 }
@@ -144,7 +175,7 @@ fun RunnerHomeContent(
                 else -> {
                     item(key = "nearby_header") {
                         HomeSectionHeader(
-                            title = "الطلبات القريبة المتاحة",
+                            title = stringResource(R.string.home_runner_nearby_title),
                             actionLabel = stringResource(R.string.home_runner_view_all_jobs),
                             onAction = onViewAll,
                         )
@@ -190,14 +221,14 @@ private fun RunnerEmptyStateCard(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium.copy(
-                    color = CharcoalDark,
+                    color = MaterialTheme.colorScheme.onSurface,
                 ),
             )
             if (!description.isNullOrBlank()) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = CharcoalMuted,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                 )
             }
@@ -215,6 +246,75 @@ private fun RunnerHomeSkeleton(modifier: Modifier = Modifier) {
     ) {
         HatliCard(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(32.dp)) {}
+        }
+    }
+}
+
+@Composable
+private fun RunnerHeaderRow(
+    unreadCount: Int,
+    onNotificationsClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        // Captain Dashboard Persona Badge
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(horizontal = 14.dp, vertical = 8.dp),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DirectionsBike,
+                    contentDescription = null,
+                    tint = BrandCoral,
+                    modifier = Modifier.size(18.dp),
+                )
+                Text(
+                    text = stringResource(R.string.home_runner_dashboard_title),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 13.sp,
+                    ),
+                )
+            }
+        }
+
+        // Notification Bell Badge Button
+        BadgedBox(
+            badge = {
+                if (unreadCount > 0) {
+                    Badge(containerColor = BrandCoral) {
+                        Text(
+                            text = if (unreadCount > 99) "99+" else unreadCount.toString(),
+                            color = Color.White,
+                        )
+                    }
+                }
+            },
+        ) {
+            IconButton(
+                onClick = onNotificationsClick,
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.surface),
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    contentDescription = stringResource(R.string.home_notifications),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.size(22.dp),
+                )
+            }
         }
     }
 }

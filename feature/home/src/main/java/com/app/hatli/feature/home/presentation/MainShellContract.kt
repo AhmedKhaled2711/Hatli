@@ -37,6 +37,8 @@ enum class RunnerNextAction {
 
 data class MainShellUiState(
     val isLoadingProfile: Boolean = true,
+    val isError: Boolean = false,
+    val errorMessage: String? = null,
     val role: UserRole? = null,
     val selectedTab: MainTab = MainTab.Home,
     val requesterHome: RequesterHomeSnapshot? = null,
@@ -100,6 +102,7 @@ data class MainShellUiState(
 }
 
 sealed interface MainShellUiEvent : UiEvent {
+    data object Retry : MainShellUiEvent
     data class TabSelected(val tab: MainTab) : MainShellUiEvent
     data object CreateRequest : MainShellUiEvent
     data object OpenNotifications : MainShellUiEvent
