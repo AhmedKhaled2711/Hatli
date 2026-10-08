@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -61,8 +60,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.HatliSecondaryButton
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.CoralContainer
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.ui.base.CollectUiEffect

@@ -90,7 +90,12 @@ fun HatliTextButton(
             disabledContentColor = extended.disabled,
         ),
     ) {
-        Text(text = text, style = MaterialTheme.typography.labelLarge)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelLarge,
+            maxLines = 1,
+            softWrap = false,
+        )
     }
 }
 

@@ -3,6 +3,7 @@ package com.app.hatli.feature.home.presentation
 import android.util.Log
 import app.cash.turbine.test
 import com.app.hatli.core.common.result.Result
+import com.app.hatli.core.domain.repository.SessionPreferencesRepository
 import com.app.hatli.core.domain.usecase.home.ObserveRequesterHomeUseCase
 import com.app.hatli.core.domain.usecase.home.ObserveRequesterRequestsUseCase
 import com.app.hatli.core.domain.usecase.home.ObserveRunnerHomeUseCase
@@ -48,6 +49,7 @@ class MainShellViewModelTest {
     private val acceptRequest: AcceptRequestUseCase = mockk()
     private val advanceStatus: AdvanceRequestStatusUseCase = mockk()
     private val confirmDelivery: ConfirmDeliveryUseCase = mockk()
+    private val sessionPreferences: SessionPreferencesRepository = mockk(relaxed = true)
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -88,6 +90,10 @@ class MainShellViewModelTest {
         every { observeRunnerHome() } returns flowOf(createTestRunnerSnapshot())
         every { observeRequesterRequests() } returns flowOf(emptyList())
         every { observeRunnerJobs() } returns flowOf(emptyList())
+        every { sessionPreferences.runnerOnlineBannerDismissed } returns flowOf(false)
+        every { sessionPreferences.runnerOnlineBannerShownCount } returns flowOf(0)
+        coEvery { sessionPreferences.incrementRunnerOnlineBannerCount() } returns Unit
+        coEvery { sessionPreferences.dismissRunnerOnlineBanner() } returns Unit
     }
 
     @After
@@ -106,6 +112,7 @@ class MainShellViewModelTest {
             acceptRequest = acceptRequest,
             advanceStatus = advanceStatus,
             confirmDelivery = confirmDelivery,
+            sessionPreferences = sessionPreferences,
         )
     }
 
@@ -191,5 +198,88 @@ class MainShellViewModelTest {
             val navEffect = awaitItem()
             assertThat(navEffect).isEqualTo(MainShellUiEffect.NavigateDetail("req_100"))
         }
+    }
+
+    @Test
+    fun `runner online shows banner when count less than 6 and not dismissed`() = runTest {
+        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val snap = createTestRunnerSnapshot(isOnline = true)
+        every { observeUserProfile() } returns flowOf(profile)
+        every { observeRunnerHome() } returns flowOf(snap)
+        every { sessionPreferences.runnerOnlineBannerDismissed } returns flowOf(false)
+        every { sessionPreferences.runnerOnlineBannerShownCount } returns flowOf(2)
+
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.showRunnerOnlineInfoBanner).isTrue()
+        coVerify(exactly = 1) { sessionPreferences.incrementRunnerOnlineBannerCount() }
+    }
+
+    @Test
+    fun `runner offline does not show online banner`() = runTest {
+        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val snap = createTestRunnerSnapshot(isOnline = false)
+        every { observeUserProfile() } returns flowOf(profile)
+        every { observeRunnerHome() } returns flowOf(snap)
+        every { sessionPreferences.runnerOnlineBannerDismissed } returns flowOf(false)
+        every { sessionPreferences.runnerOnlineBannerShownCount } returns flowOf(2)
+
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.showRunnerOnlineInfoBanner).isFalse()
+        coVerify(exactly = 0) { sessionPreferences.incrementRunnerOnlineBannerCount() }
+    }
+
+    @Test
+    fun `runner online banner dismissed does not show banner`() = runTest {
+        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val snap = createTestRunnerSnapshot(isOnline = true)
+        every { observeUserProfile() } returns flowOf(profile)
+        every { observeRunnerHome() } returns flowOf(snap)
+        every { sessionPreferences.runnerOnlineBannerDismissed } returns flowOf(true)
+        every { sessionPreferences.runnerOnlineBannerShownCount } returns flowOf(1)
+
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.showRunnerOnlineInfoBanner).isFalse()
+    }
+
+    @Test
+    fun `runner online banner with count 6 or more does not show banner`() = runTest {
+        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val snap = createTestRunnerSnapshot(isOnline = true)
+        every { observeUserProfile() } returns flowOf(profile)
+        every { observeRunnerHome() } returns flowOf(snap)
+        every { sessionPreferences.runnerOnlineBannerDismissed } returns flowOf(false)
+        every { sessionPreferences.runnerOnlineBannerShownCount } returns flowOf(6)
+
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.showRunnerOnlineInfoBanner).isFalse()
+    }
+
+    @Test
+    fun `DismissRunnerOnlineInfoBanner calls session preferences dismiss and updates state`() = runTest {
+        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val snap = createTestRunnerSnapshot(isOnline = true)
+        every { observeUserProfile() } returns flowOf(profile)
+        every { observeRunnerHome() } returns flowOf(snap)
+        every { sessionPreferences.runnerOnlineBannerDismissed } returns flowOf(false)
+        every { sessionPreferences.runnerOnlineBannerShownCount } returns flowOf(1)
+
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertThat(viewModel.uiState.value.showRunnerOnlineInfoBanner).isTrue()
+
+        viewModel.onEvent(MainShellUiEvent.DismissRunnerOnlineInfoBanner)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { sessionPreferences.dismissRunnerOnlineBanner() }
+        assertThat(viewModel.uiState.value.showRunnerOnlineInfoBanner).isFalse()
     }
 }

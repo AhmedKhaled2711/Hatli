@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.app.hatli.core.domain.repository.SessionPreferencesRepository
@@ -34,6 +35,14 @@ class SessionPreferencesRepositoryImpl @Inject constructor(
         prefs[KEY_PENDING_ROLE]?.let { runCatching { UserRole.valueOf(it) }.getOrNull() }
     }
 
+    override val runnerOnlineBannerDismissed: Flow<Boolean> = dataStore.data.map { prefs ->
+        prefs[KEY_RUNNER_BANNER_DISMISSED] ?: false
+    }
+
+    override val runnerOnlineBannerShownCount: Flow<Int> = dataStore.data.map { prefs ->
+        prefs[KEY_RUNNER_BANNER_SHOWN_COUNT] ?: 0
+    }
+
     override suspend fun setOnboardingCompleted(completed: Boolean) {
         dataStore.edit { it[KEY_ONBOARDING] = completed }
     }
@@ -47,13 +56,28 @@ class SessionPreferencesRepositoryImpl @Inject constructor(
 
     override suspend fun clearSessionPreferences() {
         dataStore.edit { prefs ->
-            // Keep onboarding_completed — user should not see intro again after logout.
+            // Keep onboarding_completed and runner banner counts — user should not see intro or dismissed banner again after logout.
             prefs.remove(KEY_PENDING_ROLE)
+        }
+    }
+
+    override suspend fun incrementRunnerOnlineBannerCount() {
+        dataStore.edit { prefs ->
+            val current = prefs[KEY_RUNNER_BANNER_SHOWN_COUNT] ?: 0
+            prefs[KEY_RUNNER_BANNER_SHOWN_COUNT] = current + 1
+        }
+    }
+
+    override suspend fun dismissRunnerOnlineBanner() {
+        dataStore.edit { prefs ->
+            prefs[KEY_RUNNER_BANNER_DISMISSED] = true
         }
     }
 
     private companion object {
         val KEY_ONBOARDING = booleanPreferencesKey("onboarding_completed")
         val KEY_PENDING_ROLE = stringPreferencesKey("pending_role")
+        val KEY_RUNNER_BANNER_DISMISSED = booleanPreferencesKey("runner_online_banner_dismissed")
+        val KEY_RUNNER_BANNER_SHOWN_COUNT = intPreferencesKey("runner_online_banner_shown_count")
     }
 }

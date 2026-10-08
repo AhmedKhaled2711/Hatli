@@ -47,6 +47,7 @@ data class MainShellUiState(
     val allJobs: List<RequestSummary> = emptyList(),
     val requestFilter: RequestListFilter = RequestListFilter.Active,
     val jobFilter: JobListFilter = JobListFilter.Active,
+    val showRunnerOnlineInfoBanner: Boolean = false,
 ) : UiState {
     val isRequester: Boolean get() = role == UserRole.Requester
     val isRunner: Boolean get() = role == UserRole.Runner
@@ -107,6 +108,7 @@ sealed interface MainShellUiEvent : UiEvent {
     data object CreateRequest : MainShellUiEvent
     data object OpenNotifications : MainShellUiEvent
     data object ToggleRunnerOnline : MainShellUiEvent
+    data object DismissRunnerOnlineInfoBanner : MainShellUiEvent
     data object ViewAllJobs : MainShellUiEvent
     data class RequestFilterSelected(val filter: RequestListFilter) : MainShellUiEvent
     data class JobFilterSelected(val filter: JobListFilter) : MainShellUiEvent

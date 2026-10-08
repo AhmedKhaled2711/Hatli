@@ -219,7 +219,7 @@
     <string name="home_runner_offline_sub">قم بتفعيل مفتاح التواجد بالأعلى للبدء في استقبال طلبات التوصيل.</string>
     <string name="home_runner_no_nearby_title">لا توجد طلبات قريبة حالياً</string>
     <string name="home_runner_no_nearby_sub">سنخطرك فور إدراج طلب توصيل جديد في منطقتك الجغرافية.</string>
-    <string name="home_runner_nearby_title">الطلبات القريبة المتاحة</string>
+    <string name="home_runner_nearby_title">الطلبات القريبة</string>
     <string name="home_runner_dashboard_title">لوحة الكابتن</string>
     <string name="home_runner_status_online">متاح</string>
     <string name="home_runner_status_offline">غير متاح</string>
@@ -234,4 +234,5 @@
     <string name="home_tip_title">نصيحة هامة</string>
     <string name="home_error_generic">حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.</string>
     <string name="home_action_retry">إعادة المحاولة</string>
+    <string name="home_runner_dismiss_tip">إغلاق التنبيه</string>
 </resources>

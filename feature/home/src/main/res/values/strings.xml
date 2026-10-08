@@ -218,7 +218,7 @@
     <string name="home_runner_offline_sub">Turn on availability above to start receiving delivery requests.</string>
     <string name="home_runner_no_nearby_title">No nearby requests right now</string>
     <string name="home_runner_no_nearby_sub">We will notify you as soon as a new delivery request is posted.</string>
-    <string name="home_runner_nearby_title">Available Nearby Requests</string>
+    <string name="home_runner_nearby_title">Nearby Requests</string>
     <string name="home_runner_dashboard_title">Captain Dashboard</string>
     <string name="home_runner_status_online">Online</string>
     <string name="home_runner_status_offline">Offline</string>
@@ -233,4 +233,5 @@
     <string name="home_tip_title">Important Tip</string>
     <string name="home_error_generic">Failed to load data. Please try again.</string>
     <string name="home_action_retry">Retry</string>
+    <string name="home_runner_dismiss_tip">Dismiss tip</string>
 </resources>
