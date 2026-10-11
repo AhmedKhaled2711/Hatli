@@ -5,6 +5,8 @@ import com.app.hatli.core.ui.base.UiEvent
 import com.app.hatli.core.model.ChatMessage
 import com.app.hatli.core.ui.base.UiState
 
+import com.app.hatli.core.model.RequestStatus
+
 sealed interface ChatUiEffect : UiEffect {
     data object NavigateBack : ChatUiEffect
     data class ShowMessage(val message: String) : ChatUiEffect
@@ -23,6 +25,10 @@ data class ChatUiState(
     val draft: String = "",
     val isSending: Boolean = false,
     val myUid: String = "",
+    val participantName: String? = null,
+    val isRequester: Boolean = false,
+    val requestStatus: RequestStatus? = null,
+    val isRequestLoading: Boolean = true,
 ) : UiState
 
 

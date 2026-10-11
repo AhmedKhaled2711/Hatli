@@ -8,6 +8,7 @@ import com.app.hatli.core.domain.repository.AuthRepository
 import com.app.hatli.core.domain.repository.UserRepository
 import com.app.hatli.core.domain.usecase.request.MarkChatReadUseCase
 import com.app.hatli.core.domain.usecase.request.ObserveMessagesUseCase
+import com.app.hatli.core.domain.usecase.request.ObserveRequestUseCase
 import com.app.hatli.core.domain.usecase.request.SendMessageUseCase
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.BaseViewModel
@@ -17,56 +18,117 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     authRepository: AuthRepository,
-    userRepository: UserRepository,
+    private val userRepository: UserRepository,
     observeMessages: ObserveMessagesUseCase,
+    observeRequest: ObserveRequestUseCase,
     private val sendMessage: SendMessageUseCase,
     private val markChatRead: MarkChatReadUseCase,
 ) : BaseViewModel<ChatUiState, ChatUiEvent, ChatUiEffect>(
     ChatUiState(
         myUid = authRepository.currentUser()?.uid.orEmpty(),
     ),
-){
+) {
     private val requestId: String = checkNotNull(savedStateHandle["requestId"])
+    private val cachedProfileNames = ConcurrentHashMap<String, String>()
 
     init {
         val currentUid = authRepository.currentUser()?.uid.orEmpty()
 
         combine(
             observeMessages(requestId),
+            observeRequest(requestId),
             userRepository.observeProfile(currentUid),
-        ) { messages, profile ->
-            messages.map { message ->
+        ) { messages, request, myProfile ->
+            val isRequester = when {
+                request != null && request.requesterId == currentUid -> true
+                request != null && request.runnerId == currentUid -> false
+                myProfile?.role == UserRole.Requester -> true
+                myProfile?.role == UserRole.Runner -> false
+                else -> true
+            }
+
+            val directCounterpartName = if (isRequester) {
+                request?.runnerName
+            } else {
+                request?.requesterName
+            }?.trim()?.takeIf { it.isNotBlank() }
+
+            val counterpartUid = if (isRequester) {
+                request?.runnerId
+            } else {
+                request?.requesterId
+            }?.trim()?.takeIf { it.isNotBlank() }
+
+            if (directCounterpartName == null && counterpartUid != null) {
+                resolveCounterpartProfile(counterpartUid)
+            }
+
+            val resolvedName = directCounterpartName
+                ?: counterpartUid?.let { cachedProfileNames[it] }
+
+            val messageUis = messages.map { message ->
+                val isMine = message.senderId == currentUid
+                val senderLabel = when {
+                    isMine -> "You"
+                    !resolvedName.isNullOrBlank() -> resolvedName
+                    isRequester -> "Runner"
+                    else -> "Requester"
+                }
                 ChatMessageUi(
                     id = message.id,
                     text = message.text,
-                    isMine = message.senderId == currentUid,
-                    senderLabel = when {
-                        message.senderId == currentUid -> "You"
-
-                        profile?.role == UserRole.Requester -> "Runner"
-
-                        profile?.role == UserRole.Runner -> "Requester"
-
-                        else -> "User"
-                    },
+                    isMine = isMine,
+                    senderLabel = senderLabel,
                 )
             }
+
+            Triple(messageUis, resolvedName, Pair(isRequester, request))
         }
-            .onEach { messages ->
+            .onEach { (messageUis, resolvedName, roleAndReq) ->
+                val (isRequester, request) = roleAndReq
                 setState {
-                    copy(messages = messages)
+                    copy(
+                        messages = messageUis,
+                        participantName = resolvedName,
+                        isRequester = isRequester,
+                        requestStatus = request?.status,
+                        isRequestLoading = request == null,
+                    )
                 }
             }
             .launchIn(viewModelScope)
 
         viewModelScope.launch {
             markChatRead(requestId)
+        }
+    }
+
+    private fun resolveCounterpartProfile(uid: String) {
+        if (cachedProfileNames.containsKey(uid)) return
+        viewModelScope.launch {
+            when (val result = userRepository.getProfile(uid)) {
+                is Result.Success -> {
+                    val name = result.data?.fullName?.trim()
+                    if (!name.isNullOrBlank()) {
+                        cachedProfileNames[uid] = name
+                        setState {
+                            if (participantName.isNullOrBlank()) {
+                                copy(participantName = name)
+                            } else {
+                                this
+                            }
+                        }
+                    }
+                }
+                else -> Unit
+            }
         }
     }
 

@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Send
+import androidx.compose.material.icons.automirrored.rounded.Send
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.app.hatli.core.designsystem.theme.HatliColors
 
 @Composable
 fun SendMessageButton(
@@ -29,7 +28,7 @@ fun SendMessageButton(
             .clip(CircleShape),
         shape = CircleShape,
         color = if (enabled) {
-            HatliColors.BrandTeal
+            MaterialTheme.colorScheme.primary
         } else {
             MaterialTheme.colorScheme.surfaceVariant
         },
@@ -45,7 +44,7 @@ fun SendMessageButton(
                 CircularProgressIndicator(
                     modifier = Modifier.size(20.dp),
                     strokeWidth = 2.dp,
-                    color = HatliColors.DeepTeal,
+                    color = MaterialTheme.colorScheme.onPrimary,
                 )
             }
 
@@ -53,12 +52,12 @@ fun SendMessageButton(
                 visible = !isSending,
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.Send,
+                    imageVector = Icons.AutoMirrored.Rounded.Send,
                     contentDescription = "Send message",
                     tint = if (enabled) {
-                        HatliColors.DeepTeal
+                        MaterialTheme.colorScheme.onPrimary
                     } else {
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.45f)
                     },
                 )
             }

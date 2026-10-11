@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat_title_default">Direct Delivery Chat</string>
+    <string name="chat_back">Back</string>
+    <string name="chat_counterpart_runner_fallback">Delivery Captain</string>
+    <string name="chat_counterpart_client_fallback">Client</string>
+    <string name="chat_you">You</string>
+
+    <!-- Order Status in Chat Header -->
+    <string name="chat_status_loading">Updating status…</string>
+    <string name="chat_status_pending">Searching for Captain</string>
+    <string name="chat_status_accepted">Accepted</string>
+    <string name="chat_status_in_progress">In Progress</string>
+    <string name="chat_status_purchased">Purchased</string>
+    <string name="chat_status_on_the_way">On the Way</string>
+    <string name="chat_status_delivered">Delivered</string>
+    <string name="chat_status_completed">Completed</string>
+    <string name="chat_status_cancelled">Cancelled</string>
+
+    <!-- Chat Composer & Messages -->
+    <string name="chat_input_placeholder">Type a message…</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_attach_image">Attach image</string>
+    <string name="chat_empty_title">Start a conversation</string>
+    <string name="chat_empty_subtitle">Ask about your order details or send a message.</string>
+</resources>

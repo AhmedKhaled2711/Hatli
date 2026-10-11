@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 
 @Composable
@@ -47,7 +46,7 @@ fun ChatEmptyState(
         )
 
         Text(
-            text = "Start a conversation",
+            text = androidx.compose.ui.res.stringResource(com.app.hatli.feature.chat.R.string.chat_empty_title),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.SemiBold,
         )
@@ -57,7 +56,7 @@ fun ChatEmptyState(
         )
 
         Text(
-            text = "Ask about your order details or send a message.",
+            text = androidx.compose.ui.res.stringResource(com.app.hatli.feature.chat.R.string.chat_empty_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
