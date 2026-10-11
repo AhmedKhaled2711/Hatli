@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Profile - General & Header -->
+    <string name="profile_screen_title">Profile</string>
+    <string name="profile_default_user_name">Hatli User</string>
+    <string name="profile_back_content_description">Back</string>
+    <string name="profile_photo_content_description">Profile photo</string>
+    <string name="profile_verified_badge_description">Verified Captain</string>
+
+    <!-- Profile - Role Badges -->
+    <string name="profile_role_runner_title">Captain Mode (Ready to deliver)</string>
+    <string name="profile_role_runner_subtitle">Verified and eligible to accept delivery orders</string>
+    <string name="profile_role_requester_title">Customer Mode (Request services)</string>
+    <string name="profile_role_requester_subtitle">Browse and order items to be delivered by nearby captains</string>
+
+    <!-- Profile - Runner Performance Metrics -->
+    <string name="profile_metric_orders_title">Orders</string>
+    <string name="profile_metric_rating_title">Overall Rating</string>
+    <string name="profile_metric_acceptance_title">Acceptance Rate</string>
+    <string name="profile_metric_empty_value">—</string>
+    <string name="profile_metric_new_runner">New</string>
+
+    <!-- Profile - Runner Verification & Documents -->
+    <string name="profile_section_runner_documents">Captain Documents &amp; Info</string>
+    <string name="profile_label_verification_status">Verification Status</string>
+    <string name="profile_status_approved">Verified &amp; Official 🟢</string>
+    <string name="profile_status_under_review">Under Review 🟡</string>
+    <string name="profile_status_pending">Pending Documents ⏳</string>
+    <string name="profile_status_rejected">Rejected 🔴</string>
+    <string name="profile_status_unspecified">Not specified</string>
+
+    <string name="profile_label_transport_type">Transport Type</string>
+    <string name="profile_transport_bicycle">Bicycle</string>
+    <string name="profile_transport_motorcycle">Motorcycle</string>
+    <string name="profile_transport_car">Car</string>
+    <string name="profile_transport_walking">Walking</string>
+    <string name="profile_transport_other">Other</string>
+
+    <string name="profile_label_vehicle_info">Vehicle Details</string>
+    <string name="profile_label_national_id">National ID</string>
+
+    <!-- Profile - Personal Information -->
+    <string name="profile_section_personal_info">Personal Information</string>
+    <string name="profile_label_phone">Phone Number</string>
+    <string name="profile_label_email">Email Address</string>
+    <string name="profile_label_gender">Gender</string>
+    <string name="profile_gender_male">Male</string>
+    <string name="profile_gender_female">Female</string>
+
+    <!-- Profile - Delivery Address -->
+    <string name="profile_section_delivery_address">Primary Delivery Address</string>
+    <string name="profile_label_address_location">Location</string>
+    <string name="profile_label_address_notes">Address Notes</string>
+    <string name="profile_address_empty_title">No primary delivery address yet</string>
+    <string name="profile_address_empty_description">You can easily set and save your address during checkout.</string>
+
+    <!-- Profile - App Preferences -->
+    <string name="profile_section_preferences">App Preferences</string>
+    <string name="profile_label_language">App Language</string>
+    <string name="profile_value_language_ar">العربية (مصر)</string>
+    <string name="profile_value_language_en">English</string>
+    <string name="profile_label_theme">Appearance &amp; Theme</string>
+    <string name="profile_theme_system">System Default</string>
+    <string name="profile_theme_light">Light Mode</string>
+    <string name="profile_theme_dark">Dark Mode</string>
+    <string name="profile_label_payments">Payment Methods</string>
+    <string name="profile_value_payments">Cash on Delivery 💵</string>
+    <string name="profile_label_support">Customer Support &amp; Help</string>
+    <string name="profile_value_support">Contact Support Team</string>
+
+    <!-- Profile - Interactive Preference Dialogs -->
+    <string name="profile_pref_dialog_language_title">Choose Language</string>
+    <string name="profile_language_option_arabic">العربية (Arabic)</string>
+    <string name="profile_language_option_english">English (الإنجليزية)</string>
+    <string name="profile_pref_dialog_theme_title">Choose App Theme</string>
+    <string name="profile_pref_dialog_payments_title">Payment Options</string>
+    <string name="profile_pref_dialog_payments_message">Cash on Delivery (COD) is the active payment method. Bank card and mobile wallet integrations are coming soon.</string>
+    <string name="profile_pref_dialog_support_title">Customer Support</string>
+    <string name="profile_pref_dialog_support_message">Need help with an order, report an issue, or account questions? Contact our team at support@hatli.app or call us.</string>
+    <string name="profile_pref_dialog_support_email_action">Email Support</string>
+    <string name="profile_dialog_action_close">Got it</string>
+    <string name="profile_dialog_action_confirm">Apply</string>
+    <string name="profile_dialog_action_cancel">Cancel</string>
+
+    <!-- Profile - Logout -->
+    <string name="profile_logout_button">Log Out</string>
+    <string name="profile_logout_dialog_title">Log Out</string>
+    <string name="profile_logout_dialog_message">Are you sure you want to log out of Hatli?</string>
+    <string name="profile_logout_dialog_confirm">Yes, Log Out</string>
+    <string name="profile_logout_dialog_cancel">Cancel</string>
+
+    <!-- Profile - Error & Loading States -->
+    <string name="profile_error_default_message">Unable to load profile data</string>
+    <string name="profile_retry_button">Retry</string>
+</resources>
