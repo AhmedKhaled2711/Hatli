@@ -14,12 +14,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.feature.chat.util.resolveBidiLayoutDirection
 
 @Composable
 fun ChatMessageBubble(
@@ -85,9 +91,26 @@ fun ChatMessageBubble(
                     )
                 }
 
+                val ambientLayoutDirection = LocalLayoutDirection.current
+                val messageDirection = remember(text, ambientLayoutDirection) {
+                    resolveBidiLayoutDirection(text, ambientLayoutDirection)
+                }
+
                 Text(
                     text = text,
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp),
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = 14.sp,
+                        textDirection = if (messageDirection == LayoutDirection.Rtl) {
+                            TextDirection.Rtl
+                        } else {
+                            TextDirection.Ltr
+                        },
+                        textAlign = if (messageDirection == LayoutDirection.Rtl) {
+                            TextAlign.Right
+                        } else {
+                            TextAlign.Left
+                        },
+                    ),
                     color = contentColor,
                     lineHeight = 20.sp,
                 )

@@ -23,13 +23,20 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.feature.chat.R
+import com.app.hatli.feature.chat.util.resolveBidiLayoutDirection
 
 private val QUICK_REPLIES = listOf(
     "أنا في المحل حالياً 🛒",
@@ -97,31 +104,58 @@ fun ChatComposer(
                     )
                 }
 
-                OutlinedTextField(
-                    value = value,
-                    onValueChange = onValueChange,
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.chat_input_placeholder),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    },
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(24.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
-                        focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                        cursorColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    maxLines = 3,
-                )
+                val ambientLayoutDirection = LocalLayoutDirection.current
+                val inputLayoutDirection = remember(value, ambientLayoutDirection) {
+                    resolveBidiLayoutDirection(value, ambientLayoutDirection)
+                }
+
+                CompositionLocalProvider(LocalLayoutDirection provides inputLayoutDirection) {
+                    OutlinedTextField(
+                        value = value,
+                        onValueChange = onValueChange,
+                        placeholder = {
+                            CompositionLocalProvider(LocalLayoutDirection provides ambientLayoutDirection) {
+                                Text(
+                                    text = stringResource(R.string.chat_input_placeholder),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = if (ambientLayoutDirection == LayoutDirection.Rtl) {
+                                        TextAlign.Right
+                                    } else {
+                                        TextAlign.Left
+                                    },
+                                )
+                            }
+                        },
+                        textStyle = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface,
+                            textDirection = if (inputLayoutDirection == LayoutDirection.Rtl) {
+                                TextDirection.Rtl
+                            } else {
+                                TextDirection.Ltr
+                            },
+                            textAlign = if (inputLayoutDirection == LayoutDirection.Rtl) {
+                                TextAlign.Right
+                            } else {
+                                TextAlign.Left
+                            },
+                        ),
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
+                            focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            cursorColor = MaterialTheme.colorScheme.primary,
+                        ),
+                        maxLines = 3,
+                    )
+                }
 
                 // Send Button with Theme-aware styling
                 val isSendActive = value.isNotBlank() && !isSending

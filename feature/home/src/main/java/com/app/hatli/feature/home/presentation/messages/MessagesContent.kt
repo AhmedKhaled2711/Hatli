@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.feature.home.R
@@ -58,7 +59,10 @@ fun MessagesContent(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(
-                HatliSpacing.md,
+                start = HatliSpacing.md,
+                end = HatliSpacing.md,
+                top = HatliSpacing.md,
+                bottom = 128.dp,
             ),
             verticalArrangement = Arrangement.spacedBy(
                 HatliSpacing.sm,

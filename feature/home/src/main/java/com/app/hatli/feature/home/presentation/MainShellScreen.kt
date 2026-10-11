@@ -12,9 +12,18 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
@@ -98,6 +107,26 @@ private fun MainShellReady(
     val isAr = LocalLayoutDirection.current == LayoutDirection.Rtl
     val hasUnreadMessages = state.conversations.any { it.unreadCount > 0 }
 
+    var isBottomBarCompact by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(state.selectedTab) {
+        isBottomBarCompact = false
+    }
+
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                val delta = available.y
+                if (delta < -12f && !isBottomBarCompact) {
+                    isBottomBarCompact = true
+                } else if (delta > 12f && isBottomBarCompact) {
+                    isBottomBarCompact = false
+                }
+                return Offset.Zero
+            }
+        }
+    }
+
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
@@ -130,7 +159,8 @@ private fun MainShellReady(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .nestedScroll(nestedScrollConnection),
         ) {
             // Animated Tab Content Container
             AnimatedContent(
@@ -218,8 +248,12 @@ private fun MainShellReady(
             MainBottomBar(
                 isRequester = state.isRequester,
                 selected = state.selectedTab,
-                onSelect = { onEvent(MainShellUiEvent.TabSelected(it)) },
+                onSelect = {
+                    isBottomBarCompact = false
+                    onEvent(MainShellUiEvent.TabSelected(it))
+                },
                 hasUnreadMessages = hasUnreadMessages,
+                isCompact = isBottomBarCompact,
                 modifier = Modifier.align(Alignment.BottomCenter),
             )
         }

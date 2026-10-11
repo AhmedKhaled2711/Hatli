@@ -214,6 +214,8 @@ fun ProfileScreen(
                                 color = MaterialTheme.colorScheme.error
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(if (showBack) 32.dp else 128.dp))
                     }
                 }
             }
