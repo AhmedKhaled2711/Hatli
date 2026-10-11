@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.domain.repository.SessionPreferencesRepository
 import com.app.hatli.core.domain.usecase.auth.LogoutUseCase
+import com.app.hatli.core.domain.usecase.request.ObserveRunnerAssignedRequestsUseCase
 import com.app.hatli.core.domain.usecase.user.GetUserProfileUseCase
 import com.app.hatli.core.domain.usecase.user.ObserveUserProfileUseCase
 import com.app.hatli.core.model.AppThemeMode
@@ -35,6 +36,7 @@ class ProfileViewModelTest {
 
     private val observeUserProfile: ObserveUserProfileUseCase = mockk()
     private val getUserProfile: GetUserProfileUseCase = mockk()
+    private val observeRunnerAssigned: ObserveRunnerAssignedRequestsUseCase = mockk()
     private val logout: LogoutUseCase = mockk()
     private val sessionPreferences: SessionPreferencesRepository = mockk(relaxed = true)
 
@@ -64,6 +66,7 @@ class ProfileViewModelTest {
         Dispatchers.setMain(testDispatcher)
         every { sessionPreferences.themeMode } returns flowOf(AppThemeMode.FollowSystem)
         every { sessionPreferences.appLanguage } returns flowOf("ar")
+        every { observeRunnerAssigned(any()) } returns flowOf(emptyList())
     }
 
     @After
@@ -80,6 +83,7 @@ class ProfileViewModelTest {
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
             getUserProfile = getUserProfile,
+            observeRunnerAssigned = observeRunnerAssigned,
             logout = logout,
             sessionPreferences = sessionPreferences
         )
@@ -103,6 +107,7 @@ class ProfileViewModelTest {
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
             getUserProfile = getUserProfile,
+            observeRunnerAssigned = observeRunnerAssigned,
             logout = logout,
             sessionPreferences = sessionPreferences
         )
@@ -127,6 +132,7 @@ class ProfileViewModelTest {
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
             getUserProfile = getUserProfile,
+            observeRunnerAssigned = observeRunnerAssigned,
             logout = logout,
             sessionPreferences = sessionPreferences
         )
@@ -156,6 +162,7 @@ class ProfileViewModelTest {
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
             getUserProfile = getUserProfile,
+            observeRunnerAssigned = observeRunnerAssigned,
             logout = logout,
             sessionPreferences = sessionPreferences
         )
@@ -179,6 +186,7 @@ class ProfileViewModelTest {
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
             getUserProfile = getUserProfile,
+            observeRunnerAssigned = observeRunnerAssigned,
             logout = logout,
             sessionPreferences = sessionPreferences
         )
@@ -201,6 +209,7 @@ class ProfileViewModelTest {
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
             getUserProfile = getUserProfile,
+            observeRunnerAssigned = observeRunnerAssigned,
             logout = logout,
             sessionPreferences = sessionPreferences
         )
@@ -215,6 +224,45 @@ class ProfileViewModelTest {
             assertThat(effect).isEqualTo(ProfileUiEffect.AppLanguageChanged("en"))
             coVerify(exactly = 1) { sessionPreferences.setAppLanguage("en") }
             assertThat(viewModel.uiState.value.appLanguage).isEqualTo("en")
+        }
+    }
+
+    @Test
+    fun `runner profile fetches live assigned requests and computes orders count and average rating`() = runTest {
+        val runnerProfile = createTestProfile(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+            transportType = TransportType.Bicycle
+        )
+        val mockCompletedRequest1 = mockk<com.app.hatli.core.model.Request> {
+            every { status } returns com.app.hatli.core.model.RequestStatus.Completed
+            every { rating } returns com.app.hatli.core.model.RequestRating(stars = 5, comment = null)
+        }
+        val mockCompletedRequest2 = mockk<com.app.hatli.core.model.Request> {
+            every { status } returns com.app.hatli.core.model.RequestStatus.Completed
+            every { rating } returns com.app.hatli.core.model.RequestRating(stars = 4, comment = null)
+        }
+
+        every { observeUserProfile() } returns flowOf(runnerProfile)
+        coEvery { getUserProfile() } returns Result.Success(runnerProfile)
+        every { observeRunnerAssigned(runnerProfile.uid) } returns flowOf(listOf(mockCompletedRequest1, mockCompletedRequest2))
+
+        val viewModel = ProfileViewModel(
+            observeUserProfile = observeUserProfile,
+            getUserProfile = getUserProfile,
+            observeRunnerAssigned = observeRunnerAssigned,
+            logout = logout,
+            sessionPreferences = sessionPreferences
+        )
+
+        advanceUntilIdle()
+
+        viewModel.uiState.test {
+            val state = awaitItem()
+            assertThat(state.profile?.role).isEqualTo(UserRole.Runner)
+            assertThat(state.runnerOrdersCount).isEqualTo(2)
+            assertThat(state.runnerRating).isEqualTo(4.5)
+            assertThat(state.runnerAcceptanceRate).isEqualTo(100)
         }
     }
 }

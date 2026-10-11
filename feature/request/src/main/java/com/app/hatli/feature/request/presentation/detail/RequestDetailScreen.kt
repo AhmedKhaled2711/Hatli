@@ -5,7 +5,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,7 +34,6 @@ import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.request.R
-import com.app.hatli.feature.request.presentation.detail.components.BounceScaleClickable
 import com.app.hatli.feature.request.presentation.detail.components.CancelWorkflowSection
 import com.app.hatli.feature.request.presentation.detail.components.CounterpartCard
 import com.app.hatli.feature.request.presentation.detail.components.DetailActionsSection
@@ -164,6 +162,7 @@ fun RequestDetailScreen(
                                     CounterpartCard(
                                         req = activeReq,
                                         isRequester = state.isRequester,
+                                        runnerRating = state.runnerRating,
                                         onOpenChat = { onEvent(RequestDetailUiEvent.OpenChat) },
                                     )
                                 }
@@ -208,6 +207,7 @@ fun RequestDetailScreen(
                                             req = activeReq,
                                             isRequester = state.isRequester,
                                             isRunner = state.isRunner,
+                                            nextStatus = state.runnerNextStatus,
                                             nextCta = state.runnerNextCta,
                                             isConfirming = state.isConfirming,
                                             isAdvancing = state.isAdvancing,

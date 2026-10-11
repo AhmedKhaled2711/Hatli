@@ -31,6 +31,7 @@ import org.junit.Test
 class RequestDetailViewModelTest {
 
     private val observeRequestUseCase: ObserveRequestUseCase = mockk()
+    private val observeRunnerAssigned: com.app.hatli.core.domain.usecase.request.ObserveRunnerAssignedRequestsUseCase = mockk()
     private val authRepository: AuthRepository = mockk()
     private val cancelRequestUseCase: CancelRequestUseCase = mockk()
     private val advanceRequestStatusUseCase: AdvanceRequestStatusUseCase = mockk()
@@ -55,6 +56,7 @@ class RequestDetailViewModelTest {
         return RequestDetailViewModel(
             savedStateHandle = SavedStateHandle(mapOf("requestId" to testRequestId)),
             observeRequest = observeRequestUseCase,
+            observeRunnerAssigned = observeRunnerAssigned,
             authRepository = authRepository,
             cancelRequest = cancelRequestUseCase,
             advanceStatus = advanceRequestStatusUseCase,
@@ -66,6 +68,7 @@ class RequestDetailViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         every { authRepository.currentUser() } returns mockUser
+        every { observeRunnerAssigned(any()) } returns flowOf(emptyList())
     }
 
     @After

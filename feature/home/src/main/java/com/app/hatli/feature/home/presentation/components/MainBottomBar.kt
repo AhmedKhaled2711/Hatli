@@ -192,11 +192,8 @@ fun HatliFloatingBottomBar(
 
     // Palette Resolution for Light and Dark Modes
     val barCanvasColor = MaterialTheme.colorScheme.surface
-    val barBorderColor = if (isDark) {
-        Color(0xFF2A2D30)
-    } else {
-        MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)
-    }
+    val barBorderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)
+
     val shadowAmbientColor = if (isDark) {
         Color.Black.copy(alpha = 0.35f)
     } else {

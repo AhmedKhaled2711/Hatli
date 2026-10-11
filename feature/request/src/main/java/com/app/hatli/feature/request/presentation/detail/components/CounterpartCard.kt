@@ -41,6 +41,7 @@ import com.app.hatli.feature.request.presentation.detail.RequestDetailUiEvent
 fun CounterpartCard(
     req: Request,
     isRequester: Boolean,
+    runnerRating: Double? = null,
     onOpenChat: (() -> Unit)? = null,
 ) {
     val targetName = if (isRequester) req.runnerName else req.requesterName
@@ -105,6 +106,12 @@ fun CounterpartCard(
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 if (isRequester) {
+                    val hasRating = runnerRating != null && runnerRating > 0.0
+                    val ratingText = if (hasRating) {
+                        String.format(java.util.Locale.US, "%.1f", runnerRating)
+                    } else {
+                        "5.0" // Standard default captain baseline when no reviews yet
+                    }
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -116,7 +123,7 @@ fun CounterpartCard(
                             modifier = Modifier.size(14.dp),
                         )
                         Text(
-                            text = "4.9",
+                            text = ratingText,
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface,
                         )

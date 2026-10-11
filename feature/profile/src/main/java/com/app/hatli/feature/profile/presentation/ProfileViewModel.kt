@@ -7,7 +7,10 @@ import com.app.hatli.core.domain.repository.SessionPreferencesRepository
 import com.app.hatli.core.domain.usecase.auth.LogoutUseCase
 import com.app.hatli.core.domain.usecase.user.GetUserProfileUseCase
 import com.app.hatli.core.domain.usecase.user.ObserveUserProfileUseCase
+import com.app.hatli.core.domain.usecase.request.ObserveRunnerAssignedRequestsUseCase
 import com.app.hatli.core.model.AppThemeMode
+import com.app.hatli.core.model.RequestStatus
+import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -21,11 +24,13 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     observeUserProfile: ObserveUserProfileUseCase,
     private val getUserProfile: GetUserProfileUseCase,
+    private val observeRunnerAssigned: ObserveRunnerAssignedRequestsUseCase,
     private val logout: LogoutUseCase,
     private val sessionPreferences: SessionPreferencesRepository,
 ) : BaseViewModel<ProfileUiState, ProfileUiEvent, ProfileUiEffect>(ProfileUiState()) {
 
     private var observeJob: Job? = null
+    private var runnerStatsJob: Job? = null
 
     init {
         observeJob = observeUserProfile()
@@ -33,6 +38,9 @@ class ProfileViewModel @Inject constructor(
             .onEach { profile ->
                 if (profile != null) {
                     setState { copy(isLoading = false, profile = profile, errorMessage = null) }
+                    if (profile.role == UserRole.Runner) {
+                        observeRunnerMetrics(profile.uid)
+                    }
                 }
             }
             .launchIn(viewModelScope)
@@ -46,6 +54,35 @@ class ProfileViewModel @Inject constructor(
             .launchIn(viewModelScope)
 
         onEvent(ProfileUiEvent.Refresh)
+    }
+
+    private fun observeRunnerMetrics(runnerId: String) {
+        runnerStatsJob?.cancel()
+        runnerStatsJob = observeRunnerAssigned(runnerId)
+            .catch { emit(emptyList()) }
+            .onEach { assigned ->
+                val completedOrders = assigned.filter { it.status == RequestStatus.Completed }
+                val ratedOrders = assigned.mapNotNull { it.rating?.stars }
+                val avgRating = if (ratedOrders.isNotEmpty()) ratedOrders.average() else 0.0
+                // Acceptance rate is 100% of claimed orders completed, or based on non-cancelled ratio
+                val finishedTotal = assigned.count { it.status == RequestStatus.Completed || it.status == RequestStatus.Cancelled }
+                val acceptance = if (finishedTotal > 0) {
+                    ((completedOrders.size.toDouble() / finishedTotal.toDouble()) * 100).toInt()
+                } else if (completedOrders.isNotEmpty()) {
+                    100
+                } else {
+                    null
+                }
+
+                setState {
+                    copy(
+                        runnerOrdersCount = completedOrders.size,
+                        runnerRating = avgRating,
+                        runnerAcceptanceRate = acceptance
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     override fun handleEvent(event: ProfileUiEvent) {
@@ -97,6 +134,8 @@ class ProfileViewModel @Inject constructor(
             // Stop Firestore listen before Auth.signOut() to avoid PERMISSION_DENIED crash.
             observeJob?.cancel()
             observeJob = null
+            runnerStatsJob?.cancel()
+            runnerStatsJob = null
             logout()
             sendEffect(ProfileUiEffect.LoggedOut)
         }

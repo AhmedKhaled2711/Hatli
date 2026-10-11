@@ -89,3 +89,10 @@ class MarkChatReadUseCase @Inject constructor(
     suspend operator fun invoke(requestId: String): Result<Unit> =
         requestRepository.markChatRead(requestId)
 }
+
+class ObserveRunnerAssignedRequestsUseCase @Inject constructor(
+    private val requestRepository: RequestRepository,
+) {
+    operator fun invoke(runnerId: String): Flow<List<Request>> =
+        requestRepository.observeRunnerAssigned(runnerId)
+}

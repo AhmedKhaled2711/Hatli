@@ -12,8 +12,11 @@ import com.app.hatli.core.domain.usecase.request.ObserveRequestUseCase
 import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.nextRunnerStatus
+import com.app.hatli.core.domain.usecase.request.ObserveRunnerAssignedRequestsUseCase
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ import javax.inject.Inject
 class RequestDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     observeRequest: ObserveRequestUseCase,
+    private val observeRunnerAssigned: ObserveRunnerAssignedRequestsUseCase,
     private val authRepository: AuthRepository,
     private val cancelRequest: CancelRequestUseCase,
     private val advanceStatus: AdvanceRequestStatusUseCase,
@@ -31,6 +35,8 @@ class RequestDetailViewModel @Inject constructor(
     RequestDetailUiState(),
 ) {
     private val requestId: String = checkNotNull(savedStateHandle["requestId"])
+    private var runnerRatingJob: Job? = null
+    private var currentObservedRunnerId: String? = null
 
     init {
         observeRequest(requestId)
@@ -38,6 +44,21 @@ class RequestDetailViewModel @Inject constructor(
                 val uid = authRepository.currentUser()?.uid.orEmpty()
                 val isRequester = req != null && req.requesterId == uid
                 val isRunner = req != null && req.runnerId == uid
+
+                val assignedRunnerId = req?.runnerId
+                if (!assignedRunnerId.isNullOrBlank() && assignedRunnerId != currentObservedRunnerId) {
+                    currentObservedRunnerId = assignedRunnerId
+                    runnerRatingJob?.cancel()
+                    runnerRatingJob = observeRunnerAssigned(assignedRunnerId)
+                        .catch { emit(emptyList()) }
+                        .onEach { assigned ->
+                            val ratedOrders = assigned.mapNotNull { it.rating?.stars }
+                            val avgRating = if (ratedOrders.isNotEmpty()) ratedOrders.average() else null
+                            setState { copy(runnerRating = avgRating) }
+                        }
+                        .launchIn(viewModelScope)
+                }
+
                 val next = req?.nextRunnerStatus()
                 val nextCta = when (next) {
                     RequestStatus.InProgress -> "Start work"
@@ -59,6 +80,7 @@ class RequestDetailViewModel @Inject constructor(
                         request = req,
                         isRequester = isRequester,
                         isRunner = isRunner,
+                        runnerNextStatus = if (isRunner) next else null,
                         runnerNextCta = if (isRunner) nextCta else null,
                         errorMessage = null,
                     )

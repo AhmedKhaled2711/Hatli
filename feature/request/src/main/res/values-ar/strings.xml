@@ -17,6 +17,10 @@
     <string name="request_detail_updating">جاري التحديث…</string>
     <string name="request_detail_confirming">جاري التأكيد…</string>
     <string name="request_detail_confirm_delivery">تأكيد استلام الطلب</string>
+    <string name="request_detail_runner_start_work">بدء التنفيذ</string>
+    <string name="request_detail_runner_mark_purchased">تم الشراء</string>
+    <string name="request_detail_runner_on_the_way">في الطريق</string>
+    <string name="request_detail_runner_mark_delivered">تم التوصيل</string>
     <string name="request_detail_rate_runner">تقييم الكابتن</string>
     <string name="request_detail_cancel_title">هل أنت تأكد من إلغاء الطلب؟</string>
     <string name="request_detail_cancel_reason_label">سبب الإلغاء</string>

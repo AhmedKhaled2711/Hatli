@@ -17,6 +17,10 @@
     <string name="request_detail_updating">Updating…</string>
     <string name="request_detail_confirming">Confirming…</string>
     <string name="request_detail_confirm_delivery">Confirm Delivery</string>
+    <string name="request_detail_runner_start_work">Start Work</string>
+    <string name="request_detail_runner_mark_purchased">Mark Purchased</string>
+    <string name="request_detail_runner_on_the_way">On The Way</string>
+    <string name="request_detail_runner_mark_delivered">Mark Delivered</string>
     <string name="request_detail_rate_runner">Rate Captain</string>
     <string name="request_detail_cancel_title">Cancel Order Confirmation</string>
     <string name="request_detail_cancel_reason_label">Cancel reason</string>

@@ -98,10 +98,15 @@ class HomeRepositoryImpl @Inject constructor(
                 val activeJob = activeReq?.toSummary()?.copy(
                     unreadCount = activeReq.runnerUnreadCount,
                 )
-                val todayCompleted = assigned.count { it.status == RequestStatus.Completed }
-                val earnings = assigned
-                    .filter { it.status == RequestStatus.Completed }
-                    .sumOf { it.deliveryFee }
+                val completedOrders = assigned.filter { it.status == RequestStatus.Completed }
+                val todayCompleted = completedOrders.count()
+                val earnings = completedOrders.sumOf { it.deliveryFee }
+                val ratedOrders = assigned.mapNotNull { it.rating?.stars }
+                val calculatedRating = if (ratedOrders.isNotEmpty()) {
+                    ratedOrders.average()
+                } else {
+                    0.0
+                }
                 RunnerHomeSnapshot(
                     presence = RunnerPresence(online),
                     stats = RunnerHomeStats(
@@ -111,7 +116,7 @@ class HomeRepositoryImpl @Inject constructor(
                         } else {
                             0
                         },
-                        rating = 4.9,
+                        rating = calculatedRating,
                     ),
                     nearby = nearby,
                     activeJob = activeJob,

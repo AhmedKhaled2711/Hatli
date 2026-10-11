@@ -19,18 +19,27 @@ fun DetailActionsSection(
     req: Request,
     isRequester: Boolean,
     isRunner: Boolean,
+    nextStatus: RequestStatus?,
     nextCta: String?,
     isConfirming: Boolean,
     isAdvancing: Boolean,
     onEvent: (RequestDetailUiEvent) -> Unit,
 ) {
+    val runnerButtonText = when (nextStatus) {
+        RequestStatus.InProgress -> stringResource(R.string.request_detail_runner_start_work)
+        RequestStatus.Purchased -> stringResource(R.string.request_detail_runner_mark_purchased)
+        RequestStatus.OnTheWay -> stringResource(R.string.request_detail_runner_on_the_way)
+        RequestStatus.Delivered -> stringResource(R.string.request_detail_runner_mark_delivered)
+        else -> nextCta ?: ""
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-        if (isRunner && nextCta != null) {
+        if (isRunner && (nextStatus != null || nextCta != null)) {
             BounceScaleClickable {
                 HatliPrimaryButton(
                     text = if (isAdvancing) {
                         stringResource(R.string.request_detail_updating)
-                    } else nextCta,
+                    } else runnerButtonText,
                     onClick = { onEvent(RequestDetailUiEvent.AdvanceStatus) },
                     enabled = !isAdvancing,
                     modifier = Modifier.fillMaxWidth(),

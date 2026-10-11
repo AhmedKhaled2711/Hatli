@@ -12,6 +12,9 @@ data class ProfileUiState(
     val errorMessage: String? = null,
     val themeMode: AppThemeMode = AppThemeMode.FollowSystem,
     val appLanguage: String = "ar",
+    val runnerOrdersCount: Int? = null,
+    val runnerRating: Double? = null,
+    val runnerAcceptanceRate: Int? = null,
 ) : UiState
 
 sealed interface ProfileUiEvent : UiEvent {

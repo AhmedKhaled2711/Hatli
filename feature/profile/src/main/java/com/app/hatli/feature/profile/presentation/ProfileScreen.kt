@@ -167,7 +167,10 @@ fun ProfileScreen(
                                 transportType = profile.transportType,
                                 vehicleInfo = profile.vehicleInfo,
                                 nationalId = profile.nationalId,
-                                verificationStatus = profile.verificationStatus
+                                verificationStatus = profile.verificationStatus,
+                                ordersCount = state.runnerOrdersCount,
+                                rating = state.runnerRating,
+                                acceptanceRate = state.runnerAcceptanceRate,
                             )
                         }
 
