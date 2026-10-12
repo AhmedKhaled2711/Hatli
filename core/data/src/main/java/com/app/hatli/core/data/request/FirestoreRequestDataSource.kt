@@ -1,19 +1,14 @@
 package com.app.hatli.core.data.request
 
-import com.app.hatli.core.model.BillsDetails
+import com.app.hatli.core.data.request.mapper.RequestFirestoreMapper
 import com.app.hatli.core.model.CancelledBy
 import com.app.hatli.core.model.ChatMessage
 import com.app.hatli.core.model.CreateRequestInput
-import com.app.hatli.core.model.CustomDetails
-import com.app.hatli.core.model.PickupDetails
 import com.app.hatli.core.model.Request
 import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.RequestRating
 import com.app.hatli.core.model.RequestStatus
-import com.app.hatli.core.model.ShoppingDetails
-import com.app.hatli.core.model.StatusHistoryEntry
 import com.app.hatli.core.model.nextRunnerStatus
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -39,7 +34,8 @@ class FirestoreRequestDataSource @Inject constructor(
         input: CreateRequestInput,
     ): String {
         val doc = requests.document()
-        val data = input.toFirestoreMap(
+        val data = RequestFirestoreMapper.toCreateRequestMap(
+            input = input,
             requestId = doc.id,
             requesterId = requesterId,
             requesterName = requesterName ?: input.requesterName,
@@ -63,28 +59,12 @@ class FirestoreRequestDataSource @Inject constructor(
             if (status != RequestStatus.Pending.name || !existingRunner.isNullOrBlank()) {
                 throw AppRequestException("Request is no longer available.")
             }
-            val history = snap.readHistory().toMutableList()
-            history.add(
-                mapOf(
-                    "status" to RequestStatus.Accepted.name,
-                    "at" to System.currentTimeMillis(),
-                    "byUid" to runnerId,
-                ),
-            )
-            tx.update(
-                ref,
-                mapOf(
-                    FIELD_RUNNER_ID to runnerId,
-                    FIELD_RUNNER_NAME to runnerName,
-                    FIELD_REQUESTER_NAME to (
-                        snap.getString(FIELD_REQUESTER_NAME) ?: requesterNameFallback
-                        ),
-                    FIELD_STATUS to RequestStatus.Accepted.name,
-                    FIELD_ACCEPTED_AT to FieldValue.serverTimestamp(),
-                    FIELD_STATUS_HISTORY to history,
-                    FIELD_UPDATED_AT to FieldValue.serverTimestamp(),
-                ),
-            )
+            val history = RequestFirestoreMapper.readHistory(snap).toMutableList().apply {
+                add(RequestFirestoreMapper.buildHistoryEntry(RequestStatus.Accepted.name, runnerId))
+            }
+            val requesterName = snap.getString(FIELD_REQUESTER_NAME) ?: requesterNameFallback
+            val updates = RequestFirestoreMapper.buildAcceptUpdateMap(runnerId, runnerName, requesterName, history)
+            tx.update(ref, updates)
         }.await()
     }
 
@@ -100,12 +80,10 @@ class FirestoreRequestDataSource @Inject constructor(
             if (snap.getString(FIELD_RUNNER_ID) != uid) {
                 throw AppRequestException("Only the assigned runner can update status.")
             }
-            val current = RequestStatus.valueOf(
-                snap.getString(FIELD_STATUS) ?: throw AppRequestException("Invalid status."),
-            )
-            val category = RequestCategory.valueOf(
-                snap.getString(FIELD_CATEGORY) ?: RequestCategory.Custom.name,
-            )
+            val current = RequestFirestoreMapper.toRequestStatus(snap.getString(FIELD_STATUS))
+                ?: throw AppRequestException("Invalid status.")
+            val category = RequestFirestoreMapper.toRequestCategory(snap.getString(FIELD_CATEGORY))
+                ?: RequestCategory.Custom
             val stub = Request(
                 id = requestId,
                 requesterId = "",
@@ -120,26 +98,10 @@ class FirestoreRequestDataSource @Inject constructor(
             if (toStatus != expected) {
                 throw AppRequestException("Invalid status transition.")
             }
-            val history = snap.readHistory().toMutableList()
-            history.add(
-                mapOf(
-                    "status" to toStatus.name,
-                    "at" to System.currentTimeMillis(),
-                    "byUid" to uid,
-                ),
-            )
-            val updates = mutableMapOf<String, Any>(
-                FIELD_STATUS to toStatus.name,
-                FIELD_STATUS_HISTORY to history,
-                FIELD_UPDATED_AT to FieldValue.serverTimestamp(),
-            )
-            when (toStatus) {
-                RequestStatus.InProgress -> updates[FIELD_STARTED_AT] = FieldValue.serverTimestamp()
-                RequestStatus.Purchased -> updates[FIELD_PURCHASED_AT] = FieldValue.serverTimestamp()
-                RequestStatus.OnTheWay -> updates[FIELD_ON_THE_WAY_AT] = FieldValue.serverTimestamp()
-                RequestStatus.Delivered -> updates[FIELD_DELIVERED_AT] = FieldValue.serverTimestamp()
-                else -> Unit
+            val history = RequestFirestoreMapper.readHistory(snap).toMutableList().apply {
+                add(RequestFirestoreMapper.buildHistoryEntry(toStatus.name, uid))
             }
+            val updates = RequestFirestoreMapper.buildAdvanceStatusUpdateMap(toStatus, history)
             tx.update(ref, updates)
         }.await()
     }
@@ -155,23 +117,11 @@ class FirestoreRequestDataSource @Inject constructor(
             if (snap.getString(FIELD_STATUS) != RequestStatus.Delivered.name) {
                 throw AppRequestException("Request is not awaiting confirmation.")
             }
-            val history = snap.readHistory().toMutableList()
-            history.add(
-                mapOf(
-                    "status" to RequestStatus.Completed.name,
-                    "at" to System.currentTimeMillis(),
-                    "byUid" to requesterId,
-                ),
-            )
-            tx.update(
-                ref,
-                mapOf(
-                    FIELD_STATUS to RequestStatus.Completed.name,
-                    FIELD_COMPLETED_AT to FieldValue.serverTimestamp(),
-                    FIELD_STATUS_HISTORY to history,
-                    FIELD_UPDATED_AT to FieldValue.serverTimestamp(),
-                ),
-            )
+            val history = RequestFirestoreMapper.readHistory(snap).toMutableList().apply {
+                add(RequestFirestoreMapper.buildHistoryEntry(RequestStatus.Completed.name, requesterId))
+            }
+            val updates = RequestFirestoreMapper.buildConfirmDeliveryUpdateMap(history)
+            tx.update(ref, updates)
         }.await()
     }
 
@@ -180,9 +130,8 @@ class FirestoreRequestDataSource @Inject constructor(
         firestore.runTransaction { tx ->
             val snap = tx.get(ref)
             if (!snap.exists()) throw AppRequestException("Request not found.")
-            val status = RequestStatus.valueOf(
-                snap.getString(FIELD_STATUS) ?: throw AppRequestException("Invalid status."),
-            )
+            val status = RequestFirestoreMapper.toRequestStatus(snap.getString(FIELD_STATUS))
+                ?: throw AppRequestException("Invalid status.")
             if (status == RequestStatus.Completed ||
                 status == RequestStatus.Cancelled ||
                 status == RequestStatus.Delivered
@@ -198,25 +147,11 @@ class FirestoreRequestDataSource @Inject constructor(
                 throw AppRequestException("Only the requester can cancel a pending request.")
             }
             val by = if (isRequester) CancelledBy.Requester.name else CancelledBy.Runner.name
-            val history = snap.readHistory().toMutableList()
-            history.add(
-                mapOf(
-                    "status" to RequestStatus.Cancelled.name,
-                    "at" to System.currentTimeMillis(),
-                    "byUid" to uid,
-                ),
-            )
-            tx.update(
-                ref,
-                mapOf(
-                    FIELD_STATUS to RequestStatus.Cancelled.name,
-                    FIELD_CANCEL_REASON to reason,
-                    FIELD_CANCELLED_BY to by,
-                    FIELD_CANCELLED_AT to FieldValue.serverTimestamp(),
-                    FIELD_STATUS_HISTORY to history,
-                    FIELD_UPDATED_AT to FieldValue.serverTimestamp(),
-                ),
-            )
+            val history = RequestFirestoreMapper.readHistory(snap).toMutableList().apply {
+                add(RequestFirestoreMapper.buildHistoryEntry(RequestStatus.Cancelled.name, uid))
+            }
+            val updates = RequestFirestoreMapper.buildCancelUpdateMap(reason, by, history)
+            tx.update(ref, updates)
         }.await()
     }
 
@@ -237,22 +172,13 @@ class FirestoreRequestDataSource @Inject constructor(
             if (rating.stars !in 1..5) {
                 throw AppRequestException("Stars must be 1–5.")
             }
-            tx.update(
-                ref,
-                mapOf(
-                    FIELD_RATING to mapOf(
-                        "stars" to rating.stars,
-                        "comment" to rating.comment,
-                        "ratedAt" to FieldValue.serverTimestamp(),
-                    ),
-                    FIELD_UPDATED_AT to FieldValue.serverTimestamp(),
-                ),
-            )
+            val updates = RequestFirestoreMapper.buildRatingUpdateMap(rating)
+            tx.update(ref, updates)
         }.await()
     }
 
     suspend fun get(requestId: String): Request? =
-        requests.document(requestId).get().await().toRequest()
+        RequestFirestoreMapper.toRequest(requests.document(requestId).get().await())
 
     fun observeRequest(requestId: String): Flow<Request?> = callbackFlow {
         val registration = requests.document(requestId)
@@ -261,7 +187,7 @@ class FirestoreRequestDataSource @Inject constructor(
                     handleListenErrorNullable(error)
                     return@addSnapshotListener
                 }
-                trySend(snapshot?.toRequest())
+                trySend(RequestFirestoreMapper.toRequest(snapshot))
             }
         awaitClose { registration.remove() }
     }
@@ -296,7 +222,7 @@ class FirestoreRequestDataSource @Inject constructor(
                     return@addSnapshotListener
                 }
                 trySend(
-                    snapshot?.documents?.mapNotNull { it.toChatMessage(requestId) }.orEmpty(),
+                    snapshot?.documents?.mapNotNull { RequestFirestoreMapper.toChatMessage(it, requestId) }.orEmpty(),
                 )
             }
         awaitClose { registration.remove() }
@@ -313,26 +239,11 @@ class FirestoreRequestDataSource @Inject constructor(
         if (trimmed.isEmpty()) throw AppRequestException("Message is empty.")
         val batch = firestore.batch()
         val msgRef = requests.document(requestId).collection(MESSAGES).document()
-        batch.set(
-            msgRef,
-            mapOf(
-                "senderId" to senderId,
-                "text" to trimmed,
-                "clientId" to clientId,
-                FIELD_CREATED_AT to FieldValue.serverTimestamp(),
-            ),
-        )
+        batch.set(msgRef, RequestFirestoreMapper.buildMessageMap(senderId, trimmed, clientId))
         val reqRef = requests.document(requestId)
-        val unreadField = if (isRequester) FIELD_RUNNER_UNREAD else FIELD_REQUESTER_UNREAD
         batch.set(
             reqRef,
-            mapOf(
-                FIELD_LAST_MESSAGE to trimmed,
-                FIELD_LAST_MESSAGE_AT to FieldValue.serverTimestamp(),
-                FIELD_LAST_MESSAGE_SENDER to senderId,
-                unreadField to FieldValue.increment(1),
-                FIELD_UPDATED_AT to FieldValue.serverTimestamp(),
-            ),
+            RequestFirestoreMapper.buildChatMetadataUpdateMap(trimmed, senderId, isRequester),
             SetOptions.merge(),
         )
         batch.commit().await()
@@ -357,7 +268,7 @@ class FirestoreRequestDataSource @Inject constructor(
                 handleListenError(error)
                 return@addSnapshotListener
             }
-            val mapped = snapshot?.documents?.mapNotNull { it.toRequest() }.orEmpty()
+            val mapped = snapshot?.documents?.mapNotNull { RequestFirestoreMapper.toRequest(it) }.orEmpty()
             trySend(
                 if (sortByUpdatedDesc) {
                     mapped.sortedByDescending { it.updatedAtEpochMs }
