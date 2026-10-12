@@ -31,6 +31,7 @@ import com.app.hatli.feature.home.presentation.components.formatting.isAppArabic
 import com.app.hatli.feature.home.presentation.components.formatting.formatDistance
 import com.app.hatli.feature.home.presentation.components.formatting.formatEgp
 import com.app.hatli.feature.home.presentation.components.formatting.formatRelativeTime
+import com.app.hatli.feature.home.presentation.components.formatting.formatRoute
 
 @Composable
 fun RequestRowCard(
@@ -43,7 +44,7 @@ fun RequestRowCard(
     val extended = HatliTheme.extendedColors
     val feeFormatted = formatEgp(summary.offerAmount, isAr)
     val distanceFormatted = summary.distanceMeters?.let { formatDistance(it, isAr) }
-    val timeFormatted = summary.createdAtEpochMs?.let { formatRelativeTime(it, isAr) }
+    val timeFormatted = formatRelativeTime(summary.createdAtEpochMs, isAr)
 
     Surface(
         modifier = modifier
@@ -73,7 +74,7 @@ fun RequestRowCard(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     CategoryBadge(category = summary.category, isAr = isAr)
-                    if (!timeFormatted.isNullOrBlank()) {
+                    if (timeFormatted.isNotBlank()) {
                         Text(
                             text = timeFormatted,
                             style = MaterialTheme.typography.labelSmall.copy(
@@ -112,17 +113,12 @@ fun RequestRowCard(
                     overflow = TextOverflow.Ellipsis,
                 )
 
-                val routeText = when {
-                    !summary.pickupLabel.isNullOrBlank() && !summary.dropoffLabel.isNullOrBlank() ->
-                        "📍 ${summary.pickupLabel} ➔ 🏁 ${summary.dropoffLabel}"
-                    !summary.pickupLabel.isNullOrBlank() ->
-                        "📍 ${summary.pickupLabel}"
-                    !summary.dropoffLabel.isNullOrBlank() ->
-                        "🏁 ${summary.dropoffLabel}"
-                    !summary.description.isNullOrBlank() ->
-                        summary.description
-                    else -> null
-                }
+                val routeText = formatRoute(
+                    pickupLabel = summary.pickupLabel,
+                    dropoffLabel = summary.dropoffLabel,
+                    description = summary.description,
+                    isAr = isAr,
+                )
                 if (routeText != null) {
                     Text(
                         text = routeText,

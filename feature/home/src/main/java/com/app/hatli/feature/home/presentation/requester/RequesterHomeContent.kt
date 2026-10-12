@@ -34,6 +34,7 @@ import androidx.compose.material.icons.filled.LocalPharmacy
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.Payment
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.Notifications
@@ -82,6 +83,8 @@ private data class QuickServiceCategory(
 private fun rememberQuickServiceCategories(): List<QuickServiceCategory> {
     val primaryContainer = MaterialTheme.colorScheme.primaryContainer
     val primary = MaterialTheme.colorScheme.primary
+    val secondaryContainer = MaterialTheme.colorScheme.secondaryContainer
+    val secondary = MaterialTheme.colorScheme.secondary
     val tertiaryContainer = MaterialTheme.colorScheme.tertiaryContainer
     val tertiary = MaterialTheme.colorScheme.tertiary
 
@@ -91,13 +94,15 @@ private fun rememberQuickServiceCategories(): List<QuickServiceCategory> {
     val pharmacySub = stringResource(R.string.home_category_pharmacy_subtitle)
     val courierTitle = stringResource(R.string.home_category_courier_title)
     val courierSub = stringResource(R.string.home_category_courier_subtitle)
+    val billsTitle = stringResource(R.string.home_category_bills_title)
+    val billsSub = stringResource(R.string.home_category_bills_subtitle)
     val customTitle = stringResource(R.string.home_category_custom_title)
     val customSub = stringResource(R.string.home_category_custom_subtitle)
 
     return androidx.compose.runtime.remember(
-        primaryContainer, primary, tertiaryContainer, tertiary,
+        primaryContainer, primary, secondaryContainer, secondary, tertiaryContainer, tertiary,
         groceryTitle, grocerySub, pharmacyTitle, pharmacySub,
-        courierTitle, courierSub, customTitle, customSub,
+        courierTitle, courierSub, billsTitle, billsSub, customTitle, customSub,
     ) {
         listOf(
             QuickServiceCategory(
@@ -123,6 +128,14 @@ private fun rememberQuickServiceCategories(): List<QuickServiceCategory> {
                 icon = Icons.Default.LocalShipping,
                 containerColor = primaryContainer,
                 iconColor = primary,
+            ),
+            QuickServiceCategory(
+                id = "bills",
+                title = billsTitle,
+                subtitle = billsSub,
+                icon = Icons.Default.Payment,
+                containerColor = secondaryContainer,
+                iconColor = secondary,
             ),
             QuickServiceCategory(
                 id = "custom_errand",

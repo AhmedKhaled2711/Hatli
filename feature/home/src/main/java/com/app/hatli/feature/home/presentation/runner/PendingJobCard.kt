@@ -40,6 +40,7 @@ import com.app.hatli.feature.home.presentation.components.formatting.isAppArabic
 import com.app.hatli.feature.home.presentation.components.formatting.formatDistance
 import com.app.hatli.feature.home.presentation.components.formatting.formatEgp
 import com.app.hatli.feature.home.presentation.components.formatting.formatRelativeTime
+import com.app.hatli.feature.home.presentation.components.formatting.formatRoute
 
 @Composable
 fun PendingJobCard(
@@ -134,17 +135,12 @@ fun PendingJobCard(
                 )
 
                 // Route if available
-                val routeText = when {
-                    !summary.pickupLabel.isNullOrBlank() && !summary.dropoffLabel.isNullOrBlank() ->
-                        "📍 ${summary.pickupLabel} ➔ 🏁 ${summary.dropoffLabel}"
-                    !summary.pickupLabel.isNullOrBlank() ->
-                        "📍 ${summary.pickupLabel}"
-                    !summary.dropoffLabel.isNullOrBlank() ->
-                        "🏁 ${summary.dropoffLabel}"
-                    !summary.description.isNullOrBlank() ->
-                        summary.description
-                    else -> null
-                }
+                val routeText = formatRoute(
+                    pickupLabel = summary.pickupLabel,
+                    dropoffLabel = summary.dropoffLabel,
+                    description = summary.description,
+                    isAr = isAr,
+                )
                 if (routeText != null) {
                     Text(
                         text = routeText,

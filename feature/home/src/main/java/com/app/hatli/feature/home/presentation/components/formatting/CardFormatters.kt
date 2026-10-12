@@ -46,3 +46,19 @@ fun formatDistance(meters: Int?, isAr: Boolean = false): String {
         stringResource(R.string.home_card_distance_m, meters)
     }
 }
+
+fun formatRoute(
+    pickupLabel: String?,
+    dropoffLabel: String?,
+    description: String? = null,
+    isAr: Boolean = false,
+): String? = when {
+    !pickupLabel.isNullOrBlank() && !dropoffLabel.isNullOrBlank() -> {
+        val arrow = if (isAr) "\u200F←\u200F" else "➔"
+        "📍 $pickupLabel $arrow 🏁 $dropoffLabel"
+    }
+    !pickupLabel.isNullOrBlank() -> "📍 $pickupLabel"
+    !dropoffLabel.isNullOrBlank() -> "🏁 $dropoffLabel"
+    !description.isNullOrBlank() -> description
+    else -> null
+}

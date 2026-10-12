@@ -210,6 +210,8 @@
     <string name="home_category_pharmacy_subtitle">Medicine &amp; Medical Supplies</string>
     <string name="home_category_courier_title">Parcel &amp; Documents</string>
     <string name="home_category_courier_subtitle">Transport papers &amp; items</string>
+    <string name="home_category_bills_title">Pay Bills</string>
+    <string name="home_category_bills_subtitle">Utilities &amp; Subscriptions</string>
     <string name="home_category_custom_title">Custom Errand</string>
     <string name="home_category_custom_subtitle">Order anything you need</string>
     <string name="home_runner_no_active_job_title">No active job right now</string>

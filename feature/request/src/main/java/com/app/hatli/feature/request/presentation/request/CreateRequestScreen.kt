@@ -251,7 +251,10 @@ fun CreateRequestScreen(
                             verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
                         ) {
                             when (step) {
-                                CreateWizardStep.Category -> CategoryStep(onEvent)
+                                CreateWizardStep.Category -> CategoryStep(
+                                    selectedCategory = state.category,
+                                    onEvent = onEvent,
+                                )
                                 CreateWizardStep.Details -> DetailsStep(state, onEvent)
                                 CreateWizardStep.FeeReview -> FeeReviewStep(state, onEvent)
                             }

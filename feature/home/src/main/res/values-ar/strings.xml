@@ -211,6 +211,8 @@
     <string name="home_category_pharmacy_subtitle">أدوية ومستلزمات طبية</string>
     <string name="home_category_courier_title">طرد ومستندات</string>
     <string name="home_category_courier_subtitle">نقل أوراق وأغراض</string>
+    <string name="home_category_bills_title">دفع فواتير</string>
+    <string name="home_category_bills_subtitle">سداد فواتير واشتراكات</string>
     <string name="home_category_custom_title">مشوار مخصص</string>
     <string name="home_category_custom_subtitle">اطلب أي شيء تريد</string>
     <string name="home_runner_no_active_job_title">لا يوجد طلب قيد التنفيذ حالياً</string>

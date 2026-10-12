@@ -41,6 +41,7 @@ import com.app.hatli.feature.home.presentation.components.badge.CategoryBadge
 import com.app.hatli.feature.home.presentation.components.badge.StatusBadge
 import com.app.hatli.feature.home.presentation.components.formatting.isAppArabic
 import com.app.hatli.feature.home.presentation.components.formatting.formatEgp
+import com.app.hatli.feature.home.presentation.components.formatting.formatRoute
 import com.app.hatli.feature.home.presentation.components.RequestStatusStepper
 
 @Composable
@@ -128,15 +129,11 @@ fun CurrentRequestCard(
                 )
 
                 // Route or location if available
-                val routeText = when {
-                    !summary.pickupLabel.isNullOrBlank() && !summary.dropoffLabel.isNullOrBlank() ->
-                        "📍 ${summary.pickupLabel} ➔ 🏁 ${summary.dropoffLabel}"
-                    !summary.pickupLabel.isNullOrBlank() ->
-                        "📍 ${summary.pickupLabel}"
-                    !summary.dropoffLabel.isNullOrBlank() ->
-                        "🏁 ${summary.dropoffLabel}"
-                    else -> null
-                }
+                val routeText = formatRoute(
+                    pickupLabel = summary.pickupLabel,
+                    dropoffLabel = summary.dropoffLabel,
+                    isAr = isAr,
+                )
                 if (routeText != null) {
                     Text(
                         text = routeText,

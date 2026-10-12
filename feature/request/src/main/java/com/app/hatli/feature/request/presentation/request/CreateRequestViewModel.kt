@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.common.result.userMessage
 import com.app.hatli.core.domain.usecase.request.CreateRequestUseCase
+import com.app.hatli.core.domain.usecase.user.GetUserProfileUseCase
 import com.app.hatli.core.model.BillsDetails
 import com.app.hatli.core.model.CreateRequestInput
 import com.app.hatli.core.model.CustomDetails
@@ -20,11 +21,13 @@ import javax.inject.Inject
 class CreateRequestViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val createRequest: CreateRequestUseCase,
+    private val getUserProfile: GetUserProfileUseCase,
 ) : BaseViewModel<CreateRequestUiState, CreateRequestUiEvent, CreateRequestUiEffect>(
     CreateRequestUiState(),
 ) {
 
     init {
+        loadUserProfileAddress()
         val initialCategory: String? = savedStateHandle["initialCategory"]
         val mapped = mapInitialCategory(initialCategory)
         if (mapped != null) {
@@ -37,6 +40,21 @@ class CreateRequestViewModel @Inject constructor(
                     categorySubtype = subtype,
                     fieldError = null,
                 )
+            }
+        }
+    }
+
+    private fun loadUserProfileAddress() {
+        viewModelScope.launch {
+            when (val result = getUserProfile()) {
+                is Result.Success -> {
+                    val address = result.data?.address
+                    val formatted = address?.takeIf { !it.isEmpty }?.formattedDeliveryAddress()
+                    if (!formatted.isNullOrBlank()) {
+                        setState { copy(savedDeliveryAddress = formatted) }
+                    }
+                }
+                else -> Unit
             }
         }
     }
@@ -79,6 +97,7 @@ class CreateRequestViewModel @Inject constructor(
                 setState { copy(pickupAddress = event.value, fieldError = null) }
             is CreateRequestUiEvent.DropoffAddressChanged ->
                 setState { copy(dropoffAddress = event.value, fieldError = null) }
+            is CreateRequestUiEvent.UseSavedAddress -> useSavedAddress(event.fallback)
             is CreateRequestUiEvent.PickupItemChanged ->
                 setState { copy(pickupItemDescription = event.value, fieldError = null) }
             is CreateRequestUiEvent.BillTypeChanged ->
@@ -94,6 +113,35 @@ class CreateRequestViewModel @Inject constructor(
             is CreateRequestUiEvent.BudgetChanged -> setState { copy(budgetText = event.value) }
             is CreateRequestUiEvent.DeliveryFeeChanged ->
                 setState { copy(deliveryFeeText = event.value, fieldError = null) }
+        }
+    }
+
+    private fun useSavedAddress(fallback: String) {
+        val cached = uiState.value.savedDeliveryAddress
+        if (!cached.isNullOrBlank()) {
+            setState { copy(dropoffAddress = cached, fieldError = null) }
+            return
+        }
+        viewModelScope.launch {
+            when (val result = getUserProfile()) {
+                is Result.Success -> {
+                    val address = result.data?.address
+                    val formatted = address?.takeIf { !it.isEmpty }?.formattedDeliveryAddress()
+                    val targetAddress = if (!formatted.isNullOrBlank()) formatted else fallback
+                    setState {
+                        copy(
+                            savedDeliveryAddress = formatted ?: savedDeliveryAddress,
+                            dropoffAddress = if (targetAddress.isNotBlank()) targetAddress else dropoffAddress,
+                            fieldError = null,
+                        )
+                    }
+                }
+                else -> {
+                    if (fallback.isNotBlank()) {
+                        setState { copy(dropoffAddress = fallback, fieldError = null) }
+                    }
+                }
+            }
         }
     }
 

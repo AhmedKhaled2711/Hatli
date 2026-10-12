@@ -22,6 +22,7 @@ data class CreateRequestUiState(
     // Pickup
     val pickupAddress: String = "",
     val dropoffAddress: String = "",
+    val savedDeliveryAddress: String? = null,
     val pickupItemDescription: String = "",
     // Bills
     val billType: String = "",
@@ -49,6 +50,7 @@ sealed interface CreateRequestUiEvent : UiEvent {
     data class NotesChanged(val value: String) : CreateRequestUiEvent
     data class PickupAddressChanged(val value: String) : CreateRequestUiEvent
     data class DropoffAddressChanged(val value: String) : CreateRequestUiEvent
+    data class UseSavedAddress(val fallback: String = "") : CreateRequestUiEvent
     data class PickupItemChanged(val value: String) : CreateRequestUiEvent
     data class BillTypeChanged(val value: String) : CreateRequestUiEvent
     data class AccountRefChanged(val value: String) : CreateRequestUiEvent

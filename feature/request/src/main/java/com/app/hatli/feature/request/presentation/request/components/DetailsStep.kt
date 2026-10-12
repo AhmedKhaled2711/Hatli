@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocalPharmacy
@@ -236,32 +237,62 @@ fun DetailsStep(
             }
 
             RequestCategory.Pickup -> {
-                // Local Landmark Selector Chips for Pickup Point
-                Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs)) {
-                    Text(
-                        text = stringResource(R.string.create_request_common_landmarks),
-                        style = MaterialTheme.typography.titleMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            fontSize = 13.sp,
-                        ),
-                    )
+                val defaultDropoff = stringResource(R.string.create_request_default_dropoff_address)
 
-                    LazyRow(horizontalArrangement = Arrangement.spacedBy(HatliSpacing.xs)) {
+                // 1. Pickup Address Section
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(28.dp)
+                                .clip(CircleShape)
+                                .background(BrandTeal.copy(alpha = 0.12f)),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = null,
+                                tint = BrandTeal,
+                                modifier = Modifier.size(16.dp),
+                            )
+                        }
+                        Text(
+                            text = stringResource(R.string.create_request_pickup_address_label),
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                fontSize = 13.sp,
+                            ),
+                        )
+                    }
+
+                    // Local Landmark Selector Chips for Pickup Point
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+                        contentPadding = PaddingValues(vertical = 2.dp),
+                    ) {
                         items(LocalLandmarkResIds) { landmarkRes ->
                             val landmark = stringResource(landmarkRes)
+                            val isSelected = state.pickupAddress == landmark
                             Surface(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(12.dp))
                                     .clickable { onEvent(CreateRequestUiEvent.PickupAddressChanged(landmark)) },
                                 shape = RoundedCornerShape(12.dp),
-                                color = MaterialTheme.colorScheme.surfaceVariant,
-                                border = BorderStroke(1.dp, extended.border),
+                                color = if (isSelected) BrandTeal.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant,
+                                border = BorderStroke(1.dp, if (isSelected) BrandTeal else extended.border),
                             ) {
                                 Text(
                                     text = landmark,
                                     style = MaterialTheme.typography.bodyMedium.copy(
-                                        color = MaterialTheme.colorScheme.primary,
+                                        color = if (isSelected) BrandTeal else MaterialTheme.colorScheme.primary,
+                                        fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                                         fontSize = 12.sp,
                                     ),
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
@@ -269,25 +300,115 @@ fun DetailsStep(
                             }
                         }
                     }
+
+                    HatliTextField(
+                        value = state.pickupAddress,
+                        onValueChange = { onEvent(CreateRequestUiEvent.PickupAddressChanged(it)) },
+                        label = stringResource(R.string.create_request_pickup_address_label),
+                        placeholder = stringResource(R.string.create_request_pickup_address_placeholder),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
 
-                HatliTextField(
-                    value = state.pickupAddress,
-                    onValueChange = { onEvent(CreateRequestUiEvent.PickupAddressChanged(it)) },
-                    label = stringResource(R.string.create_request_pickup_address_label),
+                // 2. Drop-off Address Section
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                )
+                    verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(CircleShape)
+                                    .background(BrandCoral.copy(alpha = 0.12f)),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.LocationOn,
+                                    contentDescription = null,
+                                    tint = BrandCoral,
+                                    modifier = Modifier.size(16.dp),
+                                )
+                            }
+                            Text(
+                                text = stringResource(R.string.create_request_dropoff_address_label),
+                                style = MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    fontSize = 13.sp,
+                                ),
+                            )
+                        }
 
-                // Saved Address Preview Card for Dropoff
-                SavedAddressCard(
-                    addressTitle = stringResource(R.string.create_request_dropoff_address_label),
-                    addressDetail = state.dropoffAddress.ifBlank { stringResource(R.string.create_request_default_dropoff_address) },
-                )
+                        // Quick preset chip: Use saved address
+                        val isUsingSaved = (!state.savedDeliveryAddress.isNullOrBlank() && state.dropoffAddress == state.savedDeliveryAddress) ||
+                            (state.savedDeliveryAddress.isNullOrBlank() && state.dropoffAddress.isNotBlank() && state.dropoffAddress == defaultDropoff)
 
+                        Surface(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable {
+                                    onEvent(CreateRequestUiEvent.UseSavedAddress(defaultDropoff))
+                                },
+                            shape = RoundedCornerShape(12.dp),
+                            color = if (isUsingSaved) {
+                                MaterialTheme.colorScheme.primaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                            },
+                            border = BorderStroke(
+                                1.dp,
+                                if (isUsingSaved) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+                            ),
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            ) {
+                                if (isUsingSaved) {
+                                    Icon(
+                                        imageVector = Icons.Default.Check,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(13.dp),
+                                    )
+                                }
+                                Text(
+                                    text = stringResource(R.string.create_request_use_saved_address),
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = if (isUsingSaved) FontWeight.Bold else FontWeight.Medium,
+                                        fontSize = 11.sp,
+                                    ),
+                                )
+                            }
+                        }
+                    }
+
+                    HatliTextField(
+                        value = state.dropoffAddress,
+                        onValueChange = { onEvent(CreateRequestUiEvent.DropoffAddressChanged(it)) },
+                        label = stringResource(R.string.create_request_dropoff_address_label),
+                        placeholder = stringResource(R.string.create_request_dropoff_address_placeholder),
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+
+                // 3. Item Description Section
                 HatliTextField(
                     value = state.pickupItemDescription,
                     onValueChange = { onEvent(CreateRequestUiEvent.PickupItemChanged(it)) },
                     label = stringResource(R.string.create_request_item_desc_label),
+                    placeholder = stringResource(R.string.create_request_item_desc_placeholder),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

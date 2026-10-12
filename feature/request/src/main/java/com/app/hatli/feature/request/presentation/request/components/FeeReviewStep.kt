@@ -14,8 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ReceiptLong
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import com.app.hatli.core.designsystem.theme.CoralContainer
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.RequestDefaults
+import com.app.hatli.feature.request.R
 import com.app.hatli.feature.request.presentation.request.CreateRequestUiEvent
 import com.app.hatli.feature.request.presentation.request.CreateRequestUiState
 import com.app.hatli.feature.request.presentation.request.label
@@ -65,7 +67,7 @@ fun FeeReviewStep(
                 verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
             ) {
                 Text(
-                    text = "مقابل التوصيل المقترح للكابتن",
+                    text = stringResource(R.string.create_request_fee_stepper_title),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         color = CharcoalDark,
@@ -74,7 +76,7 @@ fun FeeReviewStep(
                 )
 
                 Text(
-                    text = "يمكنك تعديل الأجر المقترح لتسريع قبول كباتن التوصيل في مدينتك.",
+                    text = stringResource(R.string.create_request_fee_stepper_desc),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = CharcoalMuted,
                         fontSize = 12.sp,
@@ -83,7 +85,7 @@ fun FeeReviewStep(
 
                 Spacer(modifier = Modifier.height(HatliSpacing.xxs))
 
-                // Stepper Row: (-5 EGP) [ 35 ج.م ] (+5 EGP)
+                // Stepper Row: (-5 EGP) [ 35 EGP ] (+5 EGP)
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -103,7 +105,7 @@ fun FeeReviewStep(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Remove,
-                            contentDescription = "تقليل المقابل",
+                            contentDescription = stringResource(R.string.create_request_fee_stepper_decrease),
                             tint = BrandCoral,
                             modifier = Modifier.size(20.dp),
                         )
@@ -144,7 +146,7 @@ fun FeeReviewStep(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "زيادة المقابل",
+                            contentDescription = stringResource(R.string.create_request_fee_stepper_increase),
                             tint = Color.White,
                             modifier = Modifier.size(20.dp),
                         )
@@ -153,7 +155,7 @@ fun FeeReviewStep(
             }
         }
 
-        // Cost Breakdown Summary Card
+        // Cost & Details Breakdown Summary Card
         HatliCard(modifier = Modifier.fillMaxWidth()) {
             Column(
                 modifier = Modifier
@@ -166,39 +168,114 @@ fun FeeReviewStep(
                     horizontalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ReceiptLong,
+                        imageVector = Icons.AutoMirrored.Filled.ReceiptLong,
                         contentDescription = null,
                         tint = BrandTeal,
                         modifier = Modifier.size(20.dp),
                     )
                     Text(
-                        text = "ملخص حساب وحالة الطلب",
+                        text = stringResource(R.string.create_request_order_cost_summary),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = CharcoalDark,
                             fontSize = 15.sp,
-                        ),
+                            ),
                     )
                 }
 
                 ReviewSummaryRow(
-                    label = "نوع الخدمة",
+                    label = stringResource(R.string.create_request_review_service_type),
                     value = state.category?.label().orEmpty(),
                 )
 
-                ReviewSummaryRow(
-                    label = "مقابل التوصيل للكابتن",
-                    value = "$currentFee ج.م",
-                )
+                // Category-specific details
+                when (state.category) {
+                    RequestCategory.Pickup -> {
+                        if (state.pickupAddress.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_pickup_address_label),
+                                value = state.pickupAddress,
+                            )
+                        }
+                        if (state.dropoffAddress.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_dropoff_address_label),
+                                value = state.dropoffAddress,
+                            )
+                        }
+                        if (state.pickupItemDescription.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_item_desc_label),
+                                value = state.pickupItemDescription,
+                            )
+                        }
+                    }
+                    RequestCategory.Shopping -> {
+                        if (state.shopName.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_shop_name_label),
+                                value = state.shopName,
+                            )
+                        }
+                        if (state.itemsText.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_items_label),
+                                value = state.itemsText,
+                            )
+                        }
+                    }
+                    RequestCategory.Bills -> {
+                        if (state.billType.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_bill_type_label),
+                                value = state.billType,
+                            )
+                        }
+                        if (state.accountRef.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_account_ref_label),
+                                value = state.accountRef,
+                            )
+                        }
+                        if (state.billAmountText.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_bill_amount_label),
+                                value = stringResource(R.string.create_request_review_egp_suffix, state.billAmountText.toIntOrNull() ?: 0),
+                            )
+                        }
+                    }
+                    RequestCategory.Custom -> {
+                        if (state.customTitle.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_custom_title_label),
+                                value = state.customTitle,
+                            )
+                        }
+                        if (state.customBody.isNotBlank()) {
+                            ReviewSummaryRow(
+                                label = stringResource(R.string.create_request_custom_body_label),
+                                value = state.customBody,
+                            )
+                        }
+                    }
+                    null -> Unit
+                }
 
                 ReviewSummaryRow(
-                    label = "تكلفة المشتريات",
-                    value = "تُدفع للمندوب عند الاستلام حسب الفاتورة",
+                    label = stringResource(R.string.create_request_review_delivery_fee),
+                    value = stringResource(R.string.create_request_review_egp_suffix, currentFee),
                 )
 
+                if (state.category == RequestCategory.Shopping) {
+                    ReviewSummaryRow(
+                        label = stringResource(R.string.create_request_review_items_cost),
+                        value = stringResource(R.string.create_request_review_items_cost_note),
+                    )
+                }
+
                 ReviewSummaryRow(
-                    label = "رسوم الخدمة والتطبيق",
-                    value = "مجاناً لفترة محدودة",
+                    label = stringResource(R.string.create_request_review_service_charge),
+                    value = stringResource(R.string.create_request_review_service_charge_free),
                 )
             }
         }

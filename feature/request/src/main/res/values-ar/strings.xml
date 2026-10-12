@@ -84,8 +84,25 @@
     <string name="create_request_budget_label">الميزانية المتوقعة بالجنيه (اختياري)</string>
 
     <string name="create_request_pickup_address_label">عنوان الاستلام</string>
+    <string name="create_request_pickup_address_placeholder">مثال: اسم المحل، معلم معروف، أو عنوان تفصيلي</string>
     <string name="create_request_dropoff_address_label">عنوان التسليم</string>
+    <string name="create_request_dropoff_address_placeholder">مثال: المنزل، العمل، رقم العمارة والشقة</string>
     <string name="create_request_item_desc_label">وصف الغرض</string>
+    <string name="create_request_item_desc_placeholder">مثال: مفاتيح منزل، ظرف مستندات، حقيبة صغيرة</string>
+    <string name="create_request_use_saved_address">استخدام العنوان المسجل</string>
+
+    <string name="create_request_review_service_type">نوع الخدمة</string>
+    <string name="create_request_review_delivery_fee">مقابل التوصيل للكابتن</string>
+    <string name="create_request_review_items_cost">تكلفة المشتريات</string>
+    <string name="create_request_review_items_cost_note">تُدفع للمندوب عند الاستلام حسب الفاتورة</string>
+    <string name="create_request_review_service_charge">رسوم الخدمة والتطبيق</string>
+    <string name="create_request_review_service_charge_free">مجاناً لفترة محدودة</string>
+    <string name="create_request_review_egp_suffix">%1$d ج.م</string>
+    <string name="create_request_fee_stepper_title">مقابل التوصيل المقترح للكابتن</string>
+    <string name="create_request_fee_stepper_desc">يمكنك تعديل الأجر المقترح لتسريع قبول كباتن التوصيل في مدينتك.</string>
+    <string name="create_request_fee_stepper_decrease">تقليل المقابل</string>
+    <string name="create_request_fee_stepper_increase">زيادة المقابل</string>
+    <string name="create_request_order_cost_summary">ملخص حساب وحالة الطلب</string>
 
     <string name="create_request_bill_type_label">نوع الفاتورة</string>
     <string name="create_request_bill_type_supporting">مثال: كهرباء، مياه، إنترنت</string>
