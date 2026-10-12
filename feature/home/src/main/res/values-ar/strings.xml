@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================== -->
+    <!-- Home - Header -->
+    <!-- ============================== -->
+
+    <string name="home_good_morning">صباح الخير 👋</string>
+    <string name="home_notifications">الإشعارات</string>
+
+    <!-- مؤقتًا لحد ما رفع صورة البروفايل يتنفذ -->
+    <string name="home_default_profile_image">الصورة الشخصية</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Navigation -->
+    <!-- ============================== -->
+
+    <string name="home_tab_home">الرئيسية</string>
+    <string name="home_tab_requests">الطلبات</string>
+    <string name="home_tab_jobs">الوظائف</string>
+    <string name="home_tab_messages">الرسائل</string>
+    <string name="home_tab_profile">حسابي</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Requester -->
+    <!-- ============================== -->
+
+    <string name="home_requester_hero_title">عايز تطلب حاجة؟</string>
+    <string name="home_requester_hero_cta">+ اطلب دلوقتي</string>
+
+    <string name="home_recent_requests">آخر الطلبات</string>
+    <string name="home_quick_actions">اختصارات</string>
+    <string name="home_tip">نصيحة</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Runner -->
+    <!-- ============================== -->
+
+    <string name="home_runner_no_active_job">مفيش وظيفة نشطة</string>
+
+    <string name="home_runner_no_active_job_description">
+        لما تقبل طلب، هيظهر هنا مع حالة التنفيذ والمحادثة.
+    </string>
+
+    <string name="home_runner_go_online">
+        افتح الاستقبال عشان تشوف الطلبات القريبة.
+    </string>
+
+    <string name="home_runner_no_nearby_requests">
+        مفيش طلبات قريبة دلوقتي — خلي الاستقبال مفتوح.
+    </string>
+
+    <string name="home_runner_nearby_requests">طلبات قريبة</string>
+    <string name="home_runner_view_all_jobs">عرض كل الوظائف</string>
+    <string name="home_runner_accept">قبول</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Requests -->
+    <!-- ============================== -->
+
+    <string name="home_requests_empty">مفيش طلبات هنا</string>
+    <string name="home_requests_create">اطلب دلوقتي</string>
+    <string name="home_requests_chat">محادثة</string>
+    <string name="home_requests_rate">قيّم</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Jobs -->
+    <!-- ============================== -->
+
+
+    <!-- Job Filters -->
+    <string name="home_jobs_filter_all">الكل</string>
+    <string name="home_jobs_filter_pending">قيد الانتظار</string>
+    <string name="home_jobs_filter_accepted">مقبولة</string>
+    <string name="home_jobs_filter_picked_up">تم الاستلام</string>
+    <string name="home_jobs_filter_delivered">تم التوصيل</string>
+    <string name="home_jobs_filter_cancelled">ملغاة</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Messages -->
+    <!-- ============================== -->
+
+    <string name="home_messages_empty_title">مفيش محادثات لسه</string>
+
+    <string name="home_messages_empty_description">
+        لما يتقبل طلب، هتقدر تفتح الشات من هنا أو من الطلب الحالي أو الوظيفة النشطة.
+    </string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Quick Actions -->
+    <!-- ============================== -->
+
+    <string name="home_quick_action_new_request">طلب جديد</string>
+    <string name="home_quick_action_my_requests">طلباتي</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Jobs -->
+    <!-- ============================== -->
+
+    <string name="home_jobs_filter_active">النشطة</string>
+    <string name="home_jobs_filter_history">السجل</string>
+
+    <string name="home_jobs_empty">
+    مفيش وظائف — اقبل طلب من القريبة منك أو افتح الاستقبال
+</string>
+
+    <string name="home_jobs_chat">محادثة</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Request Filters -->
+    <!-- ============================== -->
+
+    <string name="home_requests_filter_active">النشطة</string>
+    <string name="home_requests_filter_completed">المكتملة</string>
+    <string name="home_requests_filter_cancelled">الملغاة</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Runner Status Actions -->
+    <!-- ============================== -->
+
+    <string name="home_runner_start_work">ابدأ التنفيذ</string>
+    <string name="home_runner_mark_purchased">تم الشراء</string>
+    <string name="home_runner_on_the_way">في الطريق</string>
+    <string name="home_runner_mark_delivered">تم التوصيل</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Accessibility -->
+    <!-- ============================== -->
+
+    <string name="home_create_request">إنشاء طلب</string>
+
+    <!-- ============================== -->
+    <!-- Home - Requester Content -->
+    <!-- ============================== -->
+
+    <string name="home_requester_completed_requests">
+    طلبات مكتملة
+    </string>
+
+    <string name="home_requester_total_requests">
+    إجمالي الطلبات
+    </string>
+
+    <string name="home_requester_current_request">
+    الطلب الحالي
+    </string>
+
+    <string name="home_requester_view_all">
+    عرض الكل
+    </string>
+
+    <string name="home_requester_quick_actions">
+    اختصارات
+    </string>
+
+    <string name="home_requester_services">
+    خدمات سريعة
+    </string>
+
+    <!-- ============================== -->
+    <!-- Home - Runner - Current Job -->
+    <!-- ============================== -->
+
+    <string name="home_runner_current_job">وظيفتك الحالية</string>
+
+    <string name="home_runner_request_for">
+    طلب %1$s
+    </string>
+
+    <string name="home_runner_new_messages">
+    %1$d رسائل جديدة
+    </string>
+
+    <string name="home_runner_chat">
+    محادثة
+    </string>
+
+    <string name="home_runner_details">
+    التفاصيل
+    </string>
+
+    <string name="home_runner_waiting_confirmation">
+    في انتظار تأكيد صاحب الطلب
+    </string>
+
+    <string name="home_runner_for_requester">طلب %1$s</string>
+
+    <!-- ============================== -->
+    <!-- Home - Production Refinements -->
+    <!-- ============================== -->
+    <string name="home_location_select_prompt">حدد موقع التوصيل</string>
+    <string name="home_direct_delivery_services">خدمات التوصيل المباشرة</string>
+    <string name="home_quick_services">الخدمات السريعة</string>
+    <string name="home_hero_badge_title">خدمة التوصيل السريع</string>
+    <string name="home_hero_banner_title">اطلب أي حاجة من أي مكان في مدينتك</string>
+    <string name="home_hero_banner_description">حدد المشتريات والموقع، وسيتولى الكابتن التوصيل حتى باب بيتك.</string>
+    <string name="home_category_grocery_title">سوبر ماركت</string>
+    <string name="home_category_grocery_subtitle">بقالة ومستلزمات منزلية</string>
+    <string name="home_category_pharmacy_title">صيدلية ورعاية</string>
+    <string name="home_category_pharmacy_subtitle">أدوية ومستلزمات طبية</string>
+    <string name="home_category_courier_title">طرد ومستندات</string>
+    <string name="home_category_courier_subtitle">نقل أوراق وأغراض</string>
+    <string name="home_category_custom_title">مشوار مخصص</string>
+    <string name="home_category_custom_subtitle">اطلب أي شيء تريد</string>
+    <string name="home_runner_no_active_job_title">لا يوجد طلب قيد التنفيذ حالياً</string>
+    <string name="home_runner_no_active_job_sub">تصفّح الطلبات القريبة أدناه وقدم عرض التوصيل الآن.</string>
+    <string name="home_runner_offline_title">أنت غير متاح لاستلام الطلبات</string>
+    <string name="home_runner_offline_sub">قم بتفعيل مفتاح التواجد بالأعلى للبدء في استقبال طلبات التوصيل.</string>
+    <string name="home_runner_no_nearby_title">لا توجد طلبات قريبة حالياً</string>
+    <string name="home_runner_no_nearby_sub">سنخطرك فور إدراج طلب توصيل جديد في منطقتك الجغرافية.</string>
+    <string name="home_runner_nearby_title">الطلبات القريبة</string>
+    <string name="home_runner_dashboard_title">لوحة الكابتن</string>
+    <string name="home_runner_status_online">متاح</string>
+    <string name="home_runner_status_offline">غير متاح</string>
+    <string name="home_runner_online_desc">أنت متاح وتستقبل الطلبات القريبة. تظل وظيفتك الحالية ظاهرة في كل الأحوال.</string>
+    <string name="home_runner_offline_desc">قم بالتفعيل للبدء في رؤية الطلبات القريبة. تظل الوظائف المقبولة ظاهرة تحت الوظيفة الحالية.</string>
+    <string name="home_runner_action_go_offline">إيقاف التواجد</string>
+    <string name="home_runner_action_go_online">تفعيل التواجد</string>
+    <string name="home_runner_stat_today">اليوم</string>
+    <string name="home_runner_stat_jobs">الطلبات</string>
+    <string name="home_runner_stat_rating">التقييم</string>
+    <string name="home_fab_create_request">طلب جديد</string>
+    <string name="home_tip_title">نصيحة هامة</string>
+    <string name="home_error_generic">حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.</string>
+    <string name="home_action_retry">إعادة المحاولة</string>
+    <string name="home_runner_dismiss_tip">إغلاق التنبيه</string>
+</resources>

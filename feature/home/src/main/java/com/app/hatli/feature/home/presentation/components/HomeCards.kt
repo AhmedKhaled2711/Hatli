@@ -30,6 +30,21 @@ import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.core.model.requesterLabelAr
 import com.app.hatli.core.model.shortLabelEn
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Surface
+import androidx.compose.ui.text.style.TextAlign
+import com.app.hatli.core.designsystem.theme.AmberPending
+import com.app.hatli.core.designsystem.theme.HatliElevation
+import com.app.hatli.core.designsystem.theme.HatliTheme
+import androidx.compose.ui.res.stringResource
+import com.app.hatli.feature.home.R
+import com.app.hatli.feature.home.presentation.RunnerNextAction
+import java.text.NumberFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -183,72 +198,114 @@ fun CurrentRequestCard(
 @Composable
 fun CurrentJobCard(
     summary: RequestSummary,
-    nextCta: String?,
+    nextAction: RunnerNextAction?,
     onNextStatus: (() -> Unit)?,
     onChat: () -> Unit,
     onDetails: () -> Unit,
     isAr: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val nextCta = when (nextAction) {
+        RunnerNextAction.StartWork ->
+            stringResource(R.string.home_runner_start_work)
+
+        RunnerNextAction.MarkPurchased ->
+            stringResource(R.string.home_runner_mark_purchased)
+
+        RunnerNextAction.OnTheWay ->
+            stringResource(R.string.home_runner_on_the_way)
+
+        RunnerNextAction.MarkDelivered ->
+            stringResource(R.string.home_runner_mark_delivered)
+
+        null -> null
+    }
+
     HatliCard(
         modifier = modifier.fillMaxWidth(),
         onClick = onDetails,
     ) {
-        Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(
+                HatliSpacing.sm,
+            ),
+        ) {
             Text(
-                text = if (isAr) "وظيفتك الحالية" else "Active Job",
+                text = stringResource(
+                    R.string.home_runner_current_job,
+                ),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.primary,
             )
+
             Text(
-                text = summary.requesterName?.let {
-                    if (isAr) "طلب $it" else "For $it"
+                text = summary.requesterName?.let { requesterName ->
+                    stringResource(
+                        R.string.home_runner_for_requester,
+                        requesterName,
+                    )
                 } ?: summary.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
             )
-            Text(summary.title, style = MaterialTheme.typography.bodyLarge)
+
+            Text(
+                text = summary.title,
+                style = MaterialTheme.typography.bodyLarge,
+            )
+
             RequestStatusStepper(
                 status = summary.status,
                 category = summary.category,
                 isAr = isAr,
             )
+
             if (summary.unreadCount > 0) {
                 Text(
-                    text = if (isAr) {
-                        "${summary.unreadCount} رسائل جديدة"
-                    } else {
-                        "${summary.unreadCount} new messages"
-                    },
+                    text = stringResource(
+                        R.string.home_runner_new_messages,
+                        summary.unreadCount,
+                    ),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
+                horizontalArrangement = Arrangement.spacedBy(
+                    HatliSpacing.sm,
+                ),
             ) {
                 HatliSecondaryButton(
-                    text = if (isAr) "محادثة" else "Chat",
+                    text = stringResource(
+                        R.string.home_runner_chat,
+                    ),
                     onClick = onChat,
                     modifier = Modifier.weight(1f),
                 )
+
                 HatliSecondaryButton(
-                    text = if (isAr) "التفاصيل" else "Details",
+                    text = stringResource(
+                        R.string.home_runner_details,
+                    ),
                     onClick = onDetails,
                     modifier = Modifier.weight(1f),
                 )
             }
+
             if (nextCta != null && onNextStatus != null) {
-                HatliPrimaryButton(text = nextCta, onClick = onNextStatus)
+                HatliPrimaryButton(
+                    text = nextCta,
+                    onClick = onNextStatus,
+                )
             }
+
             if (summary.status == RequestStatus.Delivered) {
                 Text(
-                    text = if (isAr) {
-                        "في انتظار تأكيد صاحب الطلب"
-                    } else {
-                        "Waiting for requester to confirm"
-                    },
+                    text = stringResource(
+                        R.string.home_runner_waiting_confirmation,
+                    ),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -374,23 +431,23 @@ fun RunnerPresenceCard(
     HatliCard(modifier = modifier.fillMaxWidth()) {
         Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.md)) {
             Text(
-                text = if (isOnline) "Online" else "Offline",
+                text = if (isOnline) stringResource(R.string.home_runner_status_online) else stringResource(R.string.home_runner_status_offline),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
             )
             Text(
                 text = if (isOnline) {
-                    "You're receiving nearby requests. Your Active Job stays visible either way."
+                    stringResource(R.string.home_runner_online_desc)
                 } else {
-                    "Go online to see nearby requests. Accepted jobs still appear under Active Job."
+                    stringResource(R.string.home_runner_offline_desc)
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             if (isOnline) {
-                HatliSecondaryButton(text = "Go Offline", onClick = onToggle)
+                HatliSecondaryButton(text = stringResource(R.string.home_runner_action_go_offline), onClick = onToggle)
             } else {
-                HatliPrimaryButton(text = "Go Online", onClick = onToggle)
+                HatliPrimaryButton(text = stringResource(R.string.home_runner_action_go_online), onClick = onToggle)
             }
         }
     }
@@ -401,43 +458,125 @@ fun RunnerStatsRow(
     earnings: Double,
     jobs: Int,
     rating: Double,
+    isAr: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
     ) {
-        StatChip(
-            modifier = Modifier.weight(1f),
-            title = "${earnings.toInt()} EGP",
-            subtitle = "Today",
-        )
-        StatChip(
-            modifier = Modifier.weight(1f),
-            title = "$jobs",
-            subtitle = "Jobs",
-        )
-        StatChip(
-            modifier = Modifier.weight(1f),
-            title = "$rating ★",
-            subtitle = "Rating",
-        )
+        val amountFormatted = NumberFormat.getIntegerInstance(Locale.US).format(earnings.toInt())
+        val currencyText = if (isAr) "ج.م" else "EGP"
+        val ratingFormatted = if (rating > 0.0) {
+            String.format(Locale.US, "%.1f", rating)
+        } else {
+            "—"
+        }
+
+        // Today Earnings Card (given 1.25f weight so financial value has sufficient breathing room)
+        StatCardContainer(
+            modifier = Modifier.weight(1.25f),
+            label = stringResource(R.string.home_runner_stat_today),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(3.dp, Alignment.CenterHorizontally),
+            ) {
+                Text(
+                    text = amountFormatted,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                )
+                Text(
+                    text = currencyText,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.SemiBold,
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                )
+            }
+        }
+
+        // Jobs Card
+        StatCardContainer(
+            modifier = Modifier.weight(0.85f),
+            label = stringResource(R.string.home_runner_stat_jobs),
+        ) {
+            Text(
+                text = jobs.toString(),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold,
+                ),
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+            )
+        }
+
+        // Rating Card
+        StatCardContainer(
+            modifier = Modifier.weight(0.9f),
+            label = stringResource(R.string.home_runner_stat_rating),
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(3.dp, Alignment.CenterHorizontally),
+            ) {
+                Text(
+                    text = ratingFormatted,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    textAlign = TextAlign.Center,
+                )
+                Icon(
+                    imageVector = Icons.Default.Star,
+                    contentDescription = null,
+                    tint = AmberPending,
+                    modifier = Modifier.size(13.dp),
+                )
+            }
+        }
     }
 }
 
 @Composable
-private fun StatChip(
-    title: String,
-    subtitle: String,
+private fun StatCardContainer(
+    label: String,
     modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
 ) {
-    HatliCard(modifier = modifier) {
+    val extended = HatliTheme.extendedColors
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = HatliElevation.sm,
+        shadowElevation = HatliElevation.sm,
+        border = BorderStroke(1.dp, extended.border),
+    ) {
         Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 6.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = HatliSpacing.xs),
+            verticalArrangement = Arrangement.Center,
         ) {
-            Text(title, style = MaterialTheme.typography.titleMedium)
-            Text(subtitle, style = MaterialTheme.typography.bodySmall)
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(3.dp))
+            content()
         }
     }
 }

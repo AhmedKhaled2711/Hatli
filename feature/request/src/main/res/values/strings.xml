@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Request Detail Screen -->
+    <string name="request_detail_title">Request Details</string>
+    <string name="request_detail_not_found">Request not found</string>
+    <string name="request_detail_back">Back</string>
+    <string name="request_detail_current_status">Current Status</string>
+    <string name="request_detail_order_progress">Order Progress</string>
+    <string name="request_detail_summary_title">Order &amp; Financial Summary</string>
+    <string name="request_detail_description">Description</string>
+    <string name="request_detail_delivery_fee">Delivery Fee</string>
+    <string name="request_detail_delivery_fee_format">%1$d EGP</string>
+    <string name="request_detail_runner_title">Delivery Captain</string>
+    <string name="request_detail_client_title">Client</string>
+    <string name="request_detail_timeline_title">Status History Timeline</string>
+    <string name="request_detail_open_chat">Chat with Captain</string>
+    <string name="request_detail_updating">Updating…</string>
+    <string name="request_detail_confirming">Confirming…</string>
+    <string name="request_detail_confirm_delivery">Confirm Delivery</string>
+    <string name="request_detail_runner_start_work">Start Work</string>
+    <string name="request_detail_runner_mark_purchased">Mark Purchased</string>
+    <string name="request_detail_runner_on_the_way">On The Way</string>
+    <string name="request_detail_runner_mark_delivered">Mark Delivered</string>
+    <string name="request_detail_rate_runner">Rate Captain</string>
+    <string name="request_detail_cancel_title">Cancel Order Confirmation</string>
+    <string name="request_detail_cancel_reason_label">Cancel reason</string>
+    <string name="request_detail_cancelling">Cancelling…</string>
+    <string name="request_detail_confirm_cancel">Confirm Cancel</string>
+    <string name="request_detail_dismiss">Dismiss</string>
+    <string name="request_detail_cancel_order">Cancel Order</string>
+    <string name="request_detail_pickup_location">Pickup Address / Shop</string>
+    <string name="request_detail_dropoff_location">Delivery Address</string>
+    <string name="request_detail_verified_captain">• Verified Captain</string>
+    <string name="request_detail_close">Close</string>
+
+    <!-- Status Hero Copy -->
+    <string name="status_hero_pending_title">Searching for a Captain…</string>
+    <string name="status_hero_pending_desc">You will be notified as soon as a nearby Captain accepts your request.</string>
+    <string name="status_hero_accepted_title">Request Accepted</string>
+    <string name="status_hero_accepted_desc">Captain %1$s is preparing to execute your request.</string>
+    <string name="status_hero_in_progress_title">In Progress</string>
+    <string name="status_hero_in_progress_desc">Captain %1$s is actively working on your request.</string>
+    <string name="status_hero_on_the_way_title">Captain is On The Way</string>
+    <string name="status_hero_on_the_way_desc">Track your delivery and chat with your Captain in real time.</string>
+    <string name="status_hero_delivered_title">Order Delivered</string>
+    <string name="status_hero_delivered_desc">Please inspect your order and confirm delivery.</string>
+    <string name="status_hero_completed_title">Order Completed</string>
+    <string name="status_hero_completed_desc">Thank you for using Hatli! Have a great day.</string>
+    <string name="status_hero_cancelled_title">Order Cancelled</string>
+    <string name="status_hero_cancelled_desc">This order has been cancelled.</string>
+
+    <!-- Create Request Wizard -->
+    <string name="create_request_screen_title">New Request</string>
+    <string name="create_request_step_category_title">Select Service Type</string>
+    <string name="create_request_step_details_title">Order Details</string>
+    <string name="create_request_step_review_title">Review &amp; Fee</string>
+    <string name="create_request_wizard_step_1">Step 1 of 3</string>
+    <string name="create_request_wizard_step_2">Step 2 of 3</string>
+    <string name="create_request_wizard_step_3">Step 3 of 3</string>
+    <string name="create_request_step_1_name">Category</string>
+    <string name="create_request_step_2_name">Details</string>
+    <string name="create_request_step_3_name">Review</string>
+
+    <string name="create_request_cancel">Cancel</string>
+    <string name="create_request_continue">Continue to Details</string>
+    <string name="create_request_back">Back</string>
+    <string name="create_request_confirm">Confirm &amp; Send Request</string>
+
+    <!-- Category Labels & Subtitles -->
+    <string name="category_shopping_label">Shopping</string>
+    <string name="category_shopping_subtitle">Supermarket, butcher, bakery, and more</string>
+    <string name="category_pickup_label">Pickup &amp; Delivery</string>
+    <string name="category_pickup_subtitle">Pick up from A and deliver to B</string>
+    <string name="category_bills_label">Pay Bills</string>
+    <string name="category_bills_subtitle">Pay a bill or subscription</string>
+    <string name="category_custom_label">Custom Request</string>
+    <string name="category_custom_subtitle">Anything else nearby</string>
+
+    <!-- Details Inputs -->
+    <string name="create_request_shop_name_label">Shop name (optional)</string>
+    <string name="create_request_items_label">What do you need?</string>
+    <string name="create_request_items_supporting">e.g. 2kg meat, 3L milk</string>
+    <string name="create_request_notes_label">Notes (optional)</string>
+    <string name="create_request_budget_label">Expected budget EGP (optional)</string>
+
+    <string name="create_request_pickup_address_label">Pickup address</string>
+    <string name="create_request_dropoff_address_label">Drop-off address</string>
+    <string name="create_request_item_desc_label">Item description</string>
+
+    <string name="create_request_bill_type_label">Bill type</string>
+    <string name="create_request_bill_type_supporting">e.g. Electricity, Water, Internet</string>
+    <string name="create_request_account_ref_label">Account / reference number</string>
+    <string name="create_request_bill_amount_label">Amount EGP</string>
+
+    <string name="create_request_custom_title_label">Title</string>
+    <string name="create_request_custom_body_label">Describe your request</string>
+    <string name="create_request_custom_budget_label">Budget EGP (optional)</string>
+
+    <!-- Fee Review Step -->
+    <string name="create_request_suggested_fee_hint">Suggested delivery fee is %1$d EGP. You can change it.</string>
+    <string name="create_request_delivery_fee_label">Delivery fee EGP</string>
+    <string name="create_request_summary_title">Order Summary</string>
+    <string name="create_request_summary_category_label">Category</string>
+    <string name="create_request_summary_details_label">Details</string>
+
+    <string name="create_request_summary_pickup_format">%1$s\n%2$s → %3$s</string>
+    <string name="create_request_summary_bills_format">%1$s · %2$s · %3$s EGP</string>
+    <string name="create_request_summary_custom_format">%1$s\n%2$s</string>
+    <string name="create_request_success_title">Request Created!</string>
+    <string name="create_request_success_subtitle">Your request is now live for runners around you.</string>
+    <string name="create_request_return_home">Return to Home</string>
+
+    <!-- Rating Screen -->
+    <string name="rate_runner_title">Rate Delivery Captain</string>
+    <string name="rate_runner_subtitle">How was your delivery experience with your Captain?</string>
+    <string name="rate_feedback_5">Excellent! 🔥</string>
+    <string name="rate_feedback_4">Very Good 👍</string>
+    <string name="rate_feedback_3">Average 😐</string>
+    <string name="rate_feedback_2">Poor 😞</string>
+    <string name="rate_feedback_1">Very Poor ❌</string>
+    <string name="rate_runner_comment_hint">Add optional feedback for your Captain…</string>
+    <string name="rate_runner_submit">Submit Rating</string>
+
+</resources>

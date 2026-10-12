@@ -8,4 +8,6 @@ android {
 
 dependencies {
     implementation(libs.findLibrary("coil-compose").get())
+    implementation("androidx.compose.material:material-icons-extended")
+
 }

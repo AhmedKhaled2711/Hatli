@@ -1,5 +1,6 @@
 package com.app.hatli.core.data.auth
 
+import android.util.Log
 import com.app.hatli.core.common.error.AppError
 import com.app.hatli.core.data.firebase.AuthActivityHolder
 import com.app.hatli.core.model.AuthUser
@@ -20,6 +21,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+
+private const val TAG = "PhoneAuth"
 
 @Singleton
 class FirebaseAuthDataSource @Inject constructor(
@@ -46,18 +49,22 @@ class FirebaseAuthDataSource @Inject constructor(
             val activity = try {
                 activityHolder.require()
             } catch (t: Throwable) {
-                cont.resumeWithException(AppError.FirebaseFailure("Unable to start verification.", t))
+                Log.e(TAG, "Failed to get Activity context for Phone Auth", t)
+                cont.resumeWithException(AppError.FirebaseFailure("Unable to start verification. Activity context missing.", t))
                 return@suspendCancellableCoroutine
             }
 
+            Log.d(TAG, "Initiating phone verification for: $phoneNumber (resend=$resend)")
+
             val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    // Auto-retrieval / instant verification — sign in immediately if still waiting.
+                    Log.d(TAG, "Instant verification completed automatically for: $phoneNumber")
                     if (cont.isActive) {
                         firebaseAuth.signInWithCredential(credential)
                             .addOnCompleteListener { task ->
                                 if (!cont.isActive) return@addOnCompleteListener
                                 if (task.isSuccessful) {
+                                    Log.d(TAG, "Sign in with instant credential successful!")
                                     cont.resume(
                                         OtpSession(
                                             verificationId = AUTO_VERIFIED,
@@ -65,22 +72,26 @@ class FirebaseAuthDataSource @Inject constructor(
                                         ),
                                     )
                                 } else {
-                                    cont.resumeWithException(
-                                        task.exception ?: AppError.FirebaseFailure(),
-                                    )
+                                    val exception = task.exception ?: AppError.FirebaseFailure()
+                                    Log.e(TAG, "Sign in with instant credential failed: ${exception.message}", exception)
+                                    cont.resumeWithException(exception)
                                 }
                             }
                     }
                 }
 
                 override fun onVerificationFailed(e: FirebaseException) {
-                    if (cont.isActive) cont.resumeWithException(e)
+                    Log.e(TAG, "Phone verification failed for $phoneNumber. Code: ${e.message}", e)
+                    if (cont.isActive) {
+                        cont.resumeWithException(e)
+                    }
                 }
 
                 override fun onCodeSent(
                     verificationId: String,
                     token: PhoneAuthProvider.ForceResendingToken,
                 ) {
+                    Log.d(TAG, "SMS code sent successfully! Verification ID: $verificationId")
                     forceResendingToken.set(token)
                     if (cont.isActive) {
                         cont.resume(
@@ -107,13 +118,15 @@ class FirebaseAuthDataSource @Inject constructor(
         }
 
     suspend fun verifyOtp(verificationId: String, smsCode: String): AuthUser {
+        Log.d(TAG, "Verifying OTP code for verification ID: $verificationId")
         if (verificationId == AUTO_VERIFIED) {
             return currentUser() ?: throw AppError.Unauthorized()
         }
         val credential = PhoneAuthProvider.getCredential(verificationId, smsCode)
         val result = firebaseAuth.signInWithCredential(credential).await()
+        Log.d(TAG, "OTP verification successful for user: ${result.user?.uid}")
         return result.user?.toAuthUser()
-            ?: throw AppError.FirebaseFailure("Sign-in succeeded but user is missing.")
+            ?: throw AppError.FirebaseFailure("Sign-in succeeded but user profile is missing.")
     }
 
     suspend fun logout() {

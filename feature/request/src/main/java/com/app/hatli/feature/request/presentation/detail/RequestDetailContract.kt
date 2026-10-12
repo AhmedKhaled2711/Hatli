@@ -1,6 +1,7 @@
 package com.app.hatli.feature.request.presentation.detail
 
 import com.app.hatli.core.model.Request
+import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.ui.base.UiEffect
 import com.app.hatli.core.ui.base.UiEvent
 import com.app.hatli.core.ui.base.UiState
@@ -10,6 +11,8 @@ data class RequestDetailUiState(
     val request: Request? = null,
     val isRequester: Boolean = false,
     val isRunner: Boolean = false,
+    val runnerRating: Double? = null,
+    val runnerNextStatus: RequestStatus? = null,
     val runnerNextCta: String? = null,
     val cancelReason: String = "",
     val showCancelSheet: Boolean = false,

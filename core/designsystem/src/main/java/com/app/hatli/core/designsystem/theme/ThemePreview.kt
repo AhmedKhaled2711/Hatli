@@ -44,7 +44,7 @@ private fun HatliThemePreview() {
                 Text(
                     text = "Success / warning use HatliTheme.extendedColors",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = HatliTheme.extendedColors.textSecondary,
+                    color = HatliTheme.extendedColors.warning,
                 )
             }
             HatliTextField(value = "", onValueChange = {}, label = "Phone")

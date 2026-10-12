@@ -28,8 +28,17 @@ enum class JobListFilter {
     History,
 }
 
+enum class RunnerNextAction {
+    StartWork,
+    MarkPurchased,
+    OnTheWay,
+    MarkDelivered,
+}
+
 data class MainShellUiState(
     val isLoadingProfile: Boolean = true,
+    val isError: Boolean = false,
+    val errorMessage: String? = null,
     val role: UserRole? = null,
     val selectedTab: MainTab = MainTab.Home,
     val requesterHome: RequesterHomeSnapshot? = null,
@@ -38,6 +47,7 @@ data class MainShellUiState(
     val allJobs: List<RequestSummary> = emptyList(),
     val requestFilter: RequestListFilter = RequestListFilter.Active,
     val jobFilter: JobListFilter = JobListFilter.Active,
+    val showRunnerOnlineInfoBanner: Boolean = false,
 ) : UiState {
     val isRequester: Boolean get() = role == UserRole.Requester
     val isRunner: Boolean get() = role == UserRole.Runner
@@ -93,10 +103,12 @@ data class MainShellUiState(
 }
 
 sealed interface MainShellUiEvent : UiEvent {
+    data object Retry : MainShellUiEvent
     data class TabSelected(val tab: MainTab) : MainShellUiEvent
     data object CreateRequest : MainShellUiEvent
     data object OpenNotifications : MainShellUiEvent
     data object ToggleRunnerOnline : MainShellUiEvent
+    data object DismissRunnerOnlineInfoBanner : MainShellUiEvent
     data object ViewAllJobs : MainShellUiEvent
     data class RequestFilterSelected(val filter: RequestListFilter) : MainShellUiEvent
     data class JobFilterSelected(val filter: JobListFilter) : MainShellUiEvent
@@ -131,13 +143,13 @@ fun RequestSummary.runnerNextStatus(): RequestStatus? {
     }
 }
 
-fun RequestSummary.runnerNextCtaLabel(): String? {
-    val next = runnerNextStatus() ?: return null
-    return when (next) {
-        RequestStatus.InProgress -> "Start work"
-        RequestStatus.Purchased -> "Mark purchased"
-        RequestStatus.OnTheWay -> if (status == RequestStatus.InProgress) "On the way" else "On the way"
-        RequestStatus.Delivered -> "Mark delivered"
+fun RequestSummary.runnerNextAction(): RunnerNextAction? {
+    return when (runnerNextStatus()) {
+        RequestStatus.InProgress -> RunnerNextAction.StartWork
+        RequestStatus.Purchased -> RunnerNextAction.MarkPurchased
+        RequestStatus.OnTheWay -> RunnerNextAction.OnTheWay
+        RequestStatus.Delivered -> RunnerNextAction.MarkDelivered
+        null -> null
         else -> null
     }
 }

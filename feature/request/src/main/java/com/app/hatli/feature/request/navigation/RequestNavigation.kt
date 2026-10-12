@@ -1,19 +1,17 @@
 package com.app.hatli.feature.request.navigation
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
-import com.app.hatli.core.ui.navigation.Destination
-import com.app.hatli.core.ui.navigation.Routes
-import com.app.hatli.feature.request.presentation.CreateRequestRoute
+import com.app.hatli.core.ui.navigation.DeepLinkConstants
+import com.app.hatli.core.ui.navigation.CreateRequestRoute as CreateRequestRouteKey
+import com.app.hatli.core.ui.navigation.RateRunnerRoute as RateRunnerRouteKey
+import com.app.hatli.core.ui.navigation.RequestDetailRoute as RequestDetailRouteKey
+import com.app.hatli.core.ui.navigation.RequestGraph
 import com.app.hatli.feature.request.presentation.detail.RequestDetailRoute
 import com.app.hatli.feature.request.presentation.rate.RateRunnerRoute
-
-object CreateRequestDestination : Destination {
-    override val route: String = Routes.CREATE_REQUEST
-}
+import com.app.hatli.feature.request.presentation.request.CreateRequestRoute
 
 fun NavGraphBuilder.requestGraph(
     onBack: () -> Unit,
@@ -22,20 +20,22 @@ fun NavGraphBuilder.requestGraph(
     onOpenRate: (String) -> Unit = {},
     onMessage: (String) -> Unit,
 ) {
-    navigation(
-        route = Routes.REQUEST_GRAPH,
-        startDestination = CreateRequestDestination.route,
+    navigation<RequestGraph>(
+        startDestination = CreateRequestRouteKey,
     ) {
-        composable(CreateRequestDestination.route) {
+        composable<CreateRequestRouteKey> {
             CreateRequestRoute(
                 onBack = onBack,
                 onSubmitted = onSubmitted,
                 onMessage = onMessage,
             )
         }
-        composable(
-            route = Routes.REQUEST_DETAIL,
-            arguments = listOf(navArgument("requestId") { type = NavType.StringType }),
+        composable<RequestDetailRouteKey>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${DeepLinkConstants.SCHEME}://${DeepLinkConstants.HOST}/request/{requestId}"
+                },
+            ),
         ) {
             RequestDetailRoute(
                 onBack = onBack,
@@ -44,9 +44,12 @@ fun NavGraphBuilder.requestGraph(
                 onMessage = onMessage,
             )
         }
-        composable(
-            route = Routes.RATE_RUNNER,
-            arguments = listOf(navArgument("requestId") { type = NavType.StringType }),
+        composable<RateRunnerRouteKey>(
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${DeepLinkConstants.SCHEME}://${DeepLinkConstants.HOST}/rate/{requestId}"
+                },
+            ),
         ) {
             RateRunnerRoute(
                 onDone = onBack,

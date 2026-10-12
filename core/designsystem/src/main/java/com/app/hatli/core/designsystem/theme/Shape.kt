@@ -4,9 +4,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Shapes
 
 val HatliShapes = Shapes(
-    extraSmall = RoundedCornerShape(HatliRadius.sm),
+    extraSmall = RoundedCornerShape(HatliRadius.chip),
     small = RoundedCornerShape(HatliRadius.sm),
-    medium = RoundedCornerShape(HatliRadius.md),
-    large = RoundedCornerShape(HatliRadius.lg),
-    extraLarge = RoundedCornerShape(HatliRadius.xl),
+    medium = RoundedCornerShape(HatliRadius.button),
+    large = RoundedCornerShape(HatliRadius.card),
+    extraLarge = RoundedCornerShape(HatliRadius.modal),
 )

@@ -32,16 +32,21 @@ private const val OnboardingSheetHeightFraction = 3.5f / 10f
 
 @Composable
 fun OnboardingRoute(
-    onFinished: () -> Unit,
+    onStart: () -> Unit,
     viewModel: OnboardingViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
-            OnboardingUiEffect.GoLogin -> onFinished()
+            OnboardingUiEffect.GoStart -> onStart()
         }
     }
-    OnboardingScreen(state = state, onEvent = viewModel::onEvent)
+
+    OnboardingScreen(
+        state = state,
+        onEvent = viewModel::onEvent,
+    )
 }
 
 /**

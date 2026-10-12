@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ============================== -->
+    <!-- Home - Header -->
+    <!-- ============================== -->
+
+    <string name="home_good_morning">Good morning 👋</string>
+    <string name="home_notifications">Notifications</string>
+
+    <!-- Temporary until profile image upload is implemented -->
+    <string name="home_default_profile_image">Profile</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Navigation -->
+    <!-- ============================== -->
+
+    <string name="home_tab_home">Home</string>
+    <string name="home_tab_requests">Requests</string>
+    <string name="home_tab_jobs">Jobs</string>
+    <string name="home_tab_messages">Messages</string>
+    <string name="home_tab_profile">Profile</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Requester -->
+    <!-- ============================== -->
+
+    <string name="home_requester_hero_title">Need something nearby?</string>
+    <string name="home_requester_hero_cta">+ Order now</string>
+
+    <string name="home_recent_requests">Recent requests</string>
+    <string name="home_quick_actions">Quick actions</string>
+    <string name="home_tip">Tip</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Runner -->
+    <!-- ============================== -->
+
+    <string name="home_runner_no_active_job">No active job</string>
+
+    <string name="home_runner_no_active_job_description">
+        When you accept a request, it pins here with status actions and chat.
+    </string>
+
+    <string name="home_runner_go_online">
+        Go online to browse nearby requests.
+    </string>
+
+    <string name="home_runner_no_nearby_requests">
+        No nearby requests right now — stay online.
+    </string>
+
+    <string name="home_runner_nearby_requests">Nearby requests</string>
+    <string name="home_runner_view_all_jobs">View all jobs</string>
+    <string name="home_runner_accept">Accept</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Requests -->
+    <!-- ============================== -->
+
+    <string name="home_requests_empty">No requests here</string>
+    <string name="home_requests_create">Create request</string>
+    <string name="home_requests_chat">Chat</string>
+    <string name="home_requests_rate">Rate</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Jobs -->
+    <!-- ============================== -->
+
+    <string name="home_jobs_empty">
+    No jobs yet — accept a nearby request or go online
+    </string>
+
+    <string name="home_jobs_chat">Chat</string>
+
+    <!-- Job Filters -->
+    <string name="home_jobs_filter_all">All</string>
+    <string name="home_jobs_filter_pending">Pending</string>
+    <string name="home_jobs_filter_accepted">Accepted</string>
+    <string name="home_jobs_filter_picked_up">Picked up</string>
+    <string name="home_jobs_filter_delivered">Delivered</string>
+    <string name="home_jobs_filter_cancelled">Cancelled</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Messages -->
+    <!-- ============================== -->
+
+    <string name="home_messages_empty_title">No conversations yet</string>
+
+    <string name="home_messages_empty_description">
+        After a request is accepted, open chat here or from your current request or active job.
+    </string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Quick Actions -->
+    <!-- ============================== -->
+
+    <string name="home_quick_action_new_request">New request</string>
+    <string name="home_quick_action_my_requests">My requests</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Jobs -->
+    <!-- ============================== -->
+
+    <string name="home_jobs_filter_active">Active</string>
+    <string name="home_jobs_filter_history">History</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Request Filters -->
+    <!-- ============================== -->
+
+    <string name="home_requests_filter_active">Active</string>
+    <string name="home_requests_filter_completed">Completed</string>
+    <string name="home_requests_filter_cancelled">Cancelled</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Runner Status Actions -->
+    <!-- ============================== -->
+
+    <string name="home_runner_start_work">Start work</string>
+    <string name="home_runner_mark_purchased">Mark purchased</string>
+    <string name="home_runner_on_the_way">On the way</string>
+    <string name="home_runner_mark_delivered">Mark delivered</string>
+
+
+    <!-- ============================== -->
+    <!-- Home - Accessibility -->
+    <!-- ============================== -->
+
+    <string name="home_create_request">Create request</string>
+
+    <!-- ============================== -->
+    <!-- Home - Requester Content -->
+    <!-- ============================== -->
+
+    <string name="home_requester_completed_requests">
+    Completed requests
+    </string>
+
+    <string name="home_requester_total_requests">
+    Total requests
+    </string>
+
+    <string name="home_requester_current_request">
+    Current request
+    </string>
+
+    <string name="home_requester_view_all">
+    View all
+    </string>
+
+    <string name="home_requester_quick_actions">
+    Quick actions
+    </string>
+
+    <string name="home_requester_services">
+    Services
+    </string>
+
+    <!-- ============================== -->
+    <!-- Home - Runner - Current Job -->
+    <!-- ============================== -->
+
+    <string name="home_runner_current_job">Active Job</string>
+
+    <string name="home_runner_request_for">
+    For %1$s
+    </string>
+
+    <string name="home_runner_new_messages">
+    %1$d new messages
+    </string>
+
+    <string name="home_runner_chat">
+    Chat
+    </string>
+
+    <string name="home_runner_details">
+    Details
+    </string>
+
+    <string name="home_runner_waiting_confirmation">
+    Waiting for requester to confirm
+    </string>
+
+    <string name="home_runner_for_requester">For %1$s</string>
+
+    <!-- ============================== -->
+    <!-- Home - Production Refinements -->
+    <!-- ============================== -->
+    <string name="home_location_select_prompt">Select delivery location</string>
+    <string name="home_direct_delivery_services">Direct Delivery Services</string>
+    <string name="home_quick_services">Quick Services</string>
+    <string name="home_hero_badge_title">Express Delivery</string>
+    <string name="home_hero_banner_title">Order anything from anywhere in your city</string>
+    <string name="home_hero_banner_description">Set your items and location, and a runner will deliver to your doorstep.</string>
+    <string name="home_category_grocery_title">Supermarket</string>
+    <string name="home_category_grocery_subtitle">Groceries &amp; Household Supplies</string>
+    <string name="home_category_pharmacy_title">Pharmacy &amp; Care</string>
+    <string name="home_category_pharmacy_subtitle">Medicine &amp; Medical Supplies</string>
+    <string name="home_category_courier_title">Parcel &amp; Documents</string>
+    <string name="home_category_courier_subtitle">Transport papers &amp; items</string>
+    <string name="home_category_custom_title">Custom Errand</string>
+    <string name="home_category_custom_subtitle">Order anything you need</string>
+    <string name="home_runner_no_active_job_title">No active job right now</string>
+    <string name="home_runner_no_active_job_sub">Browse nearby requests below and accept to start.</string>
+    <string name="home_runner_offline_title">You are offline</string>
+    <string name="home_runner_offline_sub">Turn on availability above to start receiving delivery requests.</string>
+    <string name="home_runner_no_nearby_title">No nearby requests right now</string>
+    <string name="home_runner_no_nearby_sub">We will notify you as soon as a new delivery request is posted.</string>
+    <string name="home_runner_nearby_title">Nearby Requests</string>
+    <string name="home_runner_dashboard_title">Captain Dashboard</string>
+    <string name="home_runner_status_online">Online</string>
+    <string name="home_runner_status_offline">Offline</string>
+    <string name="home_runner_online_desc">You are receiving nearby requests. Your Active Job stays visible either way.</string>
+    <string name="home_runner_offline_desc">Go online to see nearby requests. Accepted jobs still appear under Active Job.</string>
+    <string name="home_runner_action_go_offline">Go Offline</string>
+    <string name="home_runner_action_go_online">Go Online</string>
+    <string name="home_runner_stat_today">Today</string>
+    <string name="home_runner_stat_jobs">Jobs</string>
+    <string name="home_runner_stat_rating">Rating</string>
+    <string name="home_fab_create_request">New Order</string>
+    <string name="home_tip_title">Important Tip</string>
+    <string name="home_error_generic">Failed to load data. Please try again.</string>
+    <string name="home_action_retry">Retry</string>
+    <string name="home_runner_dismiss_tip">Dismiss tip</string>
+</resources>

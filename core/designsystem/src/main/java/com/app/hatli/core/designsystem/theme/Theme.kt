@@ -22,24 +22,24 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.core.view.WindowCompat
 
 private val LightColors = lightColorScheme(
-    primary = HatliColors.Primary,
-    onPrimary = HatliColors.OnPrimary,
-    primaryContainer = HatliColors.Teal100,
-    onPrimaryContainer = HatliColors.Teal900,
-    secondary = HatliColors.Secondary,
-    onSecondary = HatliColors.OnSecondary,
-    secondaryContainer = HatliColors.Gray100,
-    onSecondaryContainer = HatliColors.Gray700,
-    tertiary = HatliColors.Info,
-    onTertiary = HatliColors.OnInfo,
-    tertiaryContainer = HatliColors.InfoContainer,
-    onTertiaryContainer = HatliColors.Info,
-    background = HatliColors.Background,
-    onBackground = HatliColors.TextPrimary,
-    surface = HatliColors.Surface,
-    onSurface = HatliColors.TextPrimary,
+    primary = HatliColors.BrandCoral,
+    onPrimary = HatliColors.White,
+    primaryContainer = HatliColors.CoralContainer,
+    onPrimaryContainer = HatliColors.CharcoalDark,
+    secondary = HatliColors.CharcoalDark,
+    onSecondary = HatliColors.White,
+    secondaryContainer = HatliColors.CoralContainer,
+    onSecondaryContainer = HatliColors.CharcoalDark,
+    tertiary = HatliColors.Success,
+    onTertiary = HatliColors.OnSuccess,
+    tertiaryContainer = HatliColors.SuccessContainer,
+    onTertiaryContainer = HatliColors.Success,
+    background = HatliColors.OffWhiteCanvas,
+    onBackground = HatliColors.CharcoalDark,
+    surface = HatliColors.White,
+    onSurface = HatliColors.CharcoalDark,
     surfaceVariant = HatliColors.Gray100,
-    onSurfaceVariant = HatliColors.TextSecondary,
+    onSurfaceVariant = HatliColors.CharcoalMuted,
     outline = HatliColors.Border,
     outlineVariant = HatliColors.Gray100,
     error = HatliColors.Error,
@@ -48,23 +48,23 @@ private val LightColors = lightColorScheme(
     onErrorContainer = HatliColors.OnErrorContainer,
     inverseSurface = HatliColors.Gray800,
     inverseOnSurface = HatliColors.White,
-    inversePrimary = HatliColors.Teal300,
-    surfaceTint = HatliColors.Primary,
+    inversePrimary = HatliColors.BrandCoral,
+    surfaceTint = HatliColors.BrandCoral,
 )
 
 private val DarkColors = darkColorScheme(
-    primary = HatliColors.Teal500,
-    onPrimary = HatliColors.OnPrimary,
-    primaryContainer = HatliColors.Teal800,
-    onPrimaryContainer = HatliColors.Teal100,
-    secondary = HatliColors.Gray300,
-    onSecondary = HatliColors.Gray800,
+    primary = HatliColors.BrandCoral,
+    onPrimary = HatliColors.White,
+    primaryContainer = Color(0xFF4A1F12),
+    onPrimaryContainer = HatliColors.White,
+    secondary = HatliColors.Gray200,
+    onSecondary = HatliColors.OnStatsCardDark,
     secondaryContainer = HatliColors.DarkSurfaceVariant,
     onSecondaryContainer = HatliColors.Gray100,
-    tertiary = Color(0xFF8BB4E0),
-    onTertiary = HatliColors.Gray800,
-    tertiaryContainer = Color(0xFF1A334D),
-    onTertiaryContainer = HatliColors.InfoContainer,
+    tertiary = HatliColors.Success,
+    onTertiary = HatliColors.OnSuccess,
+    tertiaryContainer = Color(0xFF07362D),
+    onTertiaryContainer = HatliColors.SuccessContainer,
     background = HatliColors.DarkBackground,
     onBackground = HatliColors.White,
     surface = HatliColors.DarkSurface,
@@ -79,14 +79,10 @@ private val DarkColors = darkColorScheme(
     onErrorContainer = Color(0xFFF9DEDC),
     inverseSurface = HatliColors.Gray100,
     inverseOnSurface = HatliColors.Gray800,
-    inversePrimary = HatliColors.Teal700,
-    surfaceTint = HatliColors.Teal500,
+    inversePrimary = HatliColors.BrandCoral,
+    surfaceTint = HatliColors.BrandCoral,
 )
 
-/**
- * Controls which palette [HatliTheme] applies.
- * [FollowSystem] tracks the device dark-mode setting (default).
- */
 enum class HatliThemeMode {
     FollowSystem,
     Light,
@@ -96,6 +92,7 @@ enum class HatliThemeMode {
 private val LocalHatliIsDarkTheme = staticCompositionLocalOf { false }
 
 object HatliTheme {
+
     val extendedColors: HatliExtendedColors
         @Composable
         @ReadOnlyComposable
@@ -106,7 +103,6 @@ object HatliTheme {
         @ReadOnlyComposable
         get() = LocalHatliIsDarkTheme.current
 
-    /** Brand typeface (same as [HatliTypography] / MaterialTheme.typography). */
     val fontFamily: FontFamily
         get() = HatliFontFamily
 }
@@ -118,6 +114,7 @@ fun HatliTheme(
     content: @Composable () -> Unit,
 ) {
     val systemDark = isSystemInDarkTheme()
+
     val darkTheme = when (themeMode) {
         HatliThemeMode.FollowSystem -> systemDark
         HatliThemeMode.Light -> false
@@ -127,18 +124,36 @@ fun HatliTheme(
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+
+            if (darkTheme) {
+                dynamicDarkColorScheme(context)
+            } else {
+                dynamicLightColorScheme(context)
+            }
         }
+
         darkTheme -> DarkColors
         else -> LightColors
     }
-    val extendedColors = if (darkTheme) DarkHatliExtendedColors else LightHatliExtendedColors
+
+    val extendedColors = if (darkTheme) {
+        DarkHatliExtendedColors
+    } else {
+        LightHatliExtendedColors
+    }
 
     val view = LocalView.current
+
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as? Activity)?.window ?: return@SideEffect
-            val insetsController = WindowCompat.getInsetsController(window, view)
+            val window = (view.context as? Activity)?.window
+                ?: return@SideEffect
+
+            val insetsController = WindowCompat.getInsetsController(
+                window,
+                view,
+            )
+
             insetsController.isAppearanceLightStatusBars = !darkTheme
             insetsController.isAppearanceLightNavigationBars = !darkTheme
         }
@@ -153,7 +168,6 @@ fun HatliTheme(
             typography = HatliTypography,
             shapes = HatliShapes,
         ) {
-            // Bare Text() / TextField labels inherit Mada even without an explicit style.
             CompositionLocalProvider(
                 LocalTextStyle provides HatliTypography.bodyLarge,
             ) {

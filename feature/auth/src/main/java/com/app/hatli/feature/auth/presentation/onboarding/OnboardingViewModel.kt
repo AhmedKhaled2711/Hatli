@@ -34,7 +34,7 @@ class OnboardingViewModel @Inject constructor(
     private fun complete() {
         viewModelScope.launch {
             setOnboardingCompleted()
-            sendEffect(OnboardingUiEffect.GoLogin)
+            sendEffect(OnboardingUiEffect.GoStart)
         }
     }
 }

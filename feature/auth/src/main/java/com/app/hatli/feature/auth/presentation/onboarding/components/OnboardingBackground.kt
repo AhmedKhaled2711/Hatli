@@ -55,8 +55,8 @@ fun OnboardingBackground(
 @Composable
 private fun DefaultOnboardingHeaderBackground() {
     val isDark = HatliTheme.isDark
-    val headerTeal = HatliColors.Teal500
-    val circleDark = if (isDark) HatliColors.Gray800 else HatliColors.Teal900
+    val headerCoral = HatliColors.BrandCoral
+    val circleDark = if (isDark) HatliColors.Gray800 else HatliColors.CharcoalDark
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val circleSize = screenWidth * 1.95f
@@ -65,7 +65,7 @@ private fun DefaultOnboardingHeaderBackground() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(headerTeal),
+                .background(headerCoral),
         )
         Box(
             modifier = Modifier

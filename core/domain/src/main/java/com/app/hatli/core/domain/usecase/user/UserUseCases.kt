@@ -56,6 +56,7 @@ class ResolveStartDestinationUseCase @Inject constructor(
 ) {
     sealed interface StartDestination {
         data object Onboarding : StartDestination
+        data object Start : StartDestination
         data object Login : StartDestination
         data object CreateProfile : StartDestination
         data object Home : StartDestination
@@ -65,18 +66,23 @@ class ResolveStartDestinationUseCase @Inject constructor(
         if (!sessionPreferences.onboardingCompleted.first()) {
             return StartDestination.Onboarding
         }
-        val user = authRepository.currentUser() ?: return StartDestination.Login
+
+        val user = authRepository.currentUser()
+            ?: return StartDestination.Start
+
         return when (val profile = userRepository.getProfile(user.uid)) {
             is Result.Success -> {
                 val data = profile.data
+
                 if (data != null && data.profileCompleted) {
                     StartDestination.Home
                 } else {
                     StartDestination.CreateProfile
                 }
             }
+
             is Result.Error -> StartDestination.CreateProfile
-            Result.Loading -> StartDestination.Login
+            Result.Loading -> StartDestination.CreateProfile
         }
     }
 }

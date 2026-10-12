@@ -13,6 +13,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply("hatli.android.library")
                 apply("hatli.android.compose")
                 apply("hatli.android.hilt")
+                apply("org.jetbrains.kotlin.plugin.serialization")
             }
 
             dependencies {
@@ -26,9 +27,11 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findLibrary("androidx-lifecycle-viewmodel-compose").get())
                 add("implementation", libs.findLibrary("androidx-navigation-compose").get())
                 add("implementation", libs.findLibrary("hilt-navigation-compose").get())
+                add("implementation", libs.findLibrary("kotlinx-serialization-json").get())
                 add("implementation", libs.findLibrary("kotlinx-coroutines-android").get())
 
                 add("testImplementation", libs.findLibrary("junit").get())
+                add("testImplementation", libs.findLibrary("mockk").get())
                 add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
                 add("testImplementation", libs.findLibrary("turbine").get())
                 add("testImplementation", libs.findLibrary("truth").get())

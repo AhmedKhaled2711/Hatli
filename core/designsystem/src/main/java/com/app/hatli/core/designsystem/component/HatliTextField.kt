@@ -17,12 +17,16 @@ fun HatliTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
+    placeholder: String? = null,
     enabled: Boolean = true,
     isError: Boolean = false,
     supportingText: String? = null,
     singleLine: Boolean = true,
+    maxLines: Int = if (singleLine) 1 else Int.MAX_VALUE,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     visualTransformation: VisualTransformation = VisualTransformation.None,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val extended = HatliTheme.extendedColors
     val scheme = MaterialTheme.colorScheme
@@ -34,11 +38,18 @@ fun HatliTextField(
         enabled = enabled,
         isError = isError,
         singleLine = singleLine,
+        maxLines = maxLines,
         textStyle = typography.bodyLarge,
         label = { Text(label, style = typography.bodySmall) },
+        placeholder = placeholder?.let {
+            { Text(it, style = typography.bodySmall, color = scheme.onSurfaceVariant.copy(alpha = 0.6f)) }
+        },
         supportingText = supportingText?.let {
             { Text(it, style = typography.bodySmall) }
         },
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+
         keyboardOptions = keyboardOptions,
         visualTransformation = visualTransformation,
         shape = MaterialTheme.shapes.medium,

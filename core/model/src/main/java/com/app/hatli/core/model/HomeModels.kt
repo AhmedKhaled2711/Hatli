@@ -32,6 +32,7 @@ data class QuickAction(
 )
 
 data class RequesterHomeSnapshot(
+    val neighborhood: String = "",
     val active: RequestSummary? = null,
     val recent: List<RequestSummary> = emptyList(),
     val quickActions: List<QuickAction> = emptyList(),

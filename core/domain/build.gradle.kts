@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
     id("hatli.android.library")
 }
 
@@ -11,4 +11,10 @@ dependencies {
     implementation(project(":core:model"))
     implementation(libs.findLibrary("kotlinx-coroutines-core").get())
     implementation(libs.findLibrary("javax-inject").get())
+
+    testImplementation(libs.findLibrary("junit").get())
+    testImplementation(libs.findLibrary("mockk").get())
+    testImplementation(libs.findLibrary("truth").get())
+    testImplementation(libs.findLibrary("kotlinx-coroutines-test").get())
+    testImplementation(libs.findLibrary("turbine").get())
 }

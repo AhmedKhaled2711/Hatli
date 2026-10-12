@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat_title_default">محادثة التوصيل المباشرة</string>
+    <string name="chat_back">رجوع</string>
+    <string name="chat_counterpart_runner_fallback">كابتن التوصيل</string>
+    <string name="chat_counterpart_client_fallback">العميل</string>
+    <string name="chat_you">أنت</string>
+
+    <!-- Order Status in Chat Header -->
+    <string name="chat_status_loading">جاري تحديث الحالة…</string>
+    <string name="chat_status_pending">جاري البحث عن كابتن</string>
+    <string name="chat_status_accepted">تم قبول الطلب</string>
+    <string name="chat_status_in_progress">جاري التنفيذ</string>
+    <string name="chat_status_purchased">تم الشراء</string>
+    <string name="chat_status_on_the_way">في الطريق</string>
+    <string name="chat_status_delivered">تم التسليم</string>
+    <string name="chat_status_completed">مكتمل</string>
+    <string name="chat_status_cancelled">ملغي</string>
+
+    <!-- Chat Composer & Messages -->
+    <string name="chat_input_placeholder">اكتب رسالتك…</string>
+    <string name="chat_send">إرسال</string>
+    <string name="chat_attach_image">إرفاق صورة</string>
+    <string name="chat_empty_title">ابدأ المحادثة</string>
+    <string name="chat_empty_subtitle">استفسر عن تفاصيل طلبك أو أرسل رسالة.</string>
+</resources>

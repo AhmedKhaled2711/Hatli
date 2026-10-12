@@ -3,6 +3,7 @@ package com.app.hatli.core.data.repository
 import com.app.hatli.core.common.dispatcher.IoDispatcher
 import com.app.hatli.core.common.error.AppError
 import com.app.hatli.core.common.result.Result
+import com.app.hatli.core.common.util.PhoneSanitizer
 import com.app.hatli.core.data.auth.FirebaseAuthDataSource
 import com.app.hatli.core.data.auth.FirebaseErrorMapper
 import com.app.hatli.core.domain.repository.AuthRepository
@@ -29,16 +30,22 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun sendOtp(phoneNumber: String): Result<OtpSession> =
         withContext(ioDispatcher) {
             runAuth {
-                requireValidPhone(phoneNumber)
-                authDataSource.sendOtp(normalizePhone(phoneNumber), resend = false)
+                val sanitized = PhoneSanitizer.sanitizeEgyptianPhoneNumber(phoneNumber)
+                if (!PhoneSanitizer.isValidEgyptianPhoneNumber(sanitized)) {
+                    throw AppError.InvalidInput("Please enter a valid Egyptian mobile number (e.g. 01007394856).")
+                }
+                authDataSource.sendOtp(sanitized, resend = false)
             }
         }
 
     override suspend fun resendOtp(phoneNumber: String): Result<OtpSession> =
         withContext(ioDispatcher) {
             runAuth {
-                requireValidPhone(phoneNumber)
-                authDataSource.sendOtp(normalizePhone(phoneNumber), resend = true)
+                val sanitized = PhoneSanitizer.sanitizeEgyptianPhoneNumber(phoneNumber)
+                if (!PhoneSanitizer.isValidEgyptianPhoneNumber(sanitized)) {
+                    throw AppError.InvalidInput("Please enter a valid Egyptian mobile number (e.g. 01007394856).")
+                }
+                authDataSource.sendOtp(sanitized, resend = true)
             }
         }
 
@@ -55,16 +62,6 @@ class AuthRepositoryImpl @Inject constructor(
             authDataSource.logout()
         }
     }
-
-    private fun requireValidPhone(phone: String) {
-        val normalized = normalizePhone(phone)
-        if (!normalized.matches(Regex("^\\+[1-9]\\d{7,14}$"))) {
-            throw AppError.InvalidInput("Enter a valid phone number with country code (e.g. +2010...).")
-        }
-    }
-
-    private fun normalizePhone(phone: String): String =
-        phone.filter { !it.isWhitespace() }
 
     private inline fun <T> runAuth(block: () -> T): Result<T> = try {
         Result.Success(block())

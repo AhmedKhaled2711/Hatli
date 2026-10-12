@@ -3,6 +3,7 @@ package com.app.hatli.feature.home.presentation
 import androidx.lifecycle.viewModelScope
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.common.result.userMessage
+import com.app.hatli.core.domain.repository.SessionPreferencesRepository
 import com.app.hatli.core.domain.usecase.home.ObserveRequesterHomeUseCase
 import com.app.hatli.core.domain.usecase.home.ObserveRequesterRequestsUseCase
 import com.app.hatli.core.domain.usecase.home.ObserveRunnerHomeUseCase
@@ -15,6 +16,8 @@ import com.app.hatli.core.domain.usecase.user.ObserveUserProfileUseCase
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -22,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainShellViewModel @Inject constructor(
-    observeUserProfile: ObserveUserProfileUseCase,
+    private val observeUserProfile: ObserveUserProfileUseCase,
     private val observeRequesterHome: ObserveRequesterHomeUseCase,
     private val observeRunnerHome: ObserveRunnerHomeUseCase,
     private val observeRequesterRequests: ObserveRequesterRequestsUseCase,
@@ -31,15 +34,35 @@ class MainShellViewModel @Inject constructor(
     private val acceptRequest: AcceptRequestUseCase,
     private val advanceStatus: AdvanceRequestStatusUseCase,
     private val confirmDelivery: ConfirmDeliveryUseCase,
+    private val sessionPreferences: SessionPreferencesRepository,
 ) : BaseViewModel<MainShellUiState, MainShellUiEvent, MainShellUiEffect>(MainShellUiState()) {
 
     init {
+        loadProfileAndFeeds()
+    }
+
+    private var requesterStarted = false
+    private var runnerStarted = false
+    private var runnerBannerCountedForSession = false
+
+    private fun loadProfileAndFeeds() {
         observeUserProfile()
+            .catch { e ->
+                setState {
+                    copy(
+                        isLoadingProfile = false,
+                        isError = true,
+                        errorMessage = e.message ?: "Failed to load user profile",
+                    )
+                }
+            }
             .onEach { profile ->
                 setState {
                     copy(
                         isLoadingProfile = false,
                         role = profile?.role,
+                        isError = false,
+                        errorMessage = null,
                     )
                 }
                 when (profile?.role) {
@@ -51,16 +74,19 @@ class MainShellViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    private var requesterStarted = false
-    private var runnerStarted = false
-
     private fun startRequesterFeeds() {
         if (requesterStarted) return
         requesterStarted = true
         observeRequesterHome()
+            .catch { e ->
+                setState { copy(isError = true, errorMessage = e.message) }
+            }
             .onEach { snap -> setState { copy(requesterHome = snap) } }
             .launchIn(viewModelScope)
         observeRequesterRequests()
+            .catch { e ->
+                setState { copy(isError = true, errorMessage = e.message) }
+            }
             .onEach { list -> setState { copy(allRequests = list) } }
             .launchIn(viewModelScope)
     }
@@ -68,16 +94,55 @@ class MainShellViewModel @Inject constructor(
     private fun startRunnerFeeds() {
         if (runnerStarted) return
         runnerStarted = true
-        observeRunnerHome()
-            .onEach { snap -> setState { copy(runnerHome = snap) } }
+        combine(
+            observeRunnerHome(),
+            sessionPreferences.runnerOnlineBannerDismissed,
+            sessionPreferences.runnerOnlineBannerShownCount,
+        ) { snap, dismissed, count ->
+            val isOnline = snap.presence.isOnline
+            val shouldShow = isOnline && !dismissed && count < 6
+            if (isOnline) {
+                if (!runnerBannerCountedForSession && !dismissed && count < 6) {
+                    runnerBannerCountedForSession = true
+                    viewModelScope.launch {
+                        sessionPreferences.incrementRunnerOnlineBannerCount()
+                    }
+                }
+            } else {
+                runnerBannerCountedForSession = false
+            }
+            Pair(snap, shouldShow)
+        }
+            .catch { e ->
+                setState { copy(isError = true, errorMessage = e.message) }
+            }
+            .onEach { (snap, shouldShow) ->
+                setState {
+                    copy(
+                        runnerHome = snap,
+                        showRunnerOnlineInfoBanner = shouldShow,
+                    )
+                }
+            }
             .launchIn(viewModelScope)
+
         observeRunnerJobs()
+            .catch { e ->
+                setState { copy(isError = true, errorMessage = e.message) }
+            }
             .onEach { list -> setState { copy(allJobs = list) } }
             .launchIn(viewModelScope)
     }
 
     override fun handleEvent(event: MainShellUiEvent) {
         when (event) {
+            MainShellUiEvent.Retry -> {
+                requesterStarted = false
+                runnerStarted = false
+                runnerBannerCountedForSession = false
+                setState { copy(isError = false, errorMessage = null, isLoadingProfile = true) }
+                loadProfileAndFeeds()
+            }
             is MainShellUiEvent.TabSelected -> setState { copy(selectedTab = event.tab) }
             MainShellUiEvent.CreateRequest -> sendEffect(MainShellUiEffect.NavigateCreateRequest)
             MainShellUiEvent.OpenNotifications ->
@@ -85,6 +150,10 @@ class MainShellViewModel @Inject constructor(
             MainShellUiEvent.ToggleRunnerOnline -> viewModelScope.launch {
                 val online = uiState.value.runnerHome?.presence?.isOnline == true
                 setRunnerOnline(!online)
+            }
+            MainShellUiEvent.DismissRunnerOnlineInfoBanner -> viewModelScope.launch {
+                sessionPreferences.dismissRunnerOnlineBanner()
+                setState { copy(showRunnerOnlineInfoBanner = false) }
             }
             MainShellUiEvent.ViewAllJobs -> setState { copy(selectedTab = MainTab.RequestsOrJobs) }
             is MainShellUiEvent.RequestFilterSelected ->

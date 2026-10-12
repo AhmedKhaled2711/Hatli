@@ -1,7 +1,8 @@
 package com.app.hatli.feature.auth.presentation.onboarding.components
 
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,8 +33,11 @@ fun OnboardingIndicator(
         repeat(pageCount) { index ->
             val selected = index == currentPage
             val width by animateDpAsState(
-                targetValue = if (selected) 28.dp else 8.dp,
-                animationSpec = tween(durationMillis = 280),
+                targetValue = if (selected) 24.dp else 8.dp,
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow,
+                ),
                 label = "onboardingDotWidth",
             )
             Box(
@@ -43,7 +47,7 @@ fun OnboardingIndicator(
                     .clip(RoundedCornerShape(percent = 50))
                     .background(
                         if (selected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.outlineVariant,
+                        else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f),
                     ),
             )
         }

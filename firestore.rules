@@ -1,77 +1,57 @@
 rules_version = '2';
 
-// Firebase Console → Firestore → Rules → paste → Publish
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    match /users/{userId} {
-      allow read, write: if request.auth != null
-        && request.auth.uid == userId;
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
     }
 
-    match /requests/{requestId} {
-      function signedIn() {
-        return request.auth != null;
-      }
-      function isOwner() {
-        return signedIn() && resource.data.requesterId == request.auth.uid;
-      }
-      function isRunner() {
-        return signedIn() && resource.data.runnerId == request.auth.uid;
-      }
-      function isParticipant() {
-        return isOwner() || isRunner();
-      }
-      function isOpenPending() {
-        return resource.data.status == 'Pending'
-          && resource.data.runnerId == null;
-      }
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
 
-      allow create: if signedIn()
-        && request.resource.data.requesterId == request.auth.uid
-        && request.resource.data.status == 'Pending'
-        && request.resource.data.runnerId == null
-        && request.resource.data.requestId == requestId;
-
-      allow read: if signedIn() && (
-        resource.data.requesterId == request.auth.uid
-        || resource.data.runnerId == request.auth.uid
-        || resource.data.status == 'Pending'
+    function isParticipant(requestData) {
+      return isSignedIn() && (
+        request.auth.uid == requestData.requesterId ||
+        request.auth.uid == requestData.runnerId
       );
+    }
 
-      allow update: if signedIn() && (
-        // Accept
-        (
-          isOpenPending()
-          && request.resource.data.runnerId == request.auth.uid
-          && request.resource.data.status == 'Accepted'
-          && request.resource.data.requesterId == resource.data.requesterId
-        )
-        // Runner advances status / chat unread fields
-        || isRunner()
-        // Requester confirm, cancel, rate, chat unread
-        || isOwner()
+    // User profiles collection
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create, update: if isOwner(userId);
+      allow delete: if false;
+    }
+
+    // Requests marketplace collection
+    match /requests/{requestId} {
+      allow read: if isSignedIn();
+      
+      // Requesters can create requests under their own UID
+      allow create: if isSignedIn() 
+        && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.status == 'Pending';
+
+      // Updates are constrained by lifecycle transactions
+      allow update: if isSignedIn() && (
+        // Requester updating their request or confirming delivery / rating
+        request.auth.uid == resource.data.requesterId ||
+        // Runner accepting an unassigned pending request
+        (resource.data.status == 'Pending' && resource.data.runnerId == null) ||
+        // Assigned runner advancing task status
+        request.auth.uid == resource.data.runnerId
       );
 
       allow delete: if false;
 
+      // Chat sub-collection within a request
       match /messages/{messageId} {
-        allow read: if signedIn() && (
-          get(/databases/$(database)/documents/requests/$(requestId)).data.requesterId
-            == request.auth.uid
-          || get(/databases/$(database)/documents/requests/$(requestId)).data.runnerId
-            == request.auth.uid
-        );
-        allow create: if signedIn()
-          && request.resource.data.senderId == request.auth.uid
-          && (
-            get(/databases/$(database)/documents/requests/$(requestId)).data.requesterId
-              == request.auth.uid
-            || get(/databases/$(database)/documents/requests/$(requestId)).data.runnerId
-              == request.auth.uid
-          )
-          && get(/databases/$(database)/documents/requests/$(requestId)).data.status
-            != 'Pending';
+        allow read: if isParticipant(get(/databases/$(database)/documents/requests/$(requestId)).data);
+        allow create: if isParticipant(get(/databases/$(database)/documents/requests/$(requestId)).data)
+          && request.resource.data.senderId == request.auth.uid;
         allow update, delete: if false;
       }
     }

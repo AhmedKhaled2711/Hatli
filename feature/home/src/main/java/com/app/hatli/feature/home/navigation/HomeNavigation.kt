@@ -4,13 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.app.hatli.core.ui.navigation.Destination
-import com.app.hatli.core.ui.navigation.Routes
+import com.app.hatli.core.ui.navigation.HomeGraph
+import com.app.hatli.core.ui.navigation.MainShellRoute as MainShellRouteKey
 import com.app.hatli.feature.home.presentation.MainShellRoute
-
-object MainShellDestination : Destination {
-    override val route: String = Routes.MAIN_SHELL
-}
 
 fun NavGraphBuilder.homeGraph(
     profileTab: @Composable () -> Unit,
@@ -20,11 +16,10 @@ fun NavGraphBuilder.homeGraph(
     onOpenDetail: (String) -> Unit,
     onOpenRate: (String) -> Unit,
 ) {
-    navigation(
-        route = Routes.HOME_GRAPH,
-        startDestination = MainShellDestination.route,
+    navigation<HomeGraph>(
+        startDestination = MainShellRouteKey,
     ) {
-        composable(MainShellDestination.route) {
+        composable<MainShellRouteKey> {
             MainShellRoute(
                 profileTab = profileTab,
                 onCreateRequest = onNavigateCreateRequest,

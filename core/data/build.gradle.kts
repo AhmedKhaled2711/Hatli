@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
     id("hatli.android.library")
     id("hatli.android.hilt")
 }
@@ -20,4 +20,10 @@ dependencies {
     implementation(libs.findLibrary("firebase-auth").get())
     implementation(libs.findLibrary("firebase-firestore").get())
     implementation(libs.findLibrary("firebase-storage").get())
+
+    testImplementation(libs.findLibrary("junit").get())
+    testImplementation(libs.findLibrary("mockk").get())
+    testImplementation(libs.findLibrary("truth").get())
+    testImplementation(libs.findLibrary("kotlinx-coroutines-test").get())
+    testImplementation(libs.findLibrary("turbine").get())
 }

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Profile - General & Header -->
+    <string name="profile_screen_title">الملف الشخصي</string>
+    <string name="profile_default_user_name">مستخدم هاتلي</string>
+    <string name="profile_back_content_description">رجوع</string>
+    <string name="profile_photo_content_description">الصورة الشخصية</string>
+    <string name="profile_verified_badge_description">كابتن معتمد ورسمي</string>
+
+    <!-- Profile - Role Badges -->
+    <string name="profile_role_runner_title">نمط الكابتن (مستعد للتوصيل)</string>
+    <string name="profile_role_runner_subtitle">معتمد وقادر على استقبال طلبات التوصيل</string>
+    <string name="profile_role_requester_title">نمط العميل (طالب خدمات)</string>
+    <string name="profile_role_requester_subtitle">تصفح واطلب أغراضك وسيوصلها لك أقرب كابتن</string>
+
+    <!-- Profile - Runner Performance Metrics -->
+    <string name="profile_metric_orders_title">الطلبات</string>
+    <string name="profile_metric_rating_title">التقييم العام</string>
+    <string name="profile_metric_acceptance_title">نسبة القبول</string>
+    <string name="profile_metric_empty_value">—</string>
+    <string name="profile_metric_new_runner">جديد</string>
+
+    <!-- Profile - Runner Verification & Documents -->
+    <string name="profile_section_runner_documents">مستندات وبيانات الكابتن</string>
+    <string name="profile_label_verification_status">حالة الاعتماد</string>
+    <string name="profile_status_approved">معتمد ورسمي 🟢</string>
+    <string name="profile_status_under_review">قيد المراجعة 🟡</string>
+    <string name="profile_status_pending">في انتظار إرسال المستندات ⏳</string>
+    <string name="profile_status_rejected">مرفوض 🔴</string>
+    <string name="profile_status_unspecified">غير محدد</string>
+
+    <string name="profile_label_transport_type">وسيلة التوصيل</string>
+    <string name="profile_transport_bicycle">دراجة هوائية (عجلة)</string>
+    <string name="profile_transport_motorcycle">دراجة نارية (موتوسيكل)</string>
+    <string name="profile_transport_car">سيارة</string>
+    <string name="profile_transport_walking">مشياً على الأقدام</string>
+    <string name="profile_transport_other">أخرى</string>
+
+    <string name="profile_label_vehicle_info">بيانات المركبة</string>
+    <string name="profile_label_national_id">الرقم القومي</string>
+
+    <!-- Profile - Personal Information -->
+    <string name="profile_section_personal_info">البيانات الشخصية</string>
+    <string name="profile_label_phone">رقم الهاتف</string>
+    <string name="profile_label_email">البريد الإلكتروني</string>
+    <string name="profile_label_gender">النوع</string>
+    <string name="profile_gender_male">ذكر</string>
+    <string name="profile_gender_female">أنثى</string>
+
+    <!-- Profile - Delivery Address -->
+    <string name="profile_section_delivery_address">عنوان التوصيل الرئيسي</string>
+    <string name="profile_label_address_location">الموقع</string>
+    <string name="profile_label_address_notes">ملاحظات العنوان</string>
+    <string name="profile_address_empty_title">لم تسجل عنوان توصيل رئيسي بعد</string>
+    <string name="profile_address_empty_description">يمكنك تسجيل عنوانك وتحديده بسهولة أثناء إنشاء أي طلب جديد لتسريع التوصيل.</string>
+
+    <!-- Profile - App Preferences -->
+    <string name="profile_section_preferences">تفضيلات التطبيق</string>
+    <string name="profile_label_language">لغة التطبيق</string>
+    <string name="profile_value_language_ar">العربية (مصر)</string>
+    <string name="profile_value_language_en">English</string>
+    <string name="profile_label_theme">مظهر التطبيق</string>
+    <string name="profile_theme_system">تلقائي (حسب النظام)</string>
+    <string name="profile_theme_light">الوضع الفاتح</string>
+    <string name="profile_theme_dark">الوضع الداكن</string>
+    <string name="profile_label_payments">وسائل الدفع</string>
+    <string name="profile_value_payments">نقدي عند الاستلام 💵</string>
+    <string name="profile_label_support">الدعم الفني والشكاوى</string>
+    <string name="profile_value_support">تواصل مع خدمة العملاء</string>
+
+    <!-- Profile - Interactive Preference Dialogs -->
+    <string name="profile_pref_dialog_language_title">اختيار لغة التطبيق</string>
+    <string name="profile_language_option_arabic">العربية (Arabic)</string>
+    <string name="profile_language_option_english">English (الإنجليزية)</string>
+    <string name="profile_pref_dialog_theme_title">اختيار مظهر التطبيق</string>
+    <string name="profile_pref_dialog_payments_title">خيارات الدفع</string>
+    <string name="profile_pref_dialog_payments_message">الدفع النقدي عند الاستلام (COD) هو وسيلة الدفع النشطة حالياً لجميع المشاوير. سيتم دعم البطاقات والمحافظ الإلكترونية قريباً.</string>
+    <string name="profile_pref_dialog_support_title">خدمة العملاء والدعم الفني</string>
+    <string name="profile_pref_dialog_support_message">فريق خدمة عملاء هاتلي متاح لمساعدتك وحل أي استفسار أو مشكلة تواجهك في طلباتك. يمكنك التواصل معنا عبر البريد الإلكتروني support@hatli.app أو واتساب.</string>
+    <string name="profile_pref_dialog_support_email_action">مراسلة الدعم</string>
+    <string name="profile_dialog_action_close">فهمت</string>
+    <string name="profile_dialog_action_confirm">تطبيق</string>
+    <string name="profile_dialog_action_cancel">إلغاء</string>
+
+    <!-- Profile - Logout -->
+    <string name="profile_logout_button">تسجيل الخروج</string>
+    <string name="profile_logout_dialog_title">تسجيل الخروج</string>
+    <string name="profile_logout_dialog_message">هل أنت متأكد من رغبتك في تسجيل الخروج من تطبيق هاتلي؟</string>
+    <string name="profile_logout_dialog_confirm">نعم، خروج</string>
+    <string name="profile_logout_dialog_cancel">إلغاء</string>
+
+    <!-- Profile - Error & Loading States -->
+    <string name="profile_error_default_message">تعذر تحميل بيانات الملف الشخصي</string>
+    <string name="profile_retry_button">إعادة المحاولة</string>
+</resources>
