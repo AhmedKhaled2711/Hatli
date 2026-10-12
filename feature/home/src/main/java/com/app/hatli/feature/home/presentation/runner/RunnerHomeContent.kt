@@ -62,9 +62,9 @@ import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RunnerHomeSnapshot
 import com.app.hatli.feature.home.R
-import com.app.hatli.feature.home.presentation.components.CurrentJobCard
+import com.app.hatli.feature.home.presentation.components.card.CurrentJobCard
 import com.app.hatli.feature.home.presentation.components.HomeSectionHeader
-import com.app.hatli.feature.home.presentation.components.RunnerStatsRow
+import com.app.hatli.feature.home.presentation.components.card.RunnerStatsRow
 import com.app.hatli.feature.home.presentation.runnerNextAction
 import com.app.hatli.feature.home.presentation.runnerNextStatus
 

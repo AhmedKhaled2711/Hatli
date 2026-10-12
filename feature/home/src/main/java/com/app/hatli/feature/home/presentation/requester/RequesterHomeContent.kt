@@ -65,9 +65,9 @@ import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequesterHomeSnapshot
 import com.app.hatli.feature.home.R
-import com.app.hatli.feature.home.presentation.components.CurrentRequestCard
+import com.app.hatli.feature.home.presentation.components.card.CurrentRequestCard
 import com.app.hatli.feature.home.presentation.components.HomeSectionHeader
-import com.app.hatli.feature.home.presentation.components.RequestRowCard
+import com.app.hatli.feature.home.presentation.components.card.RequestRowCard
 
 private data class QuickServiceCategory(
     val id: String,

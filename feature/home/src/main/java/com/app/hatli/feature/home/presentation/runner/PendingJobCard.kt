@@ -35,11 +35,11 @@ import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.feature.home.R
-import com.app.hatli.feature.home.presentation.components.CategoryBadge
-import com.app.hatli.feature.home.presentation.components.formatDistance
-import com.app.hatli.feature.home.presentation.components.formatEgp
-import com.app.hatli.feature.home.presentation.components.formatRelativeTime
-import com.app.hatli.feature.home.presentation.components.isAppArabic
+import com.app.hatli.feature.home.presentation.components.badge.CategoryBadge
+import com.app.hatli.feature.home.presentation.components.formatting.isAppArabic
+import com.app.hatli.feature.home.presentation.components.formatting.formatDistance
+import com.app.hatli.feature.home.presentation.components.formatting.formatEgp
+import com.app.hatli.feature.home.presentation.components.formatting.formatRelativeTime
 
 @Composable
 fun PendingJobCard(

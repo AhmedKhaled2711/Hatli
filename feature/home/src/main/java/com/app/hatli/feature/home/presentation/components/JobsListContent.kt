@@ -19,9 +19,11 @@ import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.feature.home.presentation.JobListFilter
+import com.app.hatli.feature.home.presentation.components.card.RequestRowCard
 import com.app.hatli.feature.home.presentation.runner.PendingJobCard
 import androidx.compose.ui.res.stringResource
 import com.app.hatli.feature.home.R
+import com.app.hatli.feature.home.presentation.components.formatting.isAppArabic
 
 @Composable
 fun JobsListContent(
@@ -31,8 +33,8 @@ fun JobsListContent(
     onAccept: (String) -> Unit,
     onOpenDetail: (String) -> Unit,
     onOpenChat: (String) -> Unit,
-    isAr: Boolean,
 ) {
+    val isAr = isAppArabic()
     Column(
         modifier = Modifier
             .fillMaxSize()

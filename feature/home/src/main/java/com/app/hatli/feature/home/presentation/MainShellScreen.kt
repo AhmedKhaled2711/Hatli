@@ -35,8 +35,8 @@ import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.home.R
 import com.app.hatli.feature.home.presentation.components.JobsListContent
 import com.app.hatli.feature.home.presentation.components.MainBottomBar
-import com.app.hatli.feature.home.presentation.components.MainTopBar
 import com.app.hatli.feature.home.presentation.components.RequestsListContent
+import com.app.hatli.feature.home.presentation.components.bar.MainTopBar
 import com.app.hatli.feature.home.presentation.messages.MessagesContent
 import com.app.hatli.feature.home.presentation.requester.RequesterHomeContent
 import com.app.hatli.feature.home.presentation.runner.RunnerHomeContent
@@ -226,7 +226,6 @@ private fun MainShellReady(
                                 onAccept = { onEvent(MainShellUiEvent.AcceptRequest(it)) },
                                 onOpenDetail = { onEvent(MainShellUiEvent.OpenDetail(it)) },
                                 onOpenChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
-                                isAr = isAr,
                             )
                         }
                     }

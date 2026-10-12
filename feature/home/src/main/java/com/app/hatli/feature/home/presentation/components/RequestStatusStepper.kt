@@ -48,7 +48,6 @@ fun RequestStatus.stepperLabel(): String = when (this) {
 fun RequestStatusStepper(
     status: RequestStatus,
     category: RequestCategory?,
-    isAr: Boolean = isAppArabic(),
     modifier: Modifier = Modifier,
 ) {
     when (status) {
