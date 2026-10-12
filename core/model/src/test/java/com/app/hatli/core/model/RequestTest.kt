@@ -87,5 +87,70 @@ class RequestTest {
         assertThat(acceptedIdx).isEqualTo(0)
         assertThat(onTheWayIdxShopping).isEqualTo(3)
         assertThat(onTheWayIdxPickup).isEqualTo(2)
+        assertThat(RequestStatus.Completed.stepperIndex(RequestCategory.Shopping)).isEqualTo(5)
+        assertThat(RequestStatus.Completed.stepperIndex(RequestCategory.Pickup)).isEqualTo(4)
+        assertThat(RequestStatus.Cancelled.stepperIndex(RequestCategory.Shopping)).isEqualTo(-1)
+    }
+
+    @Test
+    fun `stepperStepVisualState marks Accepted as Unreached when request is Pending`() {
+        val steps = lifecycleSteps(RequestCategory.Shopping)
+        steps.forEach { step ->
+            val state = stepperStepVisualState(step, RequestStatus.Pending, RequestCategory.Shopping)
+            assertThat(state).isEqualTo(StepperStepVisualState.Unreached)
+        }
+    }
+
+    @Test
+    fun `stepperStepVisualState activates Accepted as ActiveStable when request is Accepted`() {
+        val acceptedState = stepperStepVisualState(
+            step = RequestStatus.Accepted,
+            currentStatus = RequestStatus.Accepted,
+            category = RequestCategory.Shopping,
+        )
+        val inProgressState = stepperStepVisualState(
+            step = RequestStatus.InProgress,
+            currentStatus = RequestStatus.Accepted,
+            category = RequestCategory.Shopping,
+        )
+
+        assertThat(acceptedState).isEqualTo(StepperStepVisualState.ActiveStable)
+        assertThat(inProgressState).isEqualTo(StepperStepVisualState.Unreached)
+    }
+
+    @Test
+    fun `stepperStepVisualState marks Accepted completed and InProgress ActivePulsing when InProgress`() {
+        val acceptedState = stepperStepVisualState(
+            step = RequestStatus.Accepted,
+            currentStatus = RequestStatus.InProgress,
+            category = RequestCategory.Shopping,
+        )
+        val inProgressState = stepperStepVisualState(
+            step = RequestStatus.InProgress,
+            currentStatus = RequestStatus.InProgress,
+            category = RequestCategory.Shopping,
+        )
+
+        assertThat(acceptedState).isEqualTo(StepperStepVisualState.Completed)
+        assertThat(inProgressState).isEqualTo(StepperStepVisualState.ActivePulsing)
+    }
+
+    @Test
+    fun `stepperStepVisualState marks all steps as Completed without pulsing when Completed`() {
+        val steps = lifecycleSteps(RequestCategory.Shopping)
+        steps.forEach { step ->
+            val state = stepperStepVisualState(step, RequestStatus.Completed, RequestCategory.Shopping)
+            assertThat(state).isEqualTo(StepperStepVisualState.Completed)
+        }
+    }
+
+    @Test
+    fun `stepperStepVisualState marks all steps Unreached when Cancelled`() {
+        val steps = lifecycleSteps(RequestCategory.Shopping)
+        steps.forEach { step ->
+            val state = stepperStepVisualState(step, RequestStatus.Cancelled, RequestCategory.Shopping)
+            assertThat(state).isEqualTo(StepperStepVisualState.Unreached)
+        }
     }
 }
+

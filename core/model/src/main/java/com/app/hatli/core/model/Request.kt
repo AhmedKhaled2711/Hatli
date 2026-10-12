@@ -182,9 +182,49 @@ fun RequestStatus.stepperIndex(category: RequestCategory?): Int {
     // Purchased skipped for non-shopping — map onto OnTheWay slot.
     return when (this) {
         RequestStatus.Purchased -> steps.indexOf(RequestStatus.OnTheWay).coerceAtLeast(0)
-        else -> 0
+        else -> -1
     }
 }
+
+/**
+ * Visual rendering state of an individual step in the lifecycle timeline/stepper.
+ */
+enum class StepperStepVisualState {
+    Unreached,
+    ActiveStable,
+    ActivePulsing,
+    Completed,
+}
+
+fun stepperStepVisualState(
+    step: RequestStatus,
+    currentStatus: RequestStatus,
+    category: RequestCategory?,
+): StepperStepVisualState {
+    if (currentStatus == RequestStatus.Completed) {
+        return StepperStepVisualState.Completed
+    }
+    if (currentStatus == RequestStatus.Pending || currentStatus == RequestStatus.Cancelled) {
+        return StepperStepVisualState.Unreached
+    }
+    val steps = lifecycleSteps(category)
+    val currentIdx = currentStatus.stepperIndex(category)
+    val stepIdx = steps.indexOf(step)
+    if (currentIdx < 0 || stepIdx < 0) {
+        return StepperStepVisualState.Unreached
+    }
+    return when {
+        stepIdx < currentIdx -> StepperStepVisualState.Completed
+        stepIdx == currentIdx -> when (step) {
+            RequestStatus.InProgress,
+            RequestStatus.Purchased,
+            RequestStatus.OnTheWay -> StepperStepVisualState.ActivePulsing
+            else -> StepperStepVisualState.ActiveStable
+        }
+        else -> StepperStepVisualState.Unreached
+    }
+}
+
 
 fun RequestStatus.shortLabelEn(): String = when (this) {
     RequestStatus.Pending -> "Searching"

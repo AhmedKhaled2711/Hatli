@@ -40,8 +40,9 @@ import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.Request
 import com.app.hatli.core.model.RequestStatus
+import com.app.hatli.core.model.StepperStepVisualState
 import com.app.hatli.core.model.lifecycleSteps
-import com.app.hatli.core.model.stepperIndex
+import com.app.hatli.core.model.stepperStepVisualState
 import com.app.hatli.feature.request.R
 
 private val SuccessGreen = Color(0xFF0F9F55)
@@ -58,11 +59,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
     if (req.status == RequestStatus.Cancelled) return
 
     val steps = lifecycleSteps(req.category)
-    val current = if (req.status == RequestStatus.Pending) {
-        0
-    } else {
-        req.status.stepperIndex(req.category).coerceIn(0, steps.lastIndex)
-    }
+    val isOrderCompleted = req.status == RequestStatus.Completed
 
     val infiniteTransition = rememberInfiniteTransition(label = "PulseTransition")
     val pulseScale by infiniteTransition.animateFloat(
@@ -101,8 +98,12 @@ fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
                 verticalAlignment = Alignment.Top,
             ) {
                 steps.forEachIndexed { index, step ->
-                    val reached = index <= current
-                    val isCurrent = index == current
+                    val visualState = stepperStepVisualState(step, req.status, req.category)
+                    val isReached = visualState != StepperStepVisualState.Unreached
+                    val isCurrent = visualState == StepperStepVisualState.ActiveStable ||
+                        visualState == StepperStepVisualState.ActivePulsing
+                    val isCompleted = visualState == StepperStepVisualState.Completed
+                    val shouldPulse = visualState == StepperStepVisualState.ActivePulsing
 
                     Column(
                         modifier = Modifier.weight(1f),
@@ -117,7 +118,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
                         ) {
                             val leftColor by animateColorAsState(
                                 targetValue = if (index > 0) {
-                                    if (index <= current) SuccessGreen else MaterialTheme.colorScheme.outlineVariant
+                                    if (isReached) SuccessGreen else MaterialTheme.colorScheme.outlineVariant
                                 } else {
                                     Color.Transparent
                                 },
@@ -136,7 +137,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
                                 modifier = Modifier.size(24.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                if (isCurrent) {
+                                if (shouldPulse) {
                                     Box(
                                         modifier = Modifier
                                             .size(22.dp)
@@ -156,14 +157,14 @@ fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
                                         .clip(CircleShape)
                                         .background(
                                             when {
+                                                isCompleted -> SuccessGreen
                                                 isCurrent -> MaterialTheme.colorScheme.primary
-                                                reached -> SuccessGreen
                                                 else -> MaterialTheme.colorScheme.outlineVariant
                                             },
                                         ),
                                     contentAlignment = Alignment.Center,
                                 ) {
-                                    if (reached && !isCurrent) {
+                                    if (isCompleted) {
                                         Icon(
                                             imageVector = Icons.Default.Check,
                                             contentDescription = null,
@@ -176,7 +177,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
 
                             val rightColor by animateColorAsState(
                                 targetValue = if (index < steps.lastIndex) {
-                                    if (index < current) SuccessGreen else MaterialTheme.colorScheme.outlineVariant
+                                    if (isCompleted) SuccessGreen else MaterialTheme.colorScheme.outlineVariant
                                 } else {
                                     Color.Transparent
                                 },
@@ -211,11 +212,12 @@ fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
                                 maxLines = 2,
                                 softWrap = true,
                                 color = when {
-                                    index == current -> MaterialTheme.colorScheme.primary
-                                    index < current -> SuccessGreen
+                                    isOrderCompleted -> SuccessGreen
+                                    isCurrent -> MaterialTheme.colorScheme.primary
+                                    isCompleted -> SuccessGreen
                                     else -> MaterialTheme.colorScheme.onSurfaceVariant
                                 },
-                                fontWeight = if (index == current) FontWeight.Bold else FontWeight.Normal,
+                                fontWeight = if (isCurrent || isOrderCompleted) FontWeight.Bold else FontWeight.Normal,
                                 modifier = Modifier.wrapContentWidth(unbounded = true),
                             )
                         }
