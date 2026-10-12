@@ -15,9 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -35,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,7 +43,6 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
@@ -53,7 +50,6 @@ import com.app.hatli.core.designsystem.component.HatliTextButton
 import com.app.hatli.core.designsystem.component.auth.HatliAuthScreen
 import com.app.hatli.core.designsystem.theme.HatliRadius
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.auth.R
 import kotlin.math.roundToInt
@@ -157,9 +153,13 @@ fun OtpScreen(
                             }
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                        modifier = Modifier.focusRequester(focusRequester),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(max = 328.dp)
+                            .focusRequester(focusRequester),
                         decorationBox = {
                             Row(
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
@@ -170,7 +170,8 @@ fun OtpScreen(
 
                                     Box(
                                         modifier = Modifier
-                                            .size(width = 48.dp, height = 56.dp)
+                                            .weight(1f)
+                                            .height(56.dp)
                                             .clip(RoundedCornerShape(HatliRadius.chip))
                                             .background(MaterialTheme.colorScheme.surface)
                                             .border(
