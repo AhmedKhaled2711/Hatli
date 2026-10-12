@@ -144,7 +144,7 @@ class MainShellViewModel @Inject constructor(
                 loadProfileAndFeeds()
             }
             is MainShellUiEvent.TabSelected -> setState { copy(selectedTab = event.tab) }
-            MainShellUiEvent.CreateRequest -> sendEffect(MainShellUiEffect.NavigateCreateRequest)
+            MainShellUiEvent.CreateRequest -> sendEffect(MainShellUiEffect.NavigateCreateRequest(null))
             MainShellUiEvent.OpenNotifications ->
                 sendEffect(MainShellUiEffect.ShowMessage("Notifications coming soon"))
             MainShellUiEvent.ToggleRunnerOnline -> viewModelScope.launch {
@@ -161,7 +161,7 @@ class MainShellViewModel @Inject constructor(
             is MainShellUiEvent.JobFilterSelected ->
                 setState { copy(jobFilter = event.filter) }
             is MainShellUiEvent.QuickActionClicked ->
-                sendEffect(MainShellUiEffect.NavigateCreateRequest)
+                sendEffect(MainShellUiEffect.NavigateCreateRequest(event.id))
             is MainShellUiEvent.AcceptRequest -> viewModelScope.launch {
                 when (val result = acceptRequest(event.requestId)) {
                     is Result.Success -> {

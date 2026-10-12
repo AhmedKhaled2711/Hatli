@@ -234,4 +234,61 @@
     <string name="home_error_generic">Failed to load data. Please try again.</string>
     <string name="home_action_retry">Retry</string>
     <string name="home_runner_dismiss_tip">Dismiss tip</string>
+
+    <!-- Request & Job Cards -->
+    <string name="home_card_accept_job">Accept Job</string>
+    <string name="home_card_delivery_fee">Delivery fee</string>
+    <string name="home_card_earnings">Earnings</string>
+    <string name="home_card_time_just_now">Just now</string>
+    <string name="home_card_time_mins_ago">%1$d mins ago</string>
+    <string name="home_card_time_hours_ago">%1$d hrs ago</string>
+    <string name="home_card_time_days_ago">%1$d days ago</string>
+    <string name="home_card_confirm_delivery">Confirm Receipt</string>
+    <string name="home_card_rate_runner">Rate Captain</string>
+    <string name="home_card_new_badge">NEW</string>
+    <string name="home_card_currency_egp">EGP</string>
+    <string name="home_card_details">Details</string>
+    <string name="home_card_chat">Chat</string>
+    <string name="home_card_time_more_than_month">+30 days ago</string>
+    <string name="home_card_distance_km">%1$s km</string>
+    <string name="home_card_distance_m">%1$d m</string>
+
+    <!-- Category Badges -->
+    <string name="home_category_badge_shopping">Shopping</string>
+    <string name="home_category_badge_pickup">Pickup</string>
+    <string name="home_category_badge_bills">Bills</string>
+    <string name="home_category_badge_custom">Custom</string>
+    <string name="home_category_badge_general">Request</string>
+
+    <!-- Request Status Labels -->
+    <string name="home_status_pending">Pending</string>
+    <string name="home_status_accepted">Accepted</string>
+    <string name="home_status_in_progress">In Progress</string>
+    <string name="home_status_purchased">Purchased</string>
+    <string name="home_status_on_the_way">On The Way</string>
+    <string name="home_status_delivered">Delivered</string>
+    <string name="home_status_completed">Completed</string>
+    <string name="home_status_cancelled">Cancelled</string>
+
+    <!-- Card Headline Statuses -->
+    <string name="home_card_status_looking_for_captain">Looking for a Captain</string>
+    <string name="home_card_status_captain_accepted">%1$s accepted your request</string>
+    <string name="home_card_default_captain_name">A Captain</string>
+    <string name="home_card_status_captain_working">Captain is working on it</string>
+    <string name="home_card_status_items_purchased">Items purchased</string>
+    <string name="home_card_status_on_the_way">On the way to you</string>
+    <string name="home_card_status_delivered_confirm">Delivered — please confirm receipt</string>
+    <string name="home_card_status_completed_rate">Completed — rate your Captain</string>
+    <string name="home_card_delivery_captain_role">Delivery Captain</string>
+    <string name="home_card_tap_to_chat">Tap to open chat</string>
+
+    <!-- Stepper Labels -->
+    <string name="home_stepper_looking_for_runner">Looking for a Captain</string>
+    <string name="home_stepper_step_pending">Searching</string>
+    <string name="home_stepper_step_accepted">Accepted</string>
+    <string name="home_stepper_step_in_progress">In progress</string>
+    <string name="home_stepper_step_purchased">Purchased</string>
+    <string name="home_stepper_step_on_the_way">On the way</string>
+    <string name="home_stepper_step_delivered">Delivered</string>
+    <string name="home_stepper_step_completed">Completed</string>
 </resources>

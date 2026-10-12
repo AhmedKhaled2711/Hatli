@@ -121,4 +121,30 @@
     <string name="rate_runner_comment_hint">أضف ملاحظاتك للكابتن (اختياري)…</string>
     <string name="rate_runner_submit">إرسال التقييم</string>
 
+    <string name="create_request_change_category">تغيير الخدمة</string>
+    <string name="create_request_pharmacy_shop_label">اسم الصيدلية (مثال: صيدلية العزبي / 19011)</string>
+    <string name="create_request_pharmacy_items_hint">اكتب أسماء الأدوية أو المستلزمات الطبية المطلوبة…</string>
+    <string name="create_request_grocery_shop_label">اسم السوبرماركت أو المتجر (مثال: كارفور / خير زمان)</string>
+    <string name="create_request_grocery_items_hint">اكتب قائمة المشتريات (مثال: 2 كجم سكر، لبن، خبز)…</string>
+    <string name="create_request_char_count">%1$d حرفاً مدخلاً</string>
+    <string name="create_request_common_landmarks">معالم محلية شائعة لنقطة الاستلام</string>
+    <string name="create_request_default_dropoff_address">المحلة الكبرى - حي الأشجار - عمارة 14</string>
+    <string name="create_request_landmark_old_square">الميدان القديم</string>
+    <string name="create_request_landmark_sea_street">شارع البحر الرئيسي</string>
+    <string name="create_request_landmark_hospital">أمام المستشفى العام</string>
+    <string name="create_request_landmark_bus_station">موقف السيارات الرئيسي</string>
+    <string name="create_request_landmark_governorate">مبنى المحافظة</string>
+
+    <!-- Timeline & Track Status Labels (Arabic) -->
+    <string name="request_status_step_pending">جاري البحث</string>
+    <string name="request_status_step_accepted">تم القبول</string>
+    <string name="request_status_step_in_progress">قيد التنفيذ</string>
+    <string name="request_status_step_purchased">تم الشراء</string>
+    <string name="request_status_step_on_the_way">في الطريق</string>
+    <string name="request_status_step_delivered">تم التوصيل</string>
+    <string name="request_status_step_completed">مكتمل</string>
+    <string name="request_status_step_cancelled">ملغي</string>
+    <string name="request_status_track_in_progress">قيد\nالتنفيذ</string>
+    <string name="request_status_track_on_the_way">في\nالطريق</string>
+
 </resources>

@@ -235,4 +235,61 @@
     <string name="home_error_generic">حدث خطأ أثناء تحميل البيانات. يرجى المحاولة مرة أخرى.</string>
     <string name="home_action_retry">إعادة المحاولة</string>
     <string name="home_runner_dismiss_tip">إغلاق التنبيه</string>
+
+    <!-- Request & Job Cards (Arabic) -->
+    <string name="home_card_accept_job">قبول الطلب</string>
+    <string name="home_card_delivery_fee">رسوم التوصيل</string>
+    <string name="home_card_earnings">الأرباح</string>
+    <string name="home_card_time_just_now">الآن</string>
+    <string name="home_card_time_mins_ago">منذ %1$d دقيقة</string>
+    <string name="home_card_time_hours_ago">منذ %1$d ساعة</string>
+    <string name="home_card_time_days_ago">منذ %1$d يوم</string>
+    <string name="home_card_confirm_delivery">تأكيد الاستلام</string>
+    <string name="home_card_rate_runner">تقييم الكابتن</string>
+    <string name="home_card_new_badge">جديد</string>
+    <string name="home_card_currency_egp">ج.م</string>
+    <string name="home_card_details">التفاصيل</string>
+    <string name="home_card_chat">محادثة</string>
+    <string name="home_card_time_more_than_month">منذ أكثر من شهر</string>
+    <string name="home_card_distance_km">%1$s كم</string>
+    <string name="home_card_distance_m">%1$d م</string>
+
+    <!-- Category Badges -->
+    <string name="home_category_badge_shopping">تسوق ومشتريات</string>
+    <string name="home_category_badge_pickup">استلام وتوصيل</string>
+    <string name="home_category_badge_bills">دفع فواتير</string>
+    <string name="home_category_badge_custom">مشوار خاص</string>
+    <string name="home_category_badge_general">طلب توصيل</string>
+
+    <!-- Request Status Labels -->
+    <string name="home_status_pending">قيد الانتظار</string>
+    <string name="home_status_accepted">تم القبول</string>
+    <string name="home_status_in_progress">قيد التنفيذ</string>
+    <string name="home_status_purchased">تم الشراء</string>
+    <string name="home_status_on_the_way">في الطريق</string>
+    <string name="home_status_delivered">تم التوصيل</string>
+    <string name="home_status_completed">مكتمل</string>
+    <string name="home_status_cancelled">ملغي</string>
+
+    <!-- Card Headline Statuses -->
+    <string name="home_card_status_looking_for_captain">جاري البحث عن كابتن</string>
+    <string name="home_card_status_captain_accepted">قبل %1$s طلبك</string>
+    <string name="home_card_default_captain_name">أحد الكباتن</string>
+    <string name="home_card_status_captain_working">الكابتن يقوم بتنفيذ طلبك</string>
+    <string name="home_card_status_items_purchased">تم شراء الطلبات بنجاح</string>
+    <string name="home_card_status_on_the_way">الكابتن في الطريق إليك</string>
+    <string name="home_card_status_delivered_confirm">تم التوصيل — يرجى تأكيد الاستلام</string>
+    <string name="home_card_status_completed_rate">اكتمل الطلب — قيّم الكابتن</string>
+    <string name="home_card_delivery_captain_role">كابتن توصيل</string>
+    <string name="home_card_tap_to_chat">اضغط لفتح المحادثة</string>
+
+    <!-- Stepper Labels -->
+    <string name="home_stepper_looking_for_runner">جاري البحث عن كابتن</string>
+    <string name="home_stepper_step_pending">جاري البحث</string>
+    <string name="home_stepper_step_accepted">تم القبول</string>
+    <string name="home_stepper_step_in_progress">قيد التنفيذ</string>
+    <string name="home_stepper_step_purchased">تم الشراء</string>
+    <string name="home_stepper_step_on_the_way">في الطريق</string>
+    <string name="home_stepper_step_delivered">تم التوصيل</string>
+    <string name="home_stepper_step_completed">مكتمل</string>
 </resources>

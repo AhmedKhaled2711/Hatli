@@ -41,30 +41,20 @@ import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.Request
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.lifecycleSteps
-import com.app.hatli.core.model.shortLabelAr
-import com.app.hatli.core.model.shortLabelEn
 import com.app.hatli.core.model.stepperIndex
 import com.app.hatli.feature.request.R
 
 private val SuccessGreen = Color(0xFF0F9F55)
 
-private fun RequestStatus.stepperLabel(isAr: Boolean): String {
-    return if (isAr) {
-        when (this) {
-            RequestStatus.OnTheWay -> "في\nالطريق"
-            else -> shortLabelAr()
-        }
-    } else {
-        when (this) {
-            RequestStatus.InProgress -> "In\nprogress"
-            RequestStatus.OnTheWay -> "On the\nway"
-            else -> shortLabelEn()
-        }
-    }
+@Composable
+private fun RequestStatus.stepperLabel(): String = when (this) {
+    RequestStatus.InProgress -> stringResource(R.string.request_status_track_in_progress)
+    RequestStatus.OnTheWay -> stringResource(R.string.request_status_track_on_the_way)
+    else -> timelineLabel()
 }
 
 @Composable
-fun DetailStatusTrack(req: Request, isAr: Boolean) {
+fun DetailStatusTrack(req: Request, isAr: Boolean = false) {
     if (req.status == RequestStatus.Cancelled) return
 
     val steps = lifecycleSteps(req.category)
@@ -100,7 +90,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
             verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
         ) {
             Text(
-                text = if (isAr) "مسار تنفيذ الطلب" else stringResource(R.string.request_detail_order_progress),
+                text = stringResource(R.string.request_detail_order_progress),
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurface,
             )
@@ -211,7 +201,7 @@ fun DetailStatusTrack(req: Request, isAr: Boolean) {
                             contentAlignment = Alignment.TopCenter,
                         ) {
                             Text(
-                                text = step.stepperLabel(isAr),
+                                text = step.stepperLabel(),
                                 style = MaterialTheme.typography.labelSmall.copy(
                                     fontSize = 10.sp,
                                     lineHeight = 12.sp,

@@ -22,12 +22,23 @@ import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.theme.HatliColors
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.Request
-import com.app.hatli.core.model.shortLabelAr
-import com.app.hatli.core.model.shortLabelEn
+import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.feature.request.R
 
 @Composable
-fun TimelineCard(req: Request, isAr: Boolean) {
+fun RequestStatus.timelineLabel(): String = when (this) {
+    RequestStatus.Pending -> stringResource(R.string.request_status_step_pending)
+    RequestStatus.Accepted -> stringResource(R.string.request_status_step_accepted)
+    RequestStatus.InProgress -> stringResource(R.string.request_status_step_in_progress)
+    RequestStatus.Purchased -> stringResource(R.string.request_status_step_purchased)
+    RequestStatus.OnTheWay -> stringResource(R.string.request_status_step_on_the_way)
+    RequestStatus.Delivered -> stringResource(R.string.request_status_step_delivered)
+    RequestStatus.Completed -> stringResource(R.string.request_status_step_completed)
+    RequestStatus.Cancelled -> stringResource(R.string.request_status_step_cancelled)
+}
+
+@Composable
+fun TimelineCard(req: Request, isAr: Boolean = false) {
     HatliCard(modifier = Modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.padding(HatliSpacing.md),
@@ -51,7 +62,7 @@ fun TimelineCard(req: Request, isAr: Boolean) {
                             .background(HatliColors.BrandTeal)
                     )
                     Text(
-                        text = if (isAr) entry.status.shortLabelAr() else entry.status.shortLabelEn(),
+                        text = entry.status.timelineLabel(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )

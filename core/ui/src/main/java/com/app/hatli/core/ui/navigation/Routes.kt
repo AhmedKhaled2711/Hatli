@@ -52,7 +52,7 @@ data object MainShellRoute
 
 // Request Destinations
 @Serializable
-data object CreateRequestRoute
+data class CreateRequestRoute(val initialCategory: String? = null)
 
 @Serializable
 data class RequestDetailRoute(val requestId: String)

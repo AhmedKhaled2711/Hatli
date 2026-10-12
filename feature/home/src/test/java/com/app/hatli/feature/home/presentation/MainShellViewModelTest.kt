@@ -158,6 +158,26 @@ class MainShellViewModelTest {
     }
 
     @Test
+    fun `QuickActionClicked emits NavigateCreateRequest with clicked category id`() = runTest {
+        val viewModel = createViewModel()
+        viewModel.uiEffect.test {
+            viewModel.onEvent(MainShellUiEvent.QuickActionClicked("pharmacy"))
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(MainShellUiEffect.NavigateCreateRequest(initialCategory = "pharmacy"))
+        }
+    }
+
+    @Test
+    fun `CreateRequest emits NavigateCreateRequest with null initialCategory`() = runTest {
+        val viewModel = createViewModel()
+        viewModel.uiEffect.test {
+            viewModel.onEvent(MainShellUiEvent.CreateRequest)
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(MainShellUiEffect.NavigateCreateRequest(initialCategory = null))
+        }
+    }
+
+    @Test
     fun `RequestFilterSelected updates requestFilter`() = runTest {
         val viewModel = createViewModel()
         viewModel.onEvent(MainShellUiEvent.RequestFilterSelected(RequestListFilter.Completed))

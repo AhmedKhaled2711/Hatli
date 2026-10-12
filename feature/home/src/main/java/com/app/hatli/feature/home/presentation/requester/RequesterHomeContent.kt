@@ -22,10 +22,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.LocalPharmacy
@@ -57,7 +59,9 @@ import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.theme.BrandCoral
 import com.app.hatli.core.designsystem.theme.BrandTeal
 import com.app.hatli.core.designsystem.theme.CoralContainer
+import com.app.hatli.core.designsystem.theme.HatliElevation
 import com.app.hatli.core.designsystem.theme.HatliSpacing
+import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.model.RequestStatus
 import com.app.hatli.core.model.RequesterHomeSnapshot
 import com.app.hatli.feature.home.R
@@ -436,36 +440,64 @@ private fun CategoryCard(
     category: QuickServiceCategory,
     onClick: () -> Unit,
 ) {
-    Box(
+    val extended = HatliTheme.extendedColors
+
+    Surface(
         modifier = Modifier
-            .width(140.dp)
-            .height(128.dp)
-            .clip(RoundedCornerShape(18.dp))
-            .background(category.containerColor)
-            .clickable(onClick = onClick)
-            .padding(HatliSpacing.md),
+            .width(148.dp)
+            .height(138.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = HatliElevation.sm,
+        shadowElevation = HatliElevation.sm,
+        border = BorderStroke(1.dp, extended.border),
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(HatliSpacing.md),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.Start,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .background(category.iconColor.copy(alpha = 0.18f)),
-                contentAlignment = Alignment.Center,
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    imageVector = category.icon,
-                    contentDescription = null,
-                    tint = category.iconColor,
-                    modifier = Modifier.size(22.dp),
-                )
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(category.iconColor.copy(alpha = 0.12f)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = category.icon,
+                        contentDescription = null,
+                        tint = category.iconColor,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .size(26.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                        modifier = Modifier.size(16.dp),
+                    )
+                }
             }
 
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
                 Text(
                     text = category.title,
                     maxLines = 1,
@@ -481,9 +513,10 @@ private fun CategoryCard(
                     text = category.subtitle,
                     maxLines = 2,
                     overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium.copy(
+                    style = MaterialTheme.typography.bodySmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 11.sp,
+                        lineHeight = 14.sp,
                     ),
                 )
             }

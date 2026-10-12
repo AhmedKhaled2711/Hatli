@@ -11,7 +11,7 @@ import com.app.hatli.feature.home.presentation.MainShellRoute
 fun NavGraphBuilder.homeGraph(
     profileTab: @Composable () -> Unit,
     onMessage: (String) -> Unit,
-    onNavigateCreateRequest: () -> Unit,
+    onNavigateCreateRequest: (String?) -> Unit,
     onOpenChat: (String) -> Unit,
     onOpenDetail: (String) -> Unit,
     onOpenRate: (String) -> Unit,

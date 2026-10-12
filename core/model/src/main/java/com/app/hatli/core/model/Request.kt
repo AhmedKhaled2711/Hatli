@@ -150,6 +150,10 @@ fun Request.toSummary(): RequestSummary = RequestSummary(
     lastMessage = lastMessage,
     hasRating = rating != null,
     updatedAtEpochMs = updatedAtEpochMs,
+    createdAtEpochMs = createdAtEpochMs,
+    pickupLabel = pickupLabel,
+    dropoffLabel = dropoffLabel,
+    description = description,
 )
 
 /**

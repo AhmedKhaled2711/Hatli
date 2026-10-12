@@ -121,4 +121,30 @@
     <string name="rate_runner_comment_hint">Add optional feedback for your Captain…</string>
     <string name="rate_runner_submit">Submit Rating</string>
 
+    <string name="create_request_change_category">Change service</string>
+    <string name="create_request_pharmacy_shop_label">Pharmacy name (e.g. El Ezaby / 19011)</string>
+    <string name="create_request_pharmacy_items_hint">Write required medications or healthcare products…</string>
+    <string name="create_request_grocery_shop_label">Supermarket or store name (e.g. Carrefour / Kheir Zaman)</string>
+    <string name="create_request_grocery_items_hint">Write your shopping list (e.g. 2kg sugar, milk, bread)…</string>
+    <string name="create_request_char_count">%1$d characters entered</string>
+    <string name="create_request_common_landmarks">Common local landmarks for pickup</string>
+    <string name="create_request_default_dropoff_address">El Mahalla El Kubra - Hay El Ashgar - Bldg 14</string>
+    <string name="create_request_landmark_old_square">Old Square</string>
+    <string name="create_request_landmark_sea_street">Main Sea Street</string>
+    <string name="create_request_landmark_hospital">In front of General Hospital</string>
+    <string name="create_request_landmark_bus_station">Main Bus Station</string>
+    <string name="create_request_landmark_governorate">Governorate Building</string>
+
+    <!-- Timeline & Track Status Labels -->
+    <string name="request_status_step_pending">Searching</string>
+    <string name="request_status_step_accepted">Accepted</string>
+    <string name="request_status_step_in_progress">In progress</string>
+    <string name="request_status_step_purchased">Purchased</string>
+    <string name="request_status_step_on_the_way">On the way</string>
+    <string name="request_status_step_delivered">Delivered</string>
+    <string name="request_status_step_completed">Completed</string>
+    <string name="request_status_step_cancelled">Cancelled</string>
+    <string name="request_status_track_in_progress">In\nprogress</string>
+    <string name="request_status_track_on_the_way">On the\nway</string>
+
 </resources>

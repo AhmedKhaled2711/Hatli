@@ -31,6 +31,7 @@ fun RequestsListContent(
     onOpenDetail: (String) -> Unit,
     onOpenChat: (String) -> Unit,
     onRate: (String) -> Unit,
+    isAr: Boolean = isAppArabic(),
 ) {
     Column(
         modifier = Modifier
@@ -102,6 +103,7 @@ fun RequestsListContent(
 
                     RequestRowCard(
                         summary = request,
+                        isAr = isAr,
                         onClick = {
                             onOpenDetail(request.id)
                         },

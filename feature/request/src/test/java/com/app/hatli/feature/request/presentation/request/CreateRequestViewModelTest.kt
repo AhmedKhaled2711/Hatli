@@ -1,5 +1,6 @@
 package com.app.hatli.feature.request.presentation.request
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.domain.usecase.request.CreateRequestUseCase
@@ -28,12 +29,62 @@ class CreateRequestViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = CreateRequestViewModel(createRequestUseCase)
+        viewModel = CreateRequestViewModel(SavedStateHandle(), createRequestUseCase)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `direct initial category grocery skips category step directly to Details`() = runTest {
+        val directVm = CreateRequestViewModel(
+            SavedStateHandle(mapOf("initialCategory" to "grocery")),
+            createRequestUseCase,
+        )
+        val state = directVm.uiState.value
+        assertThat(state.category).isEqualTo(RequestCategory.Shopping)
+        assertThat(state.categorySubtype).isEqualTo("grocery")
+        assertThat(state.step).isEqualTo(CreateWizardStep.Details)
+        assertThat(state.wasDirectCategory).isTrue()
+    }
+
+    @Test
+    fun `direct initial category pharmacy skips category step directly to Details`() = runTest {
+        val directVm = CreateRequestViewModel(
+            SavedStateHandle(mapOf("initialCategory" to "pharmacy")),
+            createRequestUseCase,
+        )
+        val state = directVm.uiState.value
+        assertThat(state.category).isEqualTo(RequestCategory.Shopping)
+        assertThat(state.categorySubtype).isEqualTo("pharmacy")
+        assertThat(state.step).isEqualTo(CreateWizardStep.Details)
+        assertThat(state.wasDirectCategory).isTrue()
+    }
+
+    @Test
+    fun `back on direct category Details step navigates back out`() = runTest {
+        val directVm = CreateRequestViewModel(
+            SavedStateHandle(mapOf("initialCategory" to "courier")),
+            createRequestUseCase,
+        )
+        directVm.uiEffect.test {
+            directVm.onEvent(CreateRequestUiEvent.Back)
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(CreateRequestUiEffect.NavigateBack)
+        }
+    }
+
+    @Test
+    fun `ChangeCategory switches step to Category and allows selecting different category`() = runTest {
+        val directVm = CreateRequestViewModel(
+            SavedStateHandle(mapOf("initialCategory" to "pharmacy")),
+            createRequestUseCase,
+        )
+        directVm.onEvent(CreateRequestUiEvent.ChangeCategory)
+        assertThat(directVm.uiState.value.step).isEqualTo(CreateWizardStep.Category)
+        assertThat(directVm.uiState.value.wasDirectCategory).isFalse()
     }
 
     @Test

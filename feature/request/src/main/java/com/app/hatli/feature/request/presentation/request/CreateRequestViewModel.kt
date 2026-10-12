@@ -1,5 +1,6 @@
 package com.app.hatli.feature.request.presentation.request
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.common.result.userMessage
@@ -17,15 +18,56 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateRequestViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val createRequest: CreateRequestUseCase,
 ) : BaseViewModel<CreateRequestUiState, CreateRequestUiEvent, CreateRequestUiEffect>(
     CreateRequestUiState(),
 ) {
 
+    init {
+        val initialCategory: String? = savedStateHandle["initialCategory"]
+        val mapped = mapInitialCategory(initialCategory)
+        if (mapped != null) {
+            val (category, subtype) = mapped
+            setState {
+                copy(
+                    category = category,
+                    step = CreateWizardStep.Details,
+                    wasDirectCategory = true,
+                    categorySubtype = subtype,
+                    fieldError = null,
+                )
+            }
+        }
+    }
+
+    private fun mapInitialCategory(raw: String?): Pair<RequestCategory, String?>? = when (raw?.lowercase()) {
+        "grocery" -> RequestCategory.Shopping to "grocery"
+        "pharmacy" -> RequestCategory.Shopping to "pharmacy"
+        "courier", "pickup" -> RequestCategory.Pickup to "courier"
+        "bills" -> RequestCategory.Bills to "bills"
+        "custom_errand", "custom" -> RequestCategory.Custom to "custom"
+        "shopping" -> RequestCategory.Shopping to null
+        else -> null
+    }
+
     override fun handleEvent(event: CreateRequestUiEvent) {
         when (event) {
             is CreateRequestUiEvent.CategorySelected -> setState {
-                copy(category = event.category, step = CreateWizardStep.Details, fieldError = null)
+                copy(
+                    category = event.category,
+                    step = CreateWizardStep.Details,
+                    wasDirectCategory = false,
+                    categorySubtype = null,
+                    fieldError = null,
+                )
+            }
+            CreateRequestUiEvent.ChangeCategory -> setState {
+                copy(
+                    step = CreateWizardStep.Category,
+                    wasDirectCategory = false,
+                    fieldError = null,
+                )
             }
             CreateRequestUiEvent.Back -> onBack()
             CreateRequestUiEvent.Next -> onNext()
@@ -59,8 +101,14 @@ class CreateRequestViewModel @Inject constructor(
         val state = uiState.value
         when (state.step) {
             CreateWizardStep.Category -> sendEffect(CreateRequestUiEffect.NavigateBack)
-            CreateWizardStep.Details -> setState {
-                copy(step = CreateWizardStep.Category, category = null, fieldError = null)
+            CreateWizardStep.Details -> {
+                if (state.wasDirectCategory) {
+                    sendEffect(CreateRequestUiEffect.NavigateBack)
+                } else {
+                    setState {
+                        copy(step = CreateWizardStep.Category, category = null, fieldError = null)
+                    }
+                }
             }
             CreateWizardStep.FeeReview -> setState {
                 copy(step = CreateWizardStep.Details, fieldError = null)

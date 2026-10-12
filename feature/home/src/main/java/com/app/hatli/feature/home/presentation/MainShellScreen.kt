@@ -44,7 +44,7 @@ import com.app.hatli.feature.home.presentation.runner.RunnerHomeContent
 @Composable
 fun MainShellRoute(
     profileTab: @Composable () -> Unit,
-    onCreateRequest: () -> Unit,
+    onCreateRequest: (String?) -> Unit,
     onOpenChat: (String) -> Unit,
     onOpenDetail: (String) -> Unit,
     onOpenRate: (String) -> Unit,
@@ -55,7 +55,7 @@ fun MainShellRoute(
 
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
-            MainShellUiEffect.NavigateCreateRequest -> onCreateRequest()
+            is MainShellUiEffect.NavigateCreateRequest -> onCreateRequest(effect.initialCategory)
             is MainShellUiEffect.NavigateChat -> onOpenChat(effect.requestId)
             is MainShellUiEffect.NavigateDetail -> onOpenDetail(effect.requestId)
             is MainShellUiEffect.NavigateRate -> onOpenRate(effect.requestId)
@@ -216,6 +216,7 @@ private fun MainShellReady(
                                 onOpenDetail = { onEvent(MainShellUiEvent.OpenDetail(it)) },
                                 onOpenChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
                                 onRate = { onEvent(MainShellUiEvent.OpenRate(it)) },
+                                isAr = isAr,
                             )
                         } else {
                             JobsListContent(

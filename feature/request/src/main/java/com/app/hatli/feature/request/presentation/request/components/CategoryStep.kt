@@ -1,11 +1,13 @@
 package com.app.hatli.feature.request.presentation.request.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Surface
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -110,25 +112,27 @@ private fun CategoryMatrixCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-    Box(
+    Surface(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(containerColor)
-            .border(1.dp, iconColor.copy(alpha = 0.25f), RoundedCornerShape(20.dp))
-            .shadow(2.dp, RoundedCornerShape(20.dp), spotColor = iconColor.copy(alpha = 0.15f))
-            .clickable(onClick = onClick)
-            .padding(HatliSpacing.md),
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = 2.dp,
+        border = BorderStroke(1.dp, iconColor.copy(alpha = 0.2f)),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(HatliSpacing.md),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
         ) {
             Box(
                 modifier = Modifier
                     .size(44.dp)
-                    .clip(CircleShape)
-                    .background(iconColor.copy(alpha = 0.15f)),
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(iconColor.copy(alpha = 0.12f)),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

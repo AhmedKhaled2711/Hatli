@@ -34,10 +34,13 @@ data class CreateRequestUiState(
     val deliveryFeeText: String = RequestDefaults.SUGGESTED_DELIVERY_FEE_EGP.toInt().toString(),
     val fieldError: String? = null,
     val isSubmitting: Boolean = false,
+    val wasDirectCategory: Boolean = false,
+    val categorySubtype: String? = null,
 ) : UiState
 
 sealed interface CreateRequestUiEvent : UiEvent {
     data class CategorySelected(val category: RequestCategory) : CreateRequestUiEvent
+    data object ChangeCategory : CreateRequestUiEvent
     data object Back : CreateRequestUiEvent
     data object Next : CreateRequestUiEvent
     data object Submit : CreateRequestUiEvent

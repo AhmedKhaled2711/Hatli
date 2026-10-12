@@ -108,8 +108,8 @@ fun HatliNavHost(
                 )
             },
             onMessage = onMessage,
-            onNavigateCreateRequest = {
-                navController.navigate(CreateRequestRoute) {
+            onNavigateCreateRequest = { category ->
+                navController.navigate(CreateRequestRoute(initialCategory = category)) {
                     launchSingleTop = true
                 }
             },
