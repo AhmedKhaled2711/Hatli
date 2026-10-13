@@ -60,22 +60,6 @@ data class CreateProfileUiState(
     val progress: Float get() = stepNumber.toFloat() / totalSteps.toFloat()
     val isFirstStep: Boolean get() = stepIndex <= 0
     val isLastStep: Boolean get() = stepIndex >= steps.lastIndex
-
-    val stepTitle: String
-        get() = when (step) {
-            ProfileSetupStep.Personal -> "Personal information"
-            ProfileSetupStep.Address -> "Your address"
-            ProfileSetupStep.Transport -> "How do you deliver?"
-            ProfileSetupStep.Verification -> "Verification"
-        }
-
-    val stepDescription: String
-        get() = when (step) {
-            ProfileSetupStep.Personal -> "Tell us a bit about yourself so we can personalize your experience."
-            ProfileSetupStep.Address -> "Add your address for smoother pickups and deliveries. Maps coming later."
-            ProfileSetupStep.Transport -> "Choose the transport you use on the road. You can update this later."
-            ProfileSetupStep.Verification -> "Complete your identity details. Photo verification arrives in a future update."
-        }
 }
 
 sealed interface CreateProfileUiEvent : UiEvent {

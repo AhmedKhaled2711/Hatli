@@ -124,7 +124,7 @@ class UserRepositoryImpl @Inject constructor(
         if (input.firstName.isBlank() || input.lastName.isBlank()) {
             throw AppError.InvalidInput("First and last name are required.")
         }
-        if (!input.email.matches(Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))) {
+        if (input.email.isNotBlank() && !input.email.matches(Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))) {
             throw AppError.InvalidInput("Enter a valid email address.")
         }
         if (input.phone.isBlank()) {

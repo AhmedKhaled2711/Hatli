@@ -117,6 +117,7 @@
     <string name="auth_verifying">Verifying…</string>
     <string name="auth_resend_code">Resend code</string>
     <string name="auth_resend_code_in">Resend code in %1$s</string>
+    <string name="auth_didnt_receive_code">Didn\'t receive the code?</string>
     <string name="auth_invalid_otp">
         Incorrect verification code. Please try again.
     </string>

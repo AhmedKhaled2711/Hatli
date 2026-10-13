@@ -28,6 +28,7 @@ fun NavGraphBuilder.authGraph(
     onNavigateRole: () -> Unit,
     onNavigateCreateProfile: () -> Unit,
     onNavigateOtp: (verificationId: String, phone: String) -> Unit,
+    onBackFromStart: () -> Unit = onNavigateOnboarding,
 ) {
     navigation<AuthGraph>(
         startDestination = startDestination,
@@ -51,7 +52,7 @@ fun NavGraphBuilder.authGraph(
 
         composable<StartRouteKey> {
             StartRoute(
-                onBack = onNavigateOnboarding,
+                onBack = onBackFromStart,
                 onPhoneLogin = onNavigateLogin,
             )
         }

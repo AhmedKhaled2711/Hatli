@@ -49,7 +49,10 @@ class CreateProfileViewModel @Inject constructor(
             is CreateProfileUiEvent.Floor -> setState { copy(floor = event.value, errorMessage = null) }
             is CreateProfileUiEvent.Apartment -> setState { copy(apartment = event.value, errorMessage = null) }
             is CreateProfileUiEvent.AddressNotes -> setState { copy(addressNotes = event.value, errorMessage = null) }
-            is CreateProfileUiEvent.NationalId -> setState { copy(nationalId = event.value, errorMessage = null) }
+            is CreateProfileUiEvent.NationalId -> setState {
+                val digits = event.value.filter { it.isDigit() }.take(14)
+                copy(nationalId = digits, errorMessage = null)
+            }
             is CreateProfileUiEvent.IdImage -> setState { copy(idImageUri = event.uri, errorMessage = null) }
             is CreateProfileUiEvent.Selfie -> setState { copy(selfieUri = event.uri, errorMessage = null) }
             is CreateProfileUiEvent.Transport -> setState { copy(transportType = event.value, errorMessage = null) }
@@ -89,7 +92,7 @@ class CreateProfileViewModel @Inject constructor(
         ProfileSetupStep.Personal -> when {
             state.firstName.isBlank() || state.lastName.isBlank() ->
                 if (isAr) "الاسم الأول واسم العائلة مطلوبان." else "First and last name are required."
-            !state.email.matches(EMAIL_REGEX) ->
+            state.email.isNotBlank() && !state.email.matches(EMAIL_REGEX) ->
                 if (isAr) "يرجى إدخال بريد إلكتروني صحيح." else "Enter a valid email address."
             state.phone.isBlank() ->
                 if (isAr) "رقم الهاتف مطلوب." else "Phone number is required."

@@ -126,13 +126,15 @@ fun OtpScreen(
 
             Spacer(modifier = Modifier.height(HatliSpacing.sm))
 
-            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-                Text(
-                    text = stringResource(R.string.auth_otp_description, state.phone),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+            val formattedPhone = androidx.core.text.BidiFormatter.getInstance().unicodeWrap(
+                state.phone,
+                androidx.core.text.TextDirectionHeuristicsCompat.LTR,
+            )
+            Text(
+                text = stringResource(R.string.auth_otp_description, formattedPhone),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
 
             Spacer(modifier = Modifier.height(HatliSpacing.xl))
 
@@ -216,7 +218,7 @@ fun OtpScreen(
             // Resend countdown timer styled in hatli_charcoal_muted
             Text(
                 text = if (state.canResend) {
-                    stringResource(R.string.auth_resend_code)
+                    stringResource(R.string.auth_didnt_receive_code)
                 } else {
                     stringResource(R.string.auth_resend_code_in, state.secondsLeft)
                 },

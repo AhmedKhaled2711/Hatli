@@ -22,8 +22,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.DirectionsBike
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DirectionsBike
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,17 +42,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.app.hatli.feature.auth.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.BrandTeal
 import com.app.hatli.core.designsystem.theme.CharcoalDark
 import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
+import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.CollectUiEffect
+import com.app.hatli.feature.auth.R
 
 @Composable
 fun RoleRoute(
@@ -73,9 +71,11 @@ fun RoleScreen(
     state: RoleUiState,
     onEvent: (RoleUiEvent) -> Unit,
 ) {
+    val extended = HatliTheme.extendedColors
+
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = OffWhiteCanvas,
+        color = extended.offWhiteCanvas,
     ) {
         Column(
             modifier = Modifier
@@ -110,13 +110,12 @@ fun RoleScreen(
 
                 Spacer(modifier = Modifier.height(HatliSpacing.xs))
 
-                // Role Option 1: Requester (طالب خدمة)
                 RoleSelectionCard(
                     title = stringResource(R.string.role_requester_title),
                     tagline = stringResource(R.string.role_requester_tagline),
                     icon = Icons.Default.ShoppingBag,
-                    accentColor = BrandCoral,
-                    containerColor = Color(0xFFFFF4F0),
+                    accentColor = extended.coralPrimary,
+                    containerColor = extended.coralContainer,
                     selected = state.selected == UserRole.Requester,
                     benefits = listOf(
                         stringResource(R.string.role_requester_feature_1),
@@ -126,13 +125,13 @@ fun RoleScreen(
                     onClick = { onEvent(RoleUiEvent.Select(UserRole.Requester)) },
                 )
 
-                // Role Option 2: Runner (كابتن توصيل)
+
                 RoleSelectionCard(
                     title = stringResource(R.string.role_runner_title),
                     tagline = stringResource(R.string.role_runner_tagline),
-                    icon = Icons.Default.DirectionsBike,
-                    accentColor = BrandTeal,
-                    containerColor = Color(0xFFEAFDF9),
+                    icon = Icons.AutoMirrored.Filled.DirectionsBike,
+                    accentColor = extended.mintAccent,
+                    containerColor = extended.successContainer,
                     selected = state.selected == UserRole.Runner,
                     benefits = listOf(
                         stringResource(R.string.role_runner_feature_1),
@@ -145,7 +144,6 @@ fun RoleScreen(
 
             Spacer(modifier = Modifier.height(HatliSpacing.md))
 
-            // Sticky Bottom CTA Button
             HatliPrimaryButton(
                 text = stringResource(R.string.role_continue_button),
                 onClick = { onEvent(RoleUiEvent.Continue) },
@@ -167,8 +165,9 @@ private fun RoleSelectionCard(
     benefits: List<String>,
     onClick: () -> Unit,
 ) {
+    val extended = HatliTheme.extendedColors
     val borderColor by animateColorAsState(
-        targetValue = if (selected) accentColor else Color(0xFFE5E7EB),
+        targetValue = if (selected) accentColor else extended.border,
         animationSpec = tween(durationMillis = 200),
         label = "roleBorderColor",
     )
@@ -178,7 +177,7 @@ private fun RoleSelectionCard(
         label = "roleBorderWidth",
     )
     val cardBackground by animateColorAsState(
-        targetValue = if (selected) containerColor else Color.White,
+        targetValue = if (selected) containerColor else MaterialTheme.colorScheme.surface,
         animationSpec = tween(durationMillis = 200),
         label = "roleCardBg",
     )

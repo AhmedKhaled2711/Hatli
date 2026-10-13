@@ -1,5 +1,6 @@
 package com.app.hatli.feature.auth.presentation.profile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -68,6 +69,10 @@ fun CreateProfileScreen(
     state: CreateProfileUiState,
     onEvent: (CreateProfileUiEvent) -> Unit,
 ) {
+    BackHandler(enabled = !state.isFirstStep) {
+        onEvent(CreateProfileUiEvent.Back)
+    }
+
     val animatedProgress by animateFloatAsState(
         targetValue = state.progress,
         animationSpec = tween(durationMillis = 350),

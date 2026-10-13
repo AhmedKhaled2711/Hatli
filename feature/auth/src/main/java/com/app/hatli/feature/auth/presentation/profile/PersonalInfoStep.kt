@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Person
@@ -32,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -96,6 +99,7 @@ internal fun PersonalInfoStep(
             value = state.firstName,
             onValueChange = { onEvent(CreateProfileUiEvent.FirstName(it)) },
             label = stringResource(R.string.profile_personal_first_name),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -103,6 +107,7 @@ internal fun PersonalInfoStep(
             value = state.lastName,
             onValueChange = { onEvent(CreateProfileUiEvent.LastName(it)) },
             label = stringResource(R.string.profile_personal_last_name),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -110,6 +115,10 @@ internal fun PersonalInfoStep(
             value = state.email,
             onValueChange = { onEvent(CreateProfileUiEvent.Email(it)) },
             label = stringResource(R.string.profile_personal_email_optional),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Done,
+            ),
             modifier = Modifier.fillMaxWidth(),
         )
 

@@ -147,4 +147,53 @@ class CreateProfileViewModelTest {
         assertThat(state.isLoading).isFalse()
         assertThat(state.errorMessage).isNotNull()
     }
+
+    @Test
+    fun `Submit with blank email succeeds because email is optional`() = runTest {
+        coEvery { createUserProfile(any()) } returns Result.Success(testCreatedProfile.copy(email = ""))
+
+        val viewModel = CreateProfileViewModel(getPendingRole, getCurrentAuthUser, createUserProfile)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        populateValidRequesterFields(viewModel)
+        viewModel.onEvent(CreateProfileUiEvent.Email(""))
+
+        viewModel.uiEffect.test {
+            viewModel.onEvent(CreateProfileUiEvent.Submit)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(CreateProfileUiEffect.GoHome)
+        }
+
+        coVerify(exactly = 1) { createUserProfile(match { it.email.isBlank() }) }
+    }
+
+    @Test
+    fun `Submit with invalid non-blank email fails validation and does not call createUserProfile`() = runTest {
+        val viewModel = CreateProfileViewModel(getPendingRole, getCurrentAuthUser, createUserProfile)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        populateValidRequesterFields(viewModel)
+        viewModel.onEvent(CreateProfileUiEvent.Email("not-an-email"))
+
+        viewModel.onEvent(CreateProfileUiEvent.Submit)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertThat(state.errorMessage).isNotNull()
+        coVerify(exactly = 0) { createUserProfile(any()) }
+    }
+
+    @Test
+    fun `NationalId event filters non-digits and truncates to 14 digits`() = runTest {
+        val viewModel = CreateProfileViewModel(getPendingRole, getCurrentAuthUser, createUserProfile)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        viewModel.onEvent(CreateProfileUiEvent.NationalId("2990101-123456789 extra"))
+
+        val state = viewModel.uiState.value
+        assertThat(state.nationalId).isEqualTo("29901011234567")
+        assertThat(state.nationalId.length).isEqualTo(14)
+    }
 }

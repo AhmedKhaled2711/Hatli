@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.hatli.feature.auth.R
@@ -83,6 +85,7 @@ internal fun AddressStep(
             value = state.city,
             onValueChange = { onEvent(CreateProfileUiEvent.City(it)) },
             label = stringResource(R.string.profile_address_city),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -90,6 +93,7 @@ internal fun AddressStep(
             value = state.area,
             onValueChange = { onEvent(CreateProfileUiEvent.Area(it)) },
             label = stringResource(R.string.profile_address_area),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -97,6 +101,7 @@ internal fun AddressStep(
             value = state.street,
             onValueChange = { onEvent(CreateProfileUiEvent.Street(it)) },
             label = stringResource(R.string.profile_address_street),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -104,6 +109,7 @@ internal fun AddressStep(
             value = state.building,
             onValueChange = { onEvent(CreateProfileUiEvent.Building(it)) },
             label = stringResource(R.string.profile_address_building),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -115,12 +121,14 @@ internal fun AddressStep(
                 value = state.floor,
                 onValueChange = { onEvent(CreateProfileUiEvent.Floor(it)) },
                 label = stringResource(R.string.profile_address_floor_optional),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier.weight(1f),
             )
             HatliTextField(
                 value = state.apartment,
                 onValueChange = { onEvent(CreateProfileUiEvent.Apartment(it)) },
                 label = stringResource(R.string.profile_address_apartment_optional),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 modifier = Modifier.weight(1f),
             )
         }
@@ -129,6 +137,7 @@ internal fun AddressStep(
             value = state.addressNotes,
             onValueChange = { onEvent(CreateProfileUiEvent.AddressNotes(it)) },
             label = stringResource(R.string.profile_address_notes_optional),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             singleLine = false,
             modifier = Modifier.fillMaxWidth(),
         )

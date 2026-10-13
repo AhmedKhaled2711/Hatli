@@ -77,8 +77,13 @@ fun HatliNavHost(
 
             onNavigateStart = {
                 navController.navigate(StartRoute) {
+                    popUpTo(OnboardingRoute) { inclusive = true }
                     launchSingleTop = true
                 }
+            },
+
+            onBackFromStart = {
+                navController.popBackStack()
             },
 
             onNavigateLogin = {
