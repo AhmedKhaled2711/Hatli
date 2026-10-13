@@ -58,6 +58,7 @@ class ResolveStartDestinationUseCase @Inject constructor(
         data object Onboarding : StartDestination
         data object Start : StartDestination
         data object Login : StartDestination
+        data object RoleSelect : StartDestination
         data object CreateProfile : StartDestination
         data object Home : StartDestination
     }
@@ -70,19 +71,31 @@ class ResolveStartDestinationUseCase @Inject constructor(
         val user = authRepository.currentUser()
             ?: return StartDestination.Start
 
+        val pendingRole = sessionPreferences.pendingRole.first()
+
         return when (val profile = userRepository.getProfile(user.uid)) {
             is Result.Success -> {
                 val data = profile.data
 
-                if (data != null && data.profileCompleted) {
-                    StartDestination.Home
-                } else {
-                    StartDestination.CreateProfile
+                when {
+                    data != null && data.profileCompleted -> StartDestination.Home
+                    data != null && !data.profileCompleted -> {
+                        sessionPreferences.setPendingRole(data.role)
+                        StartDestination.CreateProfile
+                    }
+                    pendingRole != null -> StartDestination.CreateProfile
+                    else -> StartDestination.RoleSelect
                 }
             }
 
-            is Result.Error -> StartDestination.CreateProfile
-            Result.Loading -> StartDestination.CreateProfile
+            is Result.Error -> {
+                if (pendingRole != null) StartDestination.CreateProfile
+                else StartDestination.RoleSelect
+            }
+            Result.Loading -> {
+                if (pendingRole != null) StartDestination.CreateProfile
+                else StartDestination.RoleSelect
+            }
         }
     }
 }

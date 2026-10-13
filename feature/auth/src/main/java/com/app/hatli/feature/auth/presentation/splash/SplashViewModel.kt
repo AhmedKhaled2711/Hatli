@@ -43,6 +43,9 @@ class SplashViewModel @Inject constructor(
                     ResolveStartDestinationUseCase.StartDestination.Login ->
                         SplashUiEffect.GoLogin
 
+                    ResolveStartDestinationUseCase.StartDestination.RoleSelect ->
+                        SplashUiEffect.GoRoleSelect
+
                     ResolveStartDestinationUseCase.StartDestination.CreateProfile ->
                         SplashUiEffect.GoCreateProfile
 

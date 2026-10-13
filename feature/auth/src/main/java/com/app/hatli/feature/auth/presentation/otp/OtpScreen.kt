@@ -147,9 +147,6 @@ fun OtpScreen(
                         onValueChange = { input ->
                             if (input.length <= 6 && input.all { it.isDigit() }) {
                                 onEvent(OtpUiEvent.CodeChanged(input))
-                                if (input.length == 6) {
-                                    onEvent(OtpUiEvent.Verify)
-                                }
                             }
                         },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),

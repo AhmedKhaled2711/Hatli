@@ -6,7 +6,9 @@ import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.common.result.userMessage
 import com.app.hatli.core.domain.usecase.auth.ResendOtpUseCase
 import com.app.hatli.core.domain.usecase.auth.VerifyOtpUseCase
+import com.app.hatli.core.domain.usecase.user.GetPendingRoleUseCase
 import com.app.hatli.core.domain.usecase.user.GetUserProfileUseCase
+import com.app.hatli.core.domain.usecase.user.SetPendingRoleUseCase
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -22,6 +24,8 @@ class OtpViewModel @Inject constructor(
     private val verifyOtp: VerifyOtpUseCase,
     private val resendOtp: ResendOtpUseCase,
     private val getUserProfile: GetUserProfileUseCase,
+    private val getPendingRole: GetPendingRoleUseCase,
+    private val setPendingRole: SetPendingRoleUseCase,
 ) : BaseViewModel<OtpUiState, OtpUiEvent, OtpUiEffect>(
     OtpUiState(
         verificationId = URLDecoder.decode(
@@ -35,6 +39,7 @@ class OtpViewModel @Inject constructor(
     ),
 ) {
     private var timerJob: Job? = null
+    private var verifyJob: Job? = null
 
     init {
         startTimer()
@@ -72,6 +77,7 @@ class OtpViewModel @Inject constructor(
 
     private fun verify() {
         val state = uiState.value
+        if (state.isLoading || verifyJob?.isActive == true) return
         if (state.code.length < 6) {
             val isAr = java.util.Locale.getDefault().language == "ar"
             setState {
@@ -85,14 +91,18 @@ class OtpViewModel @Inject constructor(
             }
             return
         }
-        viewModelScope.launch {
-            setState { copy(isLoading = true, errorMessage = null) }
-            when (val result = verifyOtp(state.verificationId, state.code)) {
-                is Result.Success -> routeAfterLogin()
-                is Result.Error -> setState {
-                    copy(isLoading = false, errorMessage = result.userMessage())
+        setState { copy(isLoading = true, errorMessage = null) }
+        verifyJob = viewModelScope.launch {
+            try {
+                when (val result = verifyOtp(state.verificationId, state.code)) {
+                    is Result.Success -> routeAfterLogin()
+                    is Result.Error -> setState {
+                        copy(isLoading = false, errorMessage = result.userMessage())
+                    }
+                    Result.Loading -> setState { copy(isLoading = true) }
                 }
-                Result.Loading -> setState { copy(isLoading = true) }
+            } catch (t: Throwable) {
+                setState { copy(isLoading = false, errorMessage = t.message) }
             }
         }
     }
@@ -102,26 +112,43 @@ class OtpViewModel @Inject constructor(
             is Result.Success -> {
                 setState { copy(isLoading = false) }
                 val data = profile.data
-                sendEffect(
-                    when {
-                        data == null || !data.profileCompleted -> OtpUiEffect.GoRoleSelect
-                        else -> OtpUiEffect.GoHome
-                    },
-                )
+                when {
+                    data != null && data.profileCompleted -> {
+                        sendEffect(OtpUiEffect.GoHome)
+                    }
+                    data != null && !data.profileCompleted -> {
+                        setPendingRole(data.role)
+                        sendEffect(OtpUiEffect.GoCreateProfile)
+                    }
+                    else -> {
+                        val pending = getPendingRole()
+                        if (pending != null) {
+                            sendEffect(OtpUiEffect.GoCreateProfile)
+                        } else {
+                            sendEffect(OtpUiEffect.GoRoleSelect)
+                        }
+                    }
+                }
             }
             is Result.Error -> {
                 setState { copy(isLoading = false) }
-                sendEffect(OtpUiEffect.GoRoleSelect)
+                val pending = getPendingRole()
+                if (pending != null) {
+                    sendEffect(OtpUiEffect.GoCreateProfile)
+                } else {
+                    sendEffect(OtpUiEffect.GoRoleSelect)
+                }
             }
             Result.Loading -> Unit
         }
     }
 
     private fun resend() {
-        if (!uiState.value.canResend) return
+        val state = uiState.value
+        if (!state.canResend || state.isLoading || verifyJob?.isActive == true) return
         viewModelScope.launch {
             setState { copy(isLoading = true, errorMessage = null) }
-            when (val result = resendOtp(uiState.value.phone)) {
+            when (val result = resendOtp(state.phone)) {
                 is Result.Success -> {
                     setState {
                         copy(

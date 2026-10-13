@@ -37,6 +37,7 @@ fun NavGraphBuilder.authGraph(
                 onOnboarding = onNavigateOnboarding,
                 onStart = onNavigateStart,
                 onLogin = onNavigateLogin,
+                onRoleSelect = onNavigateRole,
                 onCreateProfile = onNavigateCreateProfile,
                 onHome = onNavigateHome,
             )

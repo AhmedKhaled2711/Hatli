@@ -13,6 +13,7 @@ import com.app.hatli.core.model.UserAddress
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +25,8 @@ class CreateProfileViewModel @Inject constructor(
 ) : BaseViewModel<CreateProfileUiState, CreateProfileUiEvent, CreateProfileUiEffect>(
     CreateProfileUiState(),
 ) {
+
+    private var submitJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -118,6 +121,7 @@ class CreateProfileViewModel @Inject constructor(
     }
 
     private fun submit() {
+        if (uiState.value.isLoading || submitJob?.isActive == true) return
         val s = uiState.value
         val stepError = validateStep(s)
         if (stepError != null) {
@@ -132,52 +136,56 @@ class CreateProfileViewModel @Inject constructor(
                 return
             }
         }
-        viewModelScope.launch {
-            setState { copy(isLoading = true, errorMessage = null) }
-            val gender = s.gender
-            if (gender == null) {
-                setState {
-                    copy(
-                        isLoading = false,
-                        errorMessage = if (isAr) "يرجى تحديد النوع (ذكر أو أنثى)." else "Please select your gender.",
-                    )
+        setState { copy(isLoading = true, errorMessage = null) }
+        submitJob = viewModelScope.launch {
+            try {
+                val gender = s.gender
+                if (gender == null) {
+                    setState {
+                        copy(
+                            isLoading = false,
+                            errorMessage = if (isAr) "يرجى تحديد النوع (ذكر أو أنثى)." else "Please select your gender.",
+                        )
+                    }
+                    return@launch
                 }
-                return@launch
-            }
-            val uploadsEnabled = HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED
-            val input = CreateProfileInput(
-                role = s.role,
-                firstName = s.firstName,
-                lastName = s.lastName,
-                email = s.email,
-                phone = s.phone,
-                gender = gender,
-                address = UserAddress(
-                    city = s.city,
-                    area = s.area,
-                    street = s.street,
-                    building = s.building,
-                    floor = s.floor.ifBlank { null },
-                    apartment = s.apartment.ifBlank { null },
-                    notes = s.addressNotes.ifBlank { null },
-                    latitude = null,
-                    longitude = null,
-                ),
-                nationalId = s.nationalId.ifBlank { null },
-                idImageLocalUri = if (uploadsEnabled) s.idImageUri else null,
-                selfieLocalUri = if (uploadsEnabled) s.selfieUri else null,
-                transportType = s.transportType,
-                vehicleInfo = s.vehicleInfo.ifBlank { null },
-            )
-            when (val result = createUserProfile(input)) {
-                is Result.Success -> {
-                    setState { copy(isLoading = false) }
-                    sendEffect(CreateProfileUiEffect.GoHome)
+                val uploadsEnabled = HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED
+                val input = CreateProfileInput(
+                    role = s.role,
+                    firstName = s.firstName,
+                    lastName = s.lastName,
+                    email = s.email,
+                    phone = s.phone,
+                    gender = gender,
+                    address = UserAddress(
+                        city = s.city,
+                        area = s.area,
+                        street = s.street,
+                        building = s.building,
+                        floor = s.floor.ifBlank { null },
+                        apartment = s.apartment.ifBlank { null },
+                        notes = s.addressNotes.ifBlank { null },
+                        latitude = null,
+                        longitude = null,
+                    ),
+                    nationalId = s.nationalId.ifBlank { null },
+                    idImageLocalUri = if (uploadsEnabled) s.idImageUri else null,
+                    selfieLocalUri = if (uploadsEnabled) s.selfieUri else null,
+                    transportType = s.transportType,
+                    vehicleInfo = s.vehicleInfo.ifBlank { null },
+                )
+                when (val result = createUserProfile(input)) {
+                    is Result.Success -> {
+                        setState { copy(isLoading = false) }
+                        sendEffect(CreateProfileUiEffect.GoHome)
+                    }
+                    is Result.Error -> setState {
+                        copy(isLoading = false, errorMessage = result.userMessage())
+                    }
+                    Result.Loading -> Unit
                 }
-                is Result.Error -> setState {
-                    copy(isLoading = false, errorMessage = result.userMessage())
-                }
-                Result.Loading -> Unit
+            } catch (t: Throwable) {
+                setState { copy(isLoading = false, errorMessage = t.message) }
             }
         }
     }

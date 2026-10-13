@@ -52,6 +52,7 @@ fun HatliNavHost(
     val authStartDestination: Any = when (initialDestination) {
         ResolveStartDestinationUseCase.StartDestination.Onboarding -> OnboardingRoute
         ResolveStartDestinationUseCase.StartDestination.Start -> StartRoute
+        ResolveStartDestinationUseCase.StartDestination.RoleSelect -> RoleSelectRoute
         ResolveStartDestinationUseCase.StartDestination.CreateProfile -> CreateProfileRoute
         ResolveStartDestinationUseCase.StartDestination.Login -> LoginRoute
         ResolveStartDestinationUseCase.StartDestination.Home -> StartRoute

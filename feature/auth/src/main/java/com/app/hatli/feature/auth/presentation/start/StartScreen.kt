@@ -66,7 +66,7 @@ fun StartRoute(
             onFacebookClick = ::showComingSoon,
             onGoogleClick = ::showComingSoon,
             onPhoneClick = onPhoneLogin,
-            onSignUpClick = ::showComingSoon,
+            onSignUpClick = onPhoneLogin,
         )
     }
 }

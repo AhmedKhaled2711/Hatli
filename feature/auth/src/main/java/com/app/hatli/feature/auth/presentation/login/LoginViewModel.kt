@@ -8,6 +8,7 @@ import com.app.hatli.core.common.util.PhoneSanitizer
 import com.app.hatli.core.domain.usecase.auth.SendOtpUseCase
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +18,8 @@ private const val TAG = "LoginViewModel"
 class LoginViewModel @Inject constructor(
     private val sendOtp: SendOtpUseCase,
 ) : BaseViewModel<LoginUiState, LoginUiEvent, LoginUiEffect>(LoginUiState()) {
+
+    private var submitJob: Job? = null
 
     override fun handleEvent(event: LoginUiEvent) {
         when (event) {
@@ -35,6 +38,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun submit() {
+        if (uiState.value.isLoading || submitJob?.isActive == true) return
         val rawPhone = uiState.value.phone
         val sanitized = PhoneSanitizer.sanitizeEgyptianPhoneNumber(rawPhone)
         
@@ -55,27 +59,32 @@ class LoginViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
-            setState { copy(isLoading = true, errorMessage = null) }
-            when (val result = sendOtp(sanitized)) {
-                is Result.Success -> {
-                    Log.d(TAG, "sendOtp success! Verification ID: ${result.data.verificationId}")
-                    setState { copy(isLoading = false) }
-                    sendEffect(
-                        LoginUiEffect.GoOtp(
-                            verificationId = result.data.verificationId,
-                            phone = result.data.phoneNumber,
-                        ),
-                    )
-                }
-                is Result.Error -> {
-                    val msg = result.userMessage()
-                    Log.e(TAG, "sendOtp failed: $msg", result.exception)
-                    setState {
-                        copy(isLoading = false, errorMessage = msg)
+        setState { copy(isLoading = true, errorMessage = null) }
+        submitJob = viewModelScope.launch {
+            try {
+                when (val result = sendOtp(sanitized)) {
+                    is Result.Success -> {
+                        Log.d(TAG, "sendOtp success! Verification ID: ${result.data.verificationId}")
+                        setState { copy(isLoading = false) }
+                        sendEffect(
+                            LoginUiEffect.GoOtp(
+                                verificationId = result.data.verificationId,
+                                phone = result.data.phoneNumber,
+                            ),
+                        )
                     }
+                    is Result.Error -> {
+                        val msg = result.userMessage()
+                        Log.e(TAG, "sendOtp failed: $msg", result.exception)
+                        setState {
+                            copy(isLoading = false, errorMessage = msg)
+                        }
+                    }
+                    Result.Loading -> setState { copy(isLoading = true) }
                 }
-                Result.Loading -> setState { copy(isLoading = true) }
+            } catch (t: Throwable) {
+                Log.e(TAG, "sendOtp threw unexpected exception: ${t.message}", t)
+                setState { copy(isLoading = false, errorMessage = t.message) }
             }
         }
     }
