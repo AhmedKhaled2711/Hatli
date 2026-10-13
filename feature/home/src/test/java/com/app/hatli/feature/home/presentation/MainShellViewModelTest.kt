@@ -71,7 +71,7 @@ class MainShellViewModelTest {
         profileCompleted = true,
     )
 
-    private fun createTestRunnerSnapshot(isOnline: Boolean = false) = RunnerHomeSnapshot(
+    private fun createTestRunnerSnapshot(isOnline: Boolean = true) = RunnerHomeSnapshot(
         presence = RunnerPresence(isOnline = isOnline),
         stats = RunnerHomeStats(dailyEarnings = 0.0, todayJobsCount = 0, rating = 5.0),
     )
@@ -200,6 +200,23 @@ class MainShellViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         coVerify { setRunnerOnline(true) }
+    }
+
+    @Test
+    fun `ToggleRunnerOnline when runner is online toggles presence to offline`() = runTest {
+        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val snap = createTestRunnerSnapshot(isOnline = true)
+        every { observeUserProfile() } returns flowOf(profile)
+        every { observeRunnerHome() } returns flowOf(snap)
+        coEvery { setRunnerOnline(false) } returns Unit
+
+        val viewModel = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        viewModel.onEvent(MainShellUiEvent.ToggleRunnerOnline)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { setRunnerOnline(false) }
     }
 
     @Test

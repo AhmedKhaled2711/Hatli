@@ -46,7 +46,7 @@ data class RequesterHomeSnapshot(
 )
 
 data class RunnerPresence(
-    val isOnline: Boolean,
+    val isOnline: Boolean = true,
 )
 
 data class RunnerHomeStats(
