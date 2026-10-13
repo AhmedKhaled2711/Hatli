@@ -87,7 +87,7 @@ fun RunnerHomeContent(
     modifier: Modifier = Modifier,
 ) {
     if (snapshot == null) {
-        RunnerHomeSkeleton(modifier = modifier)
+        RunnerHomeShimmer(modifier = modifier)
         return
     }
 
@@ -253,19 +253,6 @@ private fun RunnerEmptyStateCard(
     }
 }
 
-@Composable
-private fun RunnerHomeSkeleton(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(HatliSpacing.lg),
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
-    ) {
-        HatliCard(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(32.dp)) {}
-        }
-    }
-}
 
 @Composable
 private fun RunnerHeaderRow(

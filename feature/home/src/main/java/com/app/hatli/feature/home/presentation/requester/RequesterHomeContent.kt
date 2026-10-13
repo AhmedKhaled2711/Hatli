@@ -163,7 +163,7 @@ fun RequesterHomeContent(
     modifier: Modifier = Modifier,
 ) {
     if (snapshot == null) {
-        RequesterHomeSkeleton(modifier = modifier)
+        RequesterHomeShimmer(modifier = modifier)
         return
     }
 
@@ -582,27 +582,3 @@ private fun RequesterTipCard(tipText: String) {
     }
 }
 
-@Composable
-private fun RequesterHomeSkeleton(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = HatliSpacing.lg, vertical = HatliSpacing.md),
-        verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(130.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
-        )
-        Box(
-            modifier = Modifier
-                .width(140.dp)
-                .height(24.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
-        )
-    }
-}

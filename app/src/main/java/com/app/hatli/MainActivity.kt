@@ -84,8 +84,9 @@ class MainActivity : ComponentActivity() {
             val startDestination by mainViewModel.startDestination.collectAsStateWithLifecycle()
             val initialDestination = startDestination ?: return@setContent
 
+            val initialThemeMode = remember { sessionPreferences.cachedThemeMode }
             val themeModeState by sessionPreferences.themeMode.collectAsStateWithLifecycle(
-                initialValue = AppThemeMode.FollowSystem
+                initialValue = initialThemeMode
             )
             val currentLanguage by sessionPreferences.appLanguage.collectAsStateWithLifecycle(
                 initialValue = "ar"

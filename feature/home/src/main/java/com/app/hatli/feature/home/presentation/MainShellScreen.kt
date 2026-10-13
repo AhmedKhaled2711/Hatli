@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -29,8 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.home.R
 import com.app.hatli.feature.home.presentation.components.JobsListContent
@@ -38,8 +35,11 @@ import com.app.hatli.feature.home.presentation.components.MainBottomBar
 import com.app.hatli.feature.home.presentation.components.RequestsListContent
 import com.app.hatli.feature.home.presentation.components.bar.MainTopBar
 import com.app.hatli.feature.home.presentation.messages.MessagesContent
+import com.app.hatli.core.model.UserRole
 import com.app.hatli.feature.home.presentation.requester.RequesterHomeContent
+import com.app.hatli.feature.home.presentation.requester.RequesterHomeShimmer
 import com.app.hatli.feature.home.presentation.runner.RunnerHomeContent
+import com.app.hatli.feature.home.presentation.runner.RunnerHomeShimmer
 
 @Composable
 fun MainShellRoute(
@@ -77,16 +77,11 @@ fun MainShellScreen(
     profileTab: @Composable () -> Unit,
 ) {
     if (state.isLoadingProfile || state.role == null) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = OffWhiteCanvas,
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(color = BrandCoral)
-            }
+        val isRunner = state.role == UserRole.Runner
+        if (isRunner) {
+            RunnerHomeShimmer()
+        } else {
+            RequesterHomeShimmer()
         }
         return
     }
