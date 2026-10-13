@@ -1,8 +1,6 @@
 package com.app.hatli.feature.home.presentation.requester
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,12 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.app.hatli.core.designsystem.component.ShimmerBox
-import com.app.hatli.core.designsystem.theme.HatliElevation
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.HatliTheme
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerCardContainer
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerCircle
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerHeaderRow
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerLine
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerSectionHeader
 
 /**
  * Production-grade skeleton shimmer layout for Requester (Client) Home screen.
@@ -37,8 +35,6 @@ import com.app.hatli.core.designsystem.theme.HatliTheme
 fun RequesterHomeShimmer(
     modifier: Modifier = Modifier,
 ) {
-    val extended = HatliTheme.extendedColors
-
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -58,33 +54,14 @@ fun RequesterHomeShimmer(
         ) {
             // 1. Location Pill & Notifications Header
             item(key = "shimmer_requester_header") {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(160.dp)
-                            .height(36.dp),
-                        shape = RoundedCornerShape(20.dp),
-                    )
-                    ShimmerBox(
-                        modifier = Modifier.size(44.dp),
-                        shape = CircleShape,
-                    )
-                }
+                ShimmerHeaderRow(pillWidth = 160.dp, pillHeight = 36.dp)
             }
 
             // 2. Hero Create Errand Banner Placeholder
             item(key = "shimmer_hero_banner") {
-                Surface(
+                ShimmerCardContainer(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = HatliElevation.sm,
-                    shadowElevation = HatliElevation.sm,
-                    border = BorderStroke(1.dp, extended.border),
                 ) {
                     Row(
                         modifier = Modifier
@@ -97,30 +74,12 @@ fun RequesterHomeShimmer(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
                         ) {
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(80.dp)
-                                    .height(16.dp),
-                                shape = RoundedCornerShape(6.dp),
-                            )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(190.dp)
-                                    .height(22.dp),
-                                shape = RoundedCornerShape(6.dp),
-                            )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .height(14.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
+                            ShimmerLine(width = 80.dp, height = 16.dp, cornerRadius = 6.dp)
+                            ShimmerLine(width = 190.dp, height = 22.dp, cornerRadius = 6.dp)
+                            ShimmerLine(width = 130.dp, height = 14.dp, cornerRadius = 4.dp)
                         }
 
-                        ShimmerBox(
-                            modifier = Modifier.size(48.dp),
-                            shape = CircleShape,
-                        )
+                        ShimmerCircle(size = 48.dp)
                     }
                 }
             }
@@ -128,12 +87,7 @@ fun RequesterHomeShimmer(
             // 3. Quick Service Categories Carousel Placeholder
             item(key = "shimmer_quick_categories") {
                 Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(140.dp)
-                            .height(18.dp),
-                        shape = RoundedCornerShape(4.dp),
-                    )
+                    ShimmerLine(width = 140.dp, height = 18.dp)
 
                     LazyRow(
                         horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
@@ -141,15 +95,11 @@ fun RequesterHomeShimmer(
                         userScrollEnabled = false,
                     ) {
                         items(4) {
-                            Surface(
+                            ShimmerCardContainer(
                                 modifier = Modifier
                                     .width(148.dp)
                                     .height(138.dp),
                                 shape = RoundedCornerShape(20.dp),
-                                color = MaterialTheme.colorScheme.surface,
-                                tonalElevation = HatliElevation.sm,
-                                shadowElevation = HatliElevation.sm,
-                                border = BorderStroke(1.dp, extended.border),
                             ) {
                                 Column(
                                     modifier = Modifier
@@ -163,29 +113,13 @@ fun RequesterHomeShimmer(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically,
                                     ) {
-                                        ShimmerBox(
-                                            modifier = Modifier.size(44.dp),
-                                            shape = RoundedCornerShape(14.dp),
-                                        )
-                                        ShimmerBox(
-                                            modifier = Modifier.size(16.dp),
-                                            shape = CircleShape,
-                                        )
+                                        ShimmerLine(width = 44.dp, height = 44.dp, cornerRadius = 14.dp)
+                                        ShimmerCircle(size = 16.dp)
                                     }
 
                                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                        ShimmerBox(
-                                            modifier = Modifier
-                                                .width(75.dp)
-                                                .height(14.dp),
-                                            shape = RoundedCornerShape(4.dp),
-                                        )
-                                        ShimmerBox(
-                                            modifier = Modifier
-                                                .width(105.dp)
-                                                .height(11.dp),
-                                            shape = RoundedCornerShape(4.dp),
-                                        )
+                                        ShimmerLine(width = 75.dp, height = 14.dp)
+                                        ShimmerLine(width = 105.dp, height = 11.dp)
                                     }
                                 }
                             }
@@ -197,20 +131,11 @@ fun RequesterHomeShimmer(
             // 4. Current / Active Request Card Placeholder
             item(key = "shimmer_active_request") {
                 Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.sm)) {
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(110.dp)
-                            .height(18.dp),
-                        shape = RoundedCornerShape(4.dp),
-                    )
+                    ShimmerLine(width = 110.dp, height = 18.dp)
 
-                    Surface(
+                    ShimmerCardContainer(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(20.dp),
-                        color = MaterialTheme.colorScheme.surface,
-                        tonalElevation = HatliElevation.sm,
-                        shadowElevation = HatliElevation.sm,
-                        border = BorderStroke(1.dp, extended.border),
                     ) {
                         Column(
                             modifier = Modifier
@@ -224,18 +149,8 @@ fun RequesterHomeShimmer(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                ShimmerBox(
-                                    modifier = Modifier
-                                        .width(88.dp)
-                                        .height(24.dp),
-                                    shape = RoundedCornerShape(12.dp),
-                                )
-                                ShimmerBox(
-                                    modifier = Modifier
-                                        .width(60.dp)
-                                        .height(14.dp),
-                                    shape = RoundedCornerShape(4.dp),
-                                )
+                                ShimmerLine(width = 88.dp, height = 24.dp, cornerRadius = 12.dp)
+                                ShimmerLine(width = 60.dp, height = 14.dp)
                             }
 
                             // Stepper Row: 4 dots + connection lines
@@ -247,17 +162,14 @@ fun RequesterHomeShimmer(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 repeat(4) { index ->
-                                    ShimmerBox(
-                                        modifier = Modifier.size(18.dp),
-                                        shape = CircleShape,
-                                    )
+                                    ShimmerCircle(size = 18.dp)
                                     if (index < 3) {
-                                        ShimmerBox(
+                                        ShimmerLine(
                                             modifier = Modifier
                                                 .weight(1f)
-                                                .padding(horizontal = 6.dp)
-                                                .height(3.dp),
-                                            shape = RoundedCornerShape(2.dp),
+                                                .padding(horizontal = 6.dp),
+                                            height = 3.dp,
+                                            cornerRadius = 2.dp,
                                         )
                                     }
                                 }
@@ -273,32 +185,14 @@ fun RequesterHomeShimmer(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
                                 ) {
-                                    ShimmerBox(
-                                        modifier = Modifier.size(40.dp),
-                                        shape = CircleShape,
-                                    )
+                                    ShimmerCircle(size = 40.dp)
                                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                        ShimmerBox(
-                                            modifier = Modifier
-                                                .width(100.dp)
-                                                .height(14.dp),
-                                            shape = RoundedCornerShape(4.dp),
-                                        )
-                                        ShimmerBox(
-                                            modifier = Modifier
-                                                .width(60.dp)
-                                                .height(12.dp),
-                                            shape = RoundedCornerShape(4.dp),
-                                        )
+                                        ShimmerLine(width = 100.dp, height = 14.dp)
+                                        ShimmerLine(width = 60.dp, height = 12.dp)
                                     }
                                 }
 
-                                ShimmerBox(
-                                    modifier = Modifier
-                                        .width(84.dp)
-                                        .height(36.dp),
-                                    shape = RoundedCornerShape(10.dp),
-                                )
+                                ShimmerLine(width = 84.dp, height = 36.dp, cornerRadius = 10.dp)
                             }
                         }
                     }
@@ -307,36 +201,15 @@ fun RequesterHomeShimmer(
 
             // 5. Recent Requests Section Placeholder
             item(key = "shimmer_recent_header") {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(110.dp)
-                            .height(18.dp),
-                        shape = RoundedCornerShape(4.dp),
-                    )
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(55.dp)
-                            .height(14.dp),
-                        shape = RoundedCornerShape(4.dp),
-                    )
-                }
+                ShimmerSectionHeader(titleWidth = 110.dp, actionWidth = 55.dp)
             }
 
             items(2) {
-                Surface(
+                ShimmerCardContainer(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(84.dp),
                     shape = RoundedCornerShape(16.dp),
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = HatliElevation.sm,
-                    shadowElevation = HatliElevation.sm,
-                    border = BorderStroke(1.dp, extended.border),
                 ) {
                     Row(
                         modifier = Modifier
@@ -344,44 +217,21 @@ fun RequesterHomeShimmer(
                             .padding(HatliSpacing.md),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        ShimmerBox(
-                            modifier = Modifier.size(44.dp),
-                            shape = RoundedCornerShape(12.dp),
-                        )
+                        ShimmerLine(width = 44.dp, height = 44.dp, cornerRadius = 12.dp)
                         Spacer(modifier = Modifier.width(HatliSpacing.md))
                         Column(
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(130.dp)
-                                    .height(14.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(85.dp)
-                                    .height(12.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
+                            ShimmerLine(width = 130.dp, height = 14.dp)
+                            ShimmerLine(width = 85.dp, height = 12.dp)
                         }
                         Column(
                             horizontalAlignment = Alignment.End,
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(60.dp)
-                                    .height(20.dp),
-                                shape = RoundedCornerShape(10.dp),
-                            )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(45.dp)
-                                    .height(14.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
+                            ShimmerLine(width = 60.dp, height = 20.dp, cornerRadius = 10.dp)
+                            ShimmerLine(width = 45.dp, height = 14.dp)
                         }
                     }
                 }

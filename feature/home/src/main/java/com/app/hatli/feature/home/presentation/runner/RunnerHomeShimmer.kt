@@ -1,21 +1,15 @@
 package com.app.hatli.feature.home.presentation.runner
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,10 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.app.hatli.core.designsystem.component.ShimmerBox
-import com.app.hatli.core.designsystem.theme.HatliElevation
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.HatliTheme
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerCardContainer
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerCircle
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerHeaderRow
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerLine
+import com.app.hatli.feature.home.presentation.components.shimmer.ShimmerSectionHeader
 
 /**
  * Production-grade skeleton shimmer layout for Runner (Delivery) Home screen.
@@ -37,8 +33,6 @@ import com.app.hatli.core.designsystem.theme.HatliTheme
 fun RunnerHomeShimmer(
     modifier: Modifier = Modifier,
 ) {
-    val extended = HatliTheme.extendedColors
-
     Surface(
         modifier = modifier
             .fillMaxSize()
@@ -58,22 +52,7 @@ fun RunnerHomeShimmer(
         ) {
             // 1. Availability Toggle & Notifications Header Row
             item(key = "shimmer_runner_header") {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(136.dp)
-                            .height(38.dp),
-                        shape = RoundedCornerShape(20.dp),
-                    )
-                    ShimmerBox(
-                        modifier = Modifier.size(44.dp),
-                        shape = CircleShape,
-                    )
-                }
+                ShimmerHeaderRow(pillWidth = 136.dp, pillHeight = 38.dp)
             }
 
             // 2. Daily Operational Stats Row (Today Earnings, Jobs, Rating)
@@ -83,13 +62,9 @@ fun RunnerHomeShimmer(
                     horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
                 ) {
                     // Card 1: Today Earnings (weight 1.25f)
-                    Surface(
+                    ShimmerCardContainer(
                         modifier = Modifier.weight(1.25f),
                         shape = RoundedCornerShape(16.dp),
-                        color = MaterialTheme.colorScheme.surface,
-                        tonalElevation = HatliElevation.sm,
-                        shadowElevation = HatliElevation.sm,
-                        border = BorderStroke(1.dp, extended.border),
                     ) {
                         Column(
                             modifier = Modifier
@@ -97,29 +72,15 @@ fun RunnerHomeShimmer(
                                 .padding(HatliSpacing.sm),
                             verticalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(45.dp)
-                                    .height(12.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(72.dp)
-                                    .height(22.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
+                            ShimmerLine(width = 45.dp, height = 12.dp)
+                            ShimmerLine(width = 72.dp, height = 22.dp)
                         }
                     }
 
                     // Card 2: Today Jobs (weight 1f)
-                    Surface(
+                    ShimmerCardContainer(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
-                        color = MaterialTheme.colorScheme.surface,
-                        tonalElevation = HatliElevation.sm,
-                        shadowElevation = HatliElevation.sm,
-                        border = BorderStroke(1.dp, extended.border),
                     ) {
                         Column(
                             modifier = Modifier
@@ -127,29 +88,15 @@ fun RunnerHomeShimmer(
                                 .padding(HatliSpacing.sm),
                             verticalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(40.dp)
-                                    .height(12.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(36.dp)
-                                    .height(22.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
+                            ShimmerLine(width = 40.dp, height = 12.dp)
+                            ShimmerLine(width = 36.dp, height = 22.dp)
                         }
                     }
 
                     // Card 3: Rating (weight 1f)
-                    Surface(
+                    ShimmerCardContainer(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
-                        color = MaterialTheme.colorScheme.surface,
-                        tonalElevation = HatliElevation.sm,
-                        shadowElevation = HatliElevation.sm,
-                        border = BorderStroke(1.dp, extended.border),
                     ) {
                         Column(
                             modifier = Modifier
@@ -157,18 +104,8 @@ fun RunnerHomeShimmer(
                                 .padding(HatliSpacing.sm),
                             verticalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(40.dp)
-                                    .height(12.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(36.dp)
-                                    .height(22.dp),
-                                shape = RoundedCornerShape(4.dp),
-                            )
+                            ShimmerLine(width = 40.dp, height = 12.dp)
+                            ShimmerLine(width = 36.dp, height = 22.dp)
                         }
                     }
                 }
@@ -176,13 +113,9 @@ fun RunnerHomeShimmer(
 
             // 3. Active Job Card Placeholder
             item(key = "shimmer_active_job") {
-                Surface(
+                ShimmerCardContainer(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(20.dp),
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = HatliElevation.sm,
-                    shadowElevation = HatliElevation.sm,
-                    border = BorderStroke(1.dp, extended.border),
                 ) {
                     Column(
                         modifier = Modifier
@@ -200,35 +133,16 @@ fun RunnerHomeShimmer(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
                             ) {
-                                ShimmerBox(
-                                    modifier = Modifier.size(42.dp),
-                                    shape = CircleShape,
-                                )
+                                ShimmerCircle(size = 42.dp)
                                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                    ShimmerBox(
-                                        modifier = Modifier
-                                            .width(110.dp)
-                                            .height(15.dp),
-                                        shape = RoundedCornerShape(4.dp),
-                                    )
-                                    ShimmerBox(
-                                        modifier = Modifier
-                                            .width(70.dp)
-                                            .height(12.dp),
-                                        shape = RoundedCornerShape(4.dp),
-                                    )
+                                    ShimmerLine(width = 110.dp, height = 15.dp)
+                                    ShimmerLine(width = 70.dp, height = 12.dp)
                                 }
                             }
 
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                ShimmerBox(
-                                    modifier = Modifier.size(36.dp),
-                                    shape = CircleShape,
-                                )
-                                ShimmerBox(
-                                    modifier = Modifier.size(36.dp),
-                                    shape = CircleShape,
-                                )
+                                ShimmerCircle(size = 36.dp)
+                                ShimmerCircle(size = 36.dp)
                             }
                         }
 
@@ -238,40 +152,23 @@ fun RunnerHomeShimmer(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
-                                ShimmerBox(
-                                    modifier = Modifier.size(10.dp),
-                                    shape = CircleShape,
-                                )
-                                ShimmerBox(
-                                    modifier = Modifier
-                                        .width(190.dp)
-                                        .height(13.dp),
-                                    shape = RoundedCornerShape(4.dp),
-                                )
+                                ShimmerCircle(size = 10.dp)
+                                ShimmerLine(width = 190.dp, height = 13.dp)
                             }
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
-                                ShimmerBox(
-                                    modifier = Modifier.size(10.dp),
-                                    shape = CircleShape,
-                                )
-                                ShimmerBox(
-                                    modifier = Modifier
-                                        .width(160.dp)
-                                        .height(13.dp),
-                                    shape = RoundedCornerShape(4.dp),
-                                )
+                                ShimmerCircle(size = 10.dp)
+                                ShimmerLine(width = 160.dp, height = 13.dp)
                             }
                         }
 
                         // Big Action Button placeholder
-                        ShimmerBox(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(46.dp),
-                            shape = RoundedCornerShape(14.dp),
+                        ShimmerLine(
+                            modifier = Modifier.fillMaxWidth(),
+                            height = 46.dp,
+                            cornerRadius = 14.dp,
                         )
                     }
                 }
@@ -279,34 +176,13 @@ fun RunnerHomeShimmer(
 
             // 4. Available / Nearby Jobs Section Placeholder
             item(key = "shimmer_nearby_header") {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(160.dp)
-                            .height(18.dp),
-                        shape = RoundedCornerShape(4.dp),
-                    )
-                    ShimmerBox(
-                        modifier = Modifier
-                            .width(60.dp)
-                            .height(14.dp),
-                        shape = RoundedCornerShape(4.dp),
-                    )
-                }
+                ShimmerSectionHeader(titleWidth = 160.dp, actionWidth = 60.dp)
             }
 
             items(2) {
-                Surface(
+                ShimmerCardContainer(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
-                    color = MaterialTheme.colorScheme.surface,
-                    tonalElevation = HatliElevation.sm,
-                    shadowElevation = HatliElevation.sm,
-                    border = BorderStroke(1.dp, extended.border),
                 ) {
                     Column(
                         modifier = Modifier
@@ -321,49 +197,29 @@ fun RunnerHomeShimmer(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                ShimmerBox(
-                                    modifier = Modifier
-                                        .width(60.dp)
-                                        .height(22.dp),
-                                    shape = RoundedCornerShape(8.dp),
-                                )
-                                ShimmerBox(
-                                    modifier = Modifier
-                                        .width(75.dp)
-                                        .height(22.dp),
-                                    shape = RoundedCornerShape(8.dp),
-                                )
+                                ShimmerLine(width = 60.dp, height = 22.dp, cornerRadius = 8.dp)
+                                ShimmerLine(width = 75.dp, height = 22.dp, cornerRadius = 8.dp)
                             }
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .width(55.dp)
-                                    .height(20.dp),
-                                shape = RoundedCornerShape(8.dp),
-                            )
+                            ShimmerLine(width = 55.dp, height = 20.dp, cornerRadius = 8.dp)
                         }
 
                         // Addresses lines
                         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.85f)
-                                    .height(14.dp),
-                                shape = RoundedCornerShape(4.dp),
+                            ShimmerLine(
+                                modifier = Modifier.fillMaxWidth(0.85f),
+                                height = 14.dp,
                             )
-                            ShimmerBox(
-                                modifier = Modifier
-                                    .fillMaxWidth(0.65f)
-                                    .height(14.dp),
-                                shape = RoundedCornerShape(4.dp),
+                            ShimmerLine(
+                                modifier = Modifier.fillMaxWidth(0.65f),
+                                height = 14.dp,
                             )
                         }
 
                         // Accept job button
-                        ShimmerBox(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(40.dp),
-                            shape = RoundedCornerShape(12.dp),
+                        ShimmerLine(
+                            modifier = Modifier.fillMaxWidth(),
+                            height = 40.dp,
+                            cornerRadius = 12.dp,
                         )
                     }
                 }
