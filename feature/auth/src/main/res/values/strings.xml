@@ -68,4 +68,10 @@
     </string>
     <string name="auth_mobile_verification">Mobile verification</string>
 
+    <!-- ============================== -->
+    <!-- Auth - Splash -->
+    <!-- ============================== -->
+
+    <string name="splash_tagline">Everything you need, delivered to you</string>
+
 </resources>

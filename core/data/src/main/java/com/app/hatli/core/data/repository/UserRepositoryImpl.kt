@@ -49,18 +49,20 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getProfile(uid: String): Result<UserProfile?> =
         withContext(ioDispatcher) {
+            val cached = local.get(uid)
+            if (cached != null) {
+                return@withContext Result.Success(cached)
+            }
             try {
                 val remoteProfile = remote.get(uid)
                 if (remoteProfile != null) {
                     local.upsert(remoteProfile)
                     Result.Success(remoteProfile)
                 } else {
-                    Result.Success(local.get(uid))
+                    Result.Success(null)
                 }
             } catch (t: Throwable) {
-                val cached = local.get(uid)
-                if (cached != null) Result.Success(cached)
-                else Result.Error(FirebaseErrorMapper.map(t))
+                Result.Error(FirebaseErrorMapper.map(t))
             }
         }
 

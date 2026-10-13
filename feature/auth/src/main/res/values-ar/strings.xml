@@ -71,4 +71,10 @@
     </string>
     <string name="auth_mobile_verification">التحقق من رقم الهاتف</string>
 
+    <!-- ============================== -->
+    <!-- Auth - Splash -->
+    <!-- ============================== -->
+
+    <string name="splash_tagline">كل اللي تحتاجه، من مكانك</string>
+
 </resources>
