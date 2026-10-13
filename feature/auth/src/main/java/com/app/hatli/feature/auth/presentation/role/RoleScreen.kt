@@ -37,10 +37,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.app.hatli.feature.auth.R
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.theme.BrandCoral
@@ -91,7 +93,7 @@ fun RoleScreen(
 
                 // Header Section
                 Text(
-                    text = "اختر نوع حسابك في هاتلي",
+                    text = stringResource(R.string.role_selection_title),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = CharcoalDark,
@@ -99,7 +101,7 @@ fun RoleScreen(
                     ),
                 )
                 Text(
-                    text = "حدد كيف تود استخدام التطبيق. يمكنك تغيير دورك أو التبديل بينهما بسهولة لاحقاً.",
+                    text = stringResource(R.string.role_selection_subtitle),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = CharcoalMuted,
                         lineHeight = 22.sp,
@@ -110,32 +112,32 @@ fun RoleScreen(
 
                 // Role Option 1: Requester (طالب خدمة)
                 RoleSelectionCard(
-                    title = "طالب خدمة (عميل)",
-                    tagline = "اطلب أي حاجة من أي مكان في مدينتك",
+                    title = stringResource(R.string.role_requester_title),
+                    tagline = stringResource(R.string.role_requester_tagline),
                     icon = Icons.Default.ShoppingBag,
                     accentColor = BrandCoral,
                     containerColor = Color(0xFFFFF4F0),
                     selected = state.selected == UserRole.Requester,
                     benefits = listOf(
-                        "توصيل طلبات المتاجر والصيدليات والسوبرماركت",
-                        "متابعة خريطة التوصيل والمنسق لحظة بلحظة",
-                        "تنسيق مشاوير خاصة وطلبات مخصصة بسهولة",
+                        stringResource(R.string.role_requester_feature_1),
+                        stringResource(R.string.role_requester_feature_2),
+                        stringResource(R.string.role_requester_feature_3),
                     ),
                     onClick = { onEvent(RoleUiEvent.Select(UserRole.Requester)) },
                 )
 
                 // Role Option 2: Runner (كابتن توصيل)
                 RoleSelectionCard(
-                    title = "مندوب توصيل (كابتن)",
-                    tagline = "وصل الطلبات وحقق دخلاً ممتازاً بأوقات حرّة",
+                    title = stringResource(R.string.role_runner_title),
+                    tagline = stringResource(R.string.role_runner_tagline),
                     icon = Icons.Default.DirectionsBike,
                     accentColor = BrandTeal,
                     containerColor = Color(0xFFEAFDF9),
                     selected = state.selected == UserRole.Runner,
                     benefits = listOf(
-                        "استلم طلبات قريبة منك بضغط زر واحدة",
-                        "عمولات منخفضة وتسوية سريعة لأرباحك",
-                        "مرونة كاملة في تحديد أوقات العمل",
+                        stringResource(R.string.role_runner_feature_1),
+                        stringResource(R.string.role_runner_feature_2),
+                        stringResource(R.string.role_runner_feature_3),
                     ),
                     onClick = { onEvent(RoleUiEvent.Select(UserRole.Runner)) },
                 )
@@ -145,7 +147,7 @@ fun RoleScreen(
 
             // Sticky Bottom CTA Button
             HatliPrimaryButton(
-                text = "متابعة التسجيل",
+                text = stringResource(R.string.role_continue_button),
                 onClick = { onEvent(RoleUiEvent.Continue) },
                 enabled = state.selected != null,
                 modifier = Modifier.fillMaxWidth(),

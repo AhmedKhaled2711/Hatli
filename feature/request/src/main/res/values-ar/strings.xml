@@ -10,8 +10,8 @@
     <string name="request_detail_description">الوصف</string>
     <string name="request_detail_delivery_fee">رسوم التوصيل</string>
     <string name="request_detail_delivery_fee_format">%1$d جنيه</string>
-    <string name="request_detail_runner_title">الكابتن (Runner)</string>
-    <string name="request_detail_client_title">صاحب الطلب (Requester)</string>
+    <string name="request_detail_runner_title">كابتن التوصيل</string>
+    <string name="request_detail_client_title">صاحب الطلب</string>
     <string name="request_detail_timeline_title">الجدول الزمني للطلب</string>
     <string name="request_detail_open_chat">محادثة الكابتن</string>
     <string name="request_detail_updating">جاري التحديث…</string>
@@ -94,7 +94,7 @@
     <string name="create_request_review_service_type">نوع الخدمة</string>
     <string name="create_request_review_delivery_fee">مقابل التوصيل للكابتن</string>
     <string name="create_request_review_items_cost">تكلفة المشتريات</string>
-    <string name="create_request_review_items_cost_note">تُدفع للمندوب عند الاستلام حسب الفاتورة</string>
+    <string name="create_request_review_items_cost_note">تُدفع للكابتن عند الاستلام حسب الفاتورة</string>
     <string name="create_request_review_service_charge">رسوم الخدمة والتطبيق</string>
     <string name="create_request_review_service_charge_free">مجاناً لفترة محدودة</string>
     <string name="create_request_review_egp_suffix">%1$d ج.م</string>
@@ -137,6 +137,7 @@
     <string name="rate_feedback_1">سيء جداً ❌</string>
     <string name="rate_runner_comment_hint">أضف ملاحظاتك للكابتن (اختياري)…</string>
     <string name="rate_runner_submit">إرسال التقييم</string>
+    <string name="rate_runner_star_desc">نجمة %1$d</string>
 
     <string name="create_request_change_category">تغيير الخدمة</string>
     <string name="create_request_pharmacy_shop_label">اسم الصيدلية (مثال: صيدلية العزبي / 19011)</string>

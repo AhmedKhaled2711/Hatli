@@ -30,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.hatli.feature.auth.R
 import com.app.hatli.core.designsystem.component.HatliTextField
 import com.app.hatli.core.designsystem.theme.BrandTeal
 import com.app.hatli.core.designsystem.theme.CharcoalDark
@@ -57,7 +59,7 @@ internal fun TransportStep(
         verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
     ) {
         Text(
-            text = "اختر وسيلة للتوصيل (واحدة على الأقل)",
+            text = stringResource(R.string.profile_transport_header),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Bold,
                 color = CharcoalDark,
@@ -86,11 +88,11 @@ internal fun TransportStep(
             HatliTextField(
                 value = state.vehicleInfo,
                 onValueChange = { onEvent(CreateProfileUiEvent.VehicleInfo(it)) },
-                label = "بيانات المركبة (الموديل · اللون · رقم اللوحة)",
+                label = stringResource(R.string.profile_transport_vehicle_details),
                 modifier = Modifier.fillMaxWidth(),
             )
             Text(
-                text = "مثال: هيونداي فيرنا · أبيض · ط ر س 1234",
+                text = stringResource(R.string.profile_transport_vehicle_example),
                 style = MaterialTheme.typography.bodyMedium.copy(
                     color = CharcoalMuted,
                     fontSize = 12.sp,
@@ -176,19 +178,21 @@ private fun transportIcon(type: TransportType): ImageVector = when (type) {
     TransportType.Other -> Icons.Default.DirectionsCar
 }
 
+@Composable
 private fun transportTitle(type: TransportType): String = when (type) {
-    TransportType.Car -> "سيارة"
-    TransportType.Motorcycle -> "دراجة نارية / سكوتر"
-    TransportType.Bicycle -> "دراجة هوائية"
-    TransportType.Walking -> "مشياً على الأقدام"
-    TransportType.Other -> "وسيلة أخرى"
+    TransportType.Car -> stringResource(R.string.profile_transport_car_title)
+    TransportType.Motorcycle -> stringResource(R.string.profile_transport_motorcycle_title)
+    TransportType.Bicycle -> stringResource(R.string.profile_transport_bicycle_title)
+    TransportType.Walking -> stringResource(R.string.profile_transport_walking_title)
+    TransportType.Other -> stringResource(R.string.profile_transport_other_title)
 }
 
+@Composable
 private fun transportSubtitle(type: TransportType): String = when (type) {
-    TransportType.Car -> "للطلبات الكبيرة والمسافات"
-    TransportType.Motorcycle -> "توصيل سريع داخل المدينة"
-    TransportType.Bicycle -> "مشاوير قصيرة وسريعة"
-    TransportType.Walking -> "توصيل الأحياء المجاورة"
-    TransportType.Other -> "وسيلة نقل مخصصة"
+    TransportType.Car -> stringResource(R.string.profile_transport_car_sub)
+    TransportType.Motorcycle -> stringResource(R.string.profile_transport_motorcycle_sub)
+    TransportType.Bicycle -> stringResource(R.string.profile_transport_bicycle_sub)
+    TransportType.Walking -> stringResource(R.string.profile_transport_walking_sub)
+    TransportType.Other -> stringResource(R.string.profile_transport_other_sub)
 }
 

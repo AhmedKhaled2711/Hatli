@@ -15,6 +15,7 @@ object LocaleHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val localeManager = context.getSystemService(LocaleManager::class.java)
             localeManager?.applicationLocales = LocaleList.forLanguageTags(languageCode)
+            Locale.setDefault(Locale(languageCode))
         } else {
             val locale = Locale(languageCode)
             Locale.setDefault(locale)

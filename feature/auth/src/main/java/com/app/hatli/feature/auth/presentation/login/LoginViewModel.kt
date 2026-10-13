@@ -41,10 +41,15 @@ class LoginViewModel @Inject constructor(
         Log.d(TAG, "Submitting phone auth. Raw input: '$rawPhone', Sanitized E.164: '$sanitized'")
 
         if (!PhoneSanitizer.isValidEgyptianPhoneNumber(sanitized)) {
+            val isAr = java.util.Locale.getDefault().language == "ar"
             setState {
                 copy(
                     isLoading = false,
-                    errorMessage = "يرجى إدخال رقم هاتف مصري صحيح (مثال: 01007394856)",
+                    errorMessage = if (isAr) {
+                        "يرجى إدخال رقم هاتف مصري صحيح (مثال: 01007394856)"
+                    } else {
+                        "Please enter a valid Egyptian phone number (e.g. 01007394856)"
+                    },
                 )
             }
             return

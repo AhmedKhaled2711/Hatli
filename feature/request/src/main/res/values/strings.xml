@@ -94,7 +94,7 @@
     <string name="create_request_review_service_type">Service Type</string>
     <string name="create_request_review_delivery_fee">Captain Delivery Fee</string>
     <string name="create_request_review_items_cost">Items Cost</string>
-    <string name="create_request_review_items_cost_note">Paid to courier upon delivery per receipt</string>
+    <string name="create_request_review_items_cost_note">Paid to Captain upon delivery per receipt</string>
     <string name="create_request_review_service_charge">Platform Service Fee</string>
     <string name="create_request_review_service_charge_free">Free for a limited time</string>
     <string name="create_request_review_egp_suffix">%1$d EGP</string>
@@ -124,7 +124,7 @@
     <string name="create_request_summary_bills_format">%1$s · %2$s · %3$s EGP</string>
     <string name="create_request_summary_custom_format">%1$s\n%2$s</string>
     <string name="create_request_success_title">Request Created!</string>
-    <string name="create_request_success_subtitle">Your request is now live for runners around you.</string>
+    <string name="create_request_success_subtitle">Your request is now live for Captains near you.</string>
     <string name="create_request_return_home">Return to Home</string>
 
     <!-- Rating Screen -->
@@ -137,6 +137,7 @@
     <string name="rate_feedback_1">Very Poor ❌</string>
     <string name="rate_runner_comment_hint">Add optional feedback for your Captain…</string>
     <string name="rate_runner_submit">Submit Rating</string>
+    <string name="rate_runner_star_desc">%1$d star</string>
 
     <string name="create_request_change_category">Change service</string>
     <string name="create_request_pharmacy_shop_label">Pharmacy name (e.g. El Ezaby / 19011)</string>

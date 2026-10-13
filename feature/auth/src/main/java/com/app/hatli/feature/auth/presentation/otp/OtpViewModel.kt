@@ -73,7 +73,16 @@ class OtpViewModel @Inject constructor(
     private fun verify() {
         val state = uiState.value
         if (state.code.length < 6) {
-            setState { copy(errorMessage = "Enter the 6-digit code") }
+            val isAr = java.util.Locale.getDefault().language == "ar"
+            setState {
+                copy(
+                    errorMessage = if (isAr) {
+                        "يرجى إدخال رمز التحقق المكون من 6 أرقام."
+                    } else {
+                        "Please enter the 6-digit verification code."
+                    }
+                )
+            }
             return
         }
         viewModelScope.launch {

@@ -14,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.app.hatli.feature.chat.R
 
 @Composable
 fun SendMessageButton(
@@ -53,7 +55,7 @@ fun SendMessageButton(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.Send,
-                    contentDescription = "Send message",
+                    contentDescription = stringResource(R.string.chat_desc_send_message),
                     tint = if (enabled) {
                         MaterialTheme.colorScheme.onPrimary
                     } else {

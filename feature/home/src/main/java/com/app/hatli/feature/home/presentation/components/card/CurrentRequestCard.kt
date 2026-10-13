@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -223,7 +224,11 @@ fun CurrentRequestCard(
             // Messages notice if unread
             if (summary.unreadCount > 0) {
                 Text(
-                    text = stringResource(R.string.home_runner_new_messages, summary.unreadCount),
+                    text = pluralStringResource(
+                        R.plurals.home_runner_new_messages_plural,
+                        summary.unreadCount,
+                        summary.unreadCount,
+                    ),
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = BrandCoral,

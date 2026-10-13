@@ -18,11 +18,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.app.hatli.feature.chat.R
 import androidx.compose.ui.unit.sp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.feature.chat.util.resolveBidiLayoutDirection
@@ -123,7 +125,7 @@ fun ChatMessageBubble(
                     if (isMine) {
                         Icon(
                             imageVector = Icons.Default.DoneAll,
-                            contentDescription = "Read",
+                            contentDescription = stringResource(R.string.chat_desc_read),
                             tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.85f),
                             modifier = Modifier.size(14.dp),
                         )

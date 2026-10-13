@@ -181,6 +181,14 @@
     %1$d new messages
     </string>
 
+    <plurals name="home_runner_new_messages_plural">
+        <item quantity="zero">No new messages</item>
+        <item quantity="one">%1$d new message</item>
+        <item quantity="other">%1$d new messages</item>
+    </plurals>
+
+    <string name="home_notifications_content_desc">Notifications</string>
+
     <string name="home_runner_chat">
     Chat
     </string>

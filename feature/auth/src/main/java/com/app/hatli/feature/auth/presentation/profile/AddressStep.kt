@@ -19,10 +19,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.hatli.feature.auth.R
 import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.component.HatliTextField
 import com.app.hatli.core.designsystem.theme.BrandCoral
@@ -61,14 +62,14 @@ internal fun AddressStep(
 
                 Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.xxs)) {
                     Text(
-                        text = "عنوان استلام الطلبات",
+                        text = stringResource(R.string.profile_address_header),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = CharcoalDark,
                         ),
                     )
                     Text(
-                        text = "إدخال يدوي مؤقتاً. سيتم تفعيل تحديد الموقع التلقائي عبر الخريطة قريباً.",
+                        text = stringResource(R.string.profile_address_manual_note),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = CharcoalMuted,
                             fontSize = 12.sp,
@@ -81,28 +82,28 @@ internal fun AddressStep(
         HatliTextField(
             value = state.city,
             onValueChange = { onEvent(CreateProfileUiEvent.City(it)) },
-            label = "المدينة / المحافظة",
+            label = stringResource(R.string.profile_address_city),
             modifier = Modifier.fillMaxWidth(),
         )
 
         HatliTextField(
             value = state.area,
             onValueChange = { onEvent(CreateProfileUiEvent.Area(it)) },
-            label = "المنطقة / الحي",
+            label = stringResource(R.string.profile_address_area),
             modifier = Modifier.fillMaxWidth(),
         )
 
         HatliTextField(
             value = state.street,
             onValueChange = { onEvent(CreateProfileUiEvent.Street(it)) },
-            label = "الشارع / اسم الشارع",
+            label = stringResource(R.string.profile_address_street),
             modifier = Modifier.fillMaxWidth(),
         )
 
         HatliTextField(
             value = state.building,
             onValueChange = { onEvent(CreateProfileUiEvent.Building(it)) },
-            label = "رقم المبنى / العمارة",
+            label = stringResource(R.string.profile_address_building),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -113,13 +114,13 @@ internal fun AddressStep(
             HatliTextField(
                 value = state.floor,
                 onValueChange = { onEvent(CreateProfileUiEvent.Floor(it)) },
-                label = "الطابق (اختياري)",
+                label = stringResource(R.string.profile_address_floor_optional),
                 modifier = Modifier.weight(1f),
             )
             HatliTextField(
                 value = state.apartment,
                 onValueChange = { onEvent(CreateProfileUiEvent.Apartment(it)) },
-                label = "الشقة (اختياري)",
+                label = stringResource(R.string.profile_address_apartment_optional),
                 modifier = Modifier.weight(1f),
             )
         }
@@ -127,13 +128,13 @@ internal fun AddressStep(
         HatliTextField(
             value = state.addressNotes,
             onValueChange = { onEvent(CreateProfileUiEvent.AddressNotes(it)) },
-            label = "علامة مميزة أو تفاصيل إضافية (اختياري)",
+            label = stringResource(R.string.profile_address_notes_optional),
             singleLine = false,
             modifier = Modifier.fillMaxWidth(),
         )
 
         Text(
-            text = "نصيحة: أضف ألمع معلَم قريب من عارتك (مثل: بجوار صيدلية أو مسجد) لمساعدة الكابتن.",
+            text = stringResource(R.string.profile_address_tip),
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = CharcoalMuted,
                 fontSize = 12.sp,

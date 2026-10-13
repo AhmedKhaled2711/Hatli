@@ -30,10 +30,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.hatli.feature.auth.R
 import com.app.hatli.core.designsystem.component.HatliTextField
 import com.app.hatli.core.designsystem.theme.BrandCoral
 import com.app.hatli.core.designsystem.theme.CharcoalDark
@@ -83,7 +85,7 @@ internal fun PersonalInfoStep(
             ) {
                 Icon(
                     imageVector = Icons.Default.CameraAlt,
-                    contentDescription = "تحميل صورة شخصية",
+                    contentDescription = stringResource(R.string.profile_personal_upload_photo),
                     tint = Color.White,
                     modifier = Modifier.size(18.dp),
                 )
@@ -93,21 +95,21 @@ internal fun PersonalInfoStep(
         HatliTextField(
             value = state.firstName,
             onValueChange = { onEvent(CreateProfileUiEvent.FirstName(it)) },
-            label = "الاسم الأول",
+            label = stringResource(R.string.profile_personal_first_name),
             modifier = Modifier.fillMaxWidth(),
         )
 
         HatliTextField(
             value = state.lastName,
             onValueChange = { onEvent(CreateProfileUiEvent.LastName(it)) },
-            label = "اسم العائلة",
+            label = stringResource(R.string.profile_personal_last_name),
             modifier = Modifier.fillMaxWidth(),
         )
 
         HatliTextField(
             value = state.email,
             onValueChange = { onEvent(CreateProfileUiEvent.Email(it)) },
-            label = "البريد الإلكتروني (اختياري)",
+            label = stringResource(R.string.profile_personal_email_optional),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -116,7 +118,7 @@ internal fun PersonalInfoStep(
             HatliTextField(
                 value = state.phone,
                 onValueChange = {},
-                label = "رقم الهاتف المحمول",
+                label = stringResource(R.string.profile_personal_phone),
                 enabled = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -130,7 +132,7 @@ internal fun PersonalInfoStep(
             verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
         ) {
             Text(
-                text = "النوع / الجنس",
+                text = stringResource(R.string.profile_personal_gender_label),
                 style = MaterialTheme.typography.titleMedium.copy(
                     fontWeight = FontWeight.Bold,
                     color = CharcoalDark,
@@ -142,14 +144,14 @@ internal fun PersonalInfoStep(
                 horizontalArrangement = Arrangement.spacedBy(HatliSpacing.sm),
             ) {
                 GenderOptionCard(
-                    title = "ذكر",
+                    title = stringResource(R.string.profile_personal_gender_male),
                     selected = state.gender == Gender.Male,
                     modifier = Modifier.weight(1f),
                     onClick = { onEvent(CreateProfileUiEvent.GenderSelected(Gender.Male)) },
                 )
 
                 GenderOptionCard(
-                    title = "أنثى",
+                    title = stringResource(R.string.profile_personal_gender_female),
                     selected = state.gender == Gender.Female,
                     modifier = Modifier.weight(1f),
                     onClick = { onEvent(CreateProfileUiEvent.GenderSelected(Gender.Female)) },

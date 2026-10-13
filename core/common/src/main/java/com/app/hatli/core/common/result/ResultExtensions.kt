@@ -7,4 +7,4 @@ fun Result.Error.toAppError(): AppError = when (val ex = exception) {
     else -> AppError.Unknown(message = message ?: "Unexpected error.", cause = ex)
 }
 
-fun Result.Error.userMessage(): String = toAppError().message
+fun Result.Error.userMessage(): String = toAppError().toLocalizedMessage()

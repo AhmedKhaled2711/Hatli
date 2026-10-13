@@ -80,35 +80,39 @@ class CreateProfileViewModel @Inject constructor(
         setState { copy(step = prev, errorMessage = null) }
     }
 
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
+
     private fun validateStep(state: CreateProfileUiState): String? = when (state.step) {
         ProfileSetupStep.Personal -> when {
             state.firstName.isBlank() || state.lastName.isBlank() ->
-                "First and last name are required."
+                if (isAr) "الاسم الأول واسم العائلة مطلوبان." else "First and last name are required."
             !state.email.matches(EMAIL_REGEX) ->
-                "Enter a valid email address."
+                if (isAr) "يرجى إدخال بريد إلكتروني صحيح." else "Enter a valid email address."
             state.phone.isBlank() ->
-                "Phone number is required."
+                if (isAr) "رقم الهاتف مطلوب." else "Phone number is required."
             state.gender == null ->
-                "Please select Male or Female."
+                if (isAr) "يرجى تحديد النوع (ذكر أو أنثى)." else "Please select your gender."
             else -> null
         }
         ProfileSetupStep.Address -> when {
             state.city.isBlank() || state.area.isBlank() ||
                 state.street.isBlank() || state.building.isBlank() ->
-                "City, area, street, and building are required."
+                if (isAr) "المدينة والمنطقة والشارع ورقم المبنى بيانات مطلوبة." else "City, area, street, and building are required."
             else -> null
         }
         ProfileSetupStep.Transport -> when {
-            state.transportType == null -> "Select how you deliver."
+            state.transportType == null ->
+                if (isAr) "يرجى اختيار وسيلة التوصيل." else "Select how you deliver."
             state.transportType != TransportType.Walking && state.vehicleInfo.isBlank() ->
-                "Add a short vehicle description."
+                if (isAr) "يرجى إضافة وصف مختصر للمركبة." else "Add a short vehicle description."
             else -> null
         }
         ProfileSetupStep.Verification -> when {
-            state.nationalId.isBlank() -> "National ID is required."
+            state.nationalId.isBlank() ->
+                if (isAr) "رقم الهوية الوطنية مطلوب." else "National ID is required."
             HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED &&
                 (state.idImageUri.isNullOrBlank() || state.selfieUri.isNullOrBlank()) ->
-                "ID image and selfie are required."
+                if (isAr) "صورة الهوية والصورة الشخصية مطلوبة." else "ID image and selfie are required."
             else -> null
         }
     }
@@ -132,7 +136,12 @@ class CreateProfileViewModel @Inject constructor(
             setState { copy(isLoading = true, errorMessage = null) }
             val gender = s.gender
             if (gender == null) {
-                setState { copy(isLoading = false, errorMessage = "Please select Male or Female.") }
+                setState {
+                    copy(
+                        isLoading = false,
+                        errorMessage = if (isAr) "يرجى تحديد النوع (ذكر أو أنثى)." else "Please select your gender.",
+                    )
+                }
                 return@launch
             }
             val uploadsEnabled = HatliFeatureFlags.STORAGE_IMAGE_UPLOADS_ENABLED

@@ -118,26 +118,6 @@ fun Request.nextRunnerStatus(): RequestStatus? = when (status) {
     else -> null
 }
 
-fun RequestStatus.requesterLabelAr(runnerName: String?): String = when (this) {
-    RequestStatus.Pending -> "جاري البحث عن Runner"
-    RequestStatus.Accepted -> "${runnerName ?: "Runner"} قبل طلبك"
-    RequestStatus.InProgress -> "جاري التنفيذ"
-    RequestStatus.Purchased -> "تم الشراء"
-    RequestStatus.OnTheWay -> "في الطريق"
-    RequestStatus.Delivered -> "تم التسليم — أكّد الاستلام"
-    RequestStatus.Completed -> "مكتمل"
-    RequestStatus.Cancelled -> "ملغي"
-}
-
-fun RequestStatus.runnerCtaLabel(): String? = when (this) {
-    RequestStatus.Accepted -> "Start work"
-    RequestStatus.InProgress -> "Mark purchased" // Shopping; UI overrides for non-shopping
-    RequestStatus.Purchased -> "On the way"
-    RequestStatus.OnTheWay -> "Mark delivered"
-    RequestStatus.Delivered -> null
-    else -> null
-}
-
 fun Request.toSummary(): RequestSummary = RequestSummary(
     id = id,
     title = title,
@@ -223,27 +203,4 @@ fun stepperStepVisualState(
         }
         else -> StepperStepVisualState.Unreached
     }
-}
-
-
-fun RequestStatus.shortLabelEn(): String = when (this) {
-    RequestStatus.Pending -> "Searching"
-    RequestStatus.Accepted -> "Accepted"
-    RequestStatus.InProgress -> "In progress"
-    RequestStatus.Purchased -> "Purchased"
-    RequestStatus.OnTheWay -> "On the way"
-    RequestStatus.Delivered -> "Delivered"
-    RequestStatus.Completed -> "Completed"
-    RequestStatus.Cancelled -> "Cancelled"
-}
-
-fun RequestStatus.shortLabelAr(): String = when (this) {
-    RequestStatus.Pending -> "بحث"
-    RequestStatus.Accepted -> "مقبول"
-    RequestStatus.InProgress -> "تنفيذ"
-    RequestStatus.Purchased -> "شراء"
-    RequestStatus.OnTheWay -> "في الطريق"
-    RequestStatus.Delivered -> "تسليم"
-    RequestStatus.Completed -> "مكتمل"
-    RequestStatus.Cancelled -> "ملغي"
 }

@@ -134,6 +134,8 @@ class MainShellViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
+
     override fun handleEvent(event: MainShellUiEvent) {
         when (event) {
             MainShellUiEvent.Retry -> {
@@ -146,7 +148,7 @@ class MainShellViewModel @Inject constructor(
             is MainShellUiEvent.TabSelected -> setState { copy(selectedTab = event.tab) }
             MainShellUiEvent.CreateRequest -> sendEffect(MainShellUiEffect.NavigateCreateRequest(null))
             MainShellUiEvent.OpenNotifications ->
-                sendEffect(MainShellUiEffect.ShowMessage("Notifications coming soon"))
+                sendEffect(MainShellUiEffect.ShowMessage(if (isAr) "ميزة الإشعارات قريباً" else "Notifications coming soon"))
             MainShellUiEvent.ToggleRunnerOnline -> viewModelScope.launch {
                 val online = uiState.value.runnerHome?.presence?.isOnline == true
                 setRunnerOnline(!online)
@@ -165,7 +167,11 @@ class MainShellViewModel @Inject constructor(
             is MainShellUiEvent.AcceptRequest -> viewModelScope.launch {
                 when (val result = acceptRequest(event.requestId)) {
                     is Result.Success -> {
-                        sendEffect(MainShellUiEffect.ShowMessage("Job accepted — it's now your Active Job"))
+                        sendEffect(
+                            MainShellUiEffect.ShowMessage(
+                                if (isAr) "تم قبول المهمة — أصبحت مهمتك الحالية" else "Job accepted — added to your active jobs"
+                            )
+                        )
                         sendEffect(MainShellUiEffect.NavigateDetail(event.requestId))
                     }
                     is Result.Error ->
@@ -176,7 +182,7 @@ class MainShellViewModel @Inject constructor(
             is MainShellUiEvent.AdvanceStatus -> viewModelScope.launch {
                 when (val result = advanceStatus(event.requestId, event.toStatus)) {
                     is Result.Success ->
-                        sendEffect(MainShellUiEffect.ShowMessage("Status updated"))
+                        sendEffect(MainShellUiEffect.ShowMessage(if (isAr) "تم تحديث الحالة" else "Status updated"))
                     is Result.Error ->
                         sendEffect(MainShellUiEffect.ShowMessage(result.userMessage()))
                     Result.Loading -> Unit

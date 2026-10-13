@@ -38,11 +38,11 @@ import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.feature.chat.R
 import com.app.hatli.feature.chat.util.resolveBidiLayoutDirection
 
-private val QUICK_REPLIES = listOf(
-    "أنا في المحل حالياً 🛒",
-    "الصنف ده ناقص ⚠️",
-    "وصلت تحت البيت 📍",
-    "تمام يا غالي 👍"
+private val QUICK_REPLY_RES_IDS = listOf(
+    R.string.chat_quick_at_shop,
+    R.string.chat_quick_item_unavailable,
+    R.string.chat_quick_arrived,
+    R.string.chat_quick_acknowledged,
 )
 
 @Composable
@@ -68,7 +68,8 @@ fun ChatComposer(
                     .padding(horizontal = HatliSpacing.md, vertical = 6.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                items(QUICK_REPLIES) { chipText ->
+                items(QUICK_REPLY_RES_IDS) { resId ->
+                    val chipText = stringResource(resId)
                     Surface(
                         shape = RoundedCornerShape(16.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant,

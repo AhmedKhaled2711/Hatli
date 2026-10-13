@@ -122,6 +122,8 @@
     </string>
     <string name="auth_mobile_verification">Mobile verification</string>
 
+    <string name="auth_send_code">Send Verification Code</string>
+
     <!-- ============================== -->
     <!-- Auth - Splash -->
     <!-- ============================== -->
@@ -129,5 +131,91 @@
     <string name="splash_brand">Hatli</string>
     <string name="splash_tagline">Everything you need, delivered to you</string>
     <string name="splash_logo_content_description">Hatli logo</string>
+
+    <!-- ============================== -->
+    <!-- Role Selection -->
+    <!-- ============================== -->
+
+    <string name="role_selection_title">Choose your Hatli account type</string>
+    <string name="role_selection_subtitle">Select how you would like to use the app. You can switch roles at any time.</string>
+    <string name="role_requester_title">Order Services (Client)</string>
+    <string name="role_requester_tagline">Request anything from any shop in your city</string>
+    <string name="role_requester_feature_1">Store, pharmacy, and supermarket delivery</string>
+    <string name="role_requester_feature_2">Track delivery map and captain in real time</string>
+    <string name="role_requester_feature_3">Coordinate custom errands and special requests</string>
+    <string name="role_runner_title">Delivery Captain</string>
+    <string name="role_runner_tagline">Deliver orders and earn great income on your schedule</string>
+    <string name="role_runner_feature_1">Accept nearby orders with a single tap</string>
+    <string name="role_runner_feature_2">Low commissions and fast earnings payouts</string>
+    <string name="role_runner_feature_3">Complete flexibility in choosing working hours</string>
+    <string name="role_continue_button">Continue Registration</string>
+
+    <!-- ============================== -->
+    <!-- Profile Setup Wizard -->
+    <!-- ============================== -->
+
+    <string name="profile_setup_title_runner">Captain Profile Setup</string>
+    <string name="profile_setup_title_requester">Client Profile Setup</string>
+    <string name="profile_setup_step_counter">Step %1$d of %2$d</string>
+    <string name="profile_setup_btn_prev">Back</string>
+    <string name="profile_setup_btn_next">Next</string>
+    <string name="profile_setup_btn_complete">Complete Registration</string>
+    <string name="profile_setup_btn_saving">Saving…</string>
+
+    <string name="profile_setup_step_personal_title">Personal Info</string>
+    <string name="profile_setup_step_personal_sub">Enter your name and basic information to customize your experience.</string>
+    <string name="profile_setup_step_address_title">Address &amp; Location</string>
+    <string name="profile_setup_step_address_sub">Add your address for accurate pickup and delivery.</string>
+    <string name="profile_setup_step_transport_title">Vehicle &amp; Transport</string>
+    <string name="profile_setup_step_transport_sub">Choose your vehicle type to match you with suitable delivery orders.</string>
+    <string name="profile_setup_step_verification_title">Identity Verification</string>
+    <string name="profile_setup_step_verification_sub">Enter your national ID number to complete your account activation.</string>
+
+    <!-- Personal Info Step -->
+    <string name="profile_personal_upload_photo">Upload profile photo</string>
+    <string name="profile_personal_first_name">First Name</string>
+    <string name="profile_personal_last_name">Last Name</string>
+    <string name="profile_personal_email_optional">Email Address (Optional)</string>
+    <string name="profile_personal_phone">Mobile Number</string>
+    <string name="profile_personal_gender_label">Gender</string>
+    <string name="profile_personal_gender_male">Male</string>
+    <string name="profile_personal_gender_female">Female</string>
+
+    <!-- Address Step -->
+    <string name="profile_address_header">Delivery Address</string>
+    <string name="profile_address_manual_note">Manual entry for now. Automatic map location will be enabled soon.</string>
+    <string name="profile_address_city">City / Governorate</string>
+    <string name="profile_address_area">Area / Neighborhood</string>
+    <string name="profile_address_street">Street Name</string>
+    <string name="profile_address_building">Building / House Number</string>
+    <string name="profile_address_floor_optional">Floor (Optional)</string>
+    <string name="profile_address_apartment_optional">Apartment (Optional)</string>
+    <string name="profile_address_notes_optional">Landmark or Additional Notes (Optional)</string>
+    <string name="profile_address_tip">Tip: Add a clear nearby landmark (such as next to a pharmacy or mosque) to help the Captain.</string>
+
+    <!-- Transport Step -->
+    <string name="profile_transport_header">Choose your transport method (at least one)</string>
+    <string name="profile_transport_vehicle_details">Vehicle Details (Model · Color · Plate Number)</string>
+    <string name="profile_transport_vehicle_example">Example: Hyundai Verna · White · ABC 1234</string>
+    <string name="profile_transport_car_title">Car</string>
+    <string name="profile_transport_car_sub">For larger orders and longer distances</string>
+    <string name="profile_transport_motorcycle_title">Motorcycle / Scooter</string>
+    <string name="profile_transport_motorcycle_sub">Fast delivery within the city</string>
+    <string name="profile_transport_bicycle_title">Bicycle</string>
+    <string name="profile_transport_bicycle_sub">Short and quick errands</string>
+    <string name="profile_transport_walking_title">On Foot</string>
+    <string name="profile_transport_walking_sub">Nearby neighborhood delivery</string>
+    <string name="profile_transport_other_title">Other Transport</string>
+    <string name="profile_transport_other_sub">Custom delivery vehicle</string>
+
+    <!-- Verification Step -->
+    <string name="profile_verification_national_id">National ID Number (14 digits)</string>
+    <string name="profile_verification_id_card_title">National ID Card Photo</string>
+    <string name="profile_verification_id_card_desc">Front and back ID photos will be required to verify Captain identity soon.</string>
+    <string name="profile_verification_selfie_title">Personal Photo (Selfie)</string>
+    <string name="profile_verification_selfie_desc">Live face check will be enabled in an upcoming update.</string>
+    <string name="profile_verification_complete_ready">You can complete registration now</string>
+    <string name="profile_verification_note">Your account will be provisionally approved under (Pending Verification). Document upload is optional until attachments are enabled.</string>
+    <string name="profile_verification_soon">Soon</string>
 
 </resources>

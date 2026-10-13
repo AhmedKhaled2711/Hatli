@@ -89,6 +89,8 @@ class RequestDetailViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
+
     override fun handleEvent(event: RequestDetailUiEvent) {
         when (event) {
             RequestDetailUiEvent.Refresh -> Unit
@@ -103,7 +105,7 @@ class RequestDetailViewModel @Inject constructor(
                 when (val result = advanceStatus(requestId, next)) {
                     is Result.Success -> {
                         setState { copy(isAdvancing = false) }
-                        sendEffect(RequestDetailUiEffect.ShowMessage("Status updated"))
+                        sendEffect(RequestDetailUiEffect.ShowMessage(if (isAr) "تم تحديث الحالة" else "Status updated"))
                     }
                     is Result.Error -> {
                         setState { copy(isAdvancing = false) }
@@ -136,7 +138,7 @@ class RequestDetailViewModel @Inject constructor(
                 when (val result = cancelRequest(requestId, uiState.value.cancelReason)) {
                     is Result.Success -> {
                         setState { copy(isCancelling = false, showCancelSheet = false) }
-                        sendEffect(RequestDetailUiEffect.ShowMessage("Request cancelled"))
+                        sendEffect(RequestDetailUiEffect.ShowMessage(if (isAr) "تم إلغاء الطلب" else "Request cancelled"))
                         sendEffect(RequestDetailUiEffect.NavigateBack)
                     }
                     is Result.Error -> {

@@ -210,7 +210,7 @@ fun RateRunnerScreen(
 
                         Icon(
                             imageVector = if (isFilled) Icons.Default.Star else Icons.Default.StarBorder,
-                            contentDescription = "Star $star",
+                            contentDescription = stringResource(R.string.rate_runner_star_desc, star),
                             tint = starColor,
                             modifier = Modifier
                                 .size(44.dp)

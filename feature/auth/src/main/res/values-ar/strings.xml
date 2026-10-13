@@ -41,12 +41,12 @@
     <string name="onboarding_mock_review_headline">مراجعة وحساب التكلفة</string>
     <string name="onboarding_mock_fee_stepper_title">مقابل التوصيل المقترح للكابتن</string>
     <string name="onboarding_mock_fee_stepper_desc">يمكنك تعديل الأجر المقترح لتسريع قبول كباتن التوصيل في مدينتك.</string>
-    <string name="onboarding_mock_fee_stepper_amount">35 EGP</string>
+    <string name="onboarding_mock_fee_stepper_amount">35 ج.م</string>
     <string name="onboarding_mock_order_cost_summary">ملخص حساب وحالة الطلب</string>
     <string name="onboarding_mock_review_service_type_label">نوع الخدمة</string>
     <string name="onboarding_mock_review_service_type_val">شراء مستلزمات</string>
     <string name="onboarding_mock_review_items_cost_label">تكلفة المشتريات</string>
-    <string name="onboarding_mock_review_items_cost_note">تُدفع للمندوب عند الاستلام حسب الفاتورة</string>
+    <string name="onboarding_mock_review_items_cost_note">تُدفع للكابتن عند الاستلام حسب الفاتورة</string>
     <string name="onboarding_mock_review_service_charge_label">رسوم الخدمة والتطبيق</string>
     <string name="onboarding_mock_review_service_charge_free">مجاناً لفترة محدودة</string>
     <string name="onboarding_mock_review_delivery_fee_label">مقابل التوصيل للكابتن</string>
@@ -125,6 +125,8 @@
     </string>
     <string name="auth_mobile_verification">التحقق من رقم الهاتف</string>
 
+    <string name="auth_send_code">إرسال كود التحقق</string>
+
     <!-- ============================== -->
     <!-- Auth - Splash -->
     <!-- ============================== -->
@@ -132,5 +134,91 @@
     <string name="splash_brand">هاتلي</string>
     <string name="splash_tagline">كل اللي تحتاجه، من مكانك</string>
     <string name="splash_logo_content_description">شعار هاتلي</string>
+
+    <!-- ============================== -->
+    <!-- Role Selection -->
+    <!-- ============================== -->
+
+    <string name="role_selection_title">اختر نوع حسابك في هاتلي</string>
+    <string name="role_selection_subtitle">حدد كيف تود استخدام التطبيق. يمكنك تغيير دورك أو التبديل بينهما بسهولة لاحقاً.</string>
+    <string name="role_requester_title">طالب خدمة (عميل)</string>
+    <string name="role_requester_tagline">اطلب أي حاجة من أي مكان في مدينتك</string>
+    <string name="role_requester_feature_1">توصيل طلبات المتاجر والصيدليات والسوبرماركت</string>
+    <string name="role_requester_feature_2">متابعة خريطة التوصيل والكابتن لحظة بلحظة</string>
+    <string name="role_requester_feature_3">تنسيق مشاوير خاصة وطلبات مخصصة بسهولة</string>
+    <string name="role_runner_title">كابتن توصيل</string>
+    <string name="role_runner_tagline">وصل الطلبات وحقق دخلاً ممتازاً بأوقات حرّة</string>
+    <string name="role_runner_feature_1">استلم طلبات قريبة منك بضغط زر واحدة</string>
+    <string name="role_runner_feature_2">عمولات منخفضة وتسوية سريعة لأرباحك</string>
+    <string name="role_runner_feature_3">مرونة كاملة في تحديد أوقات العمل</string>
+    <string name="role_continue_button">متابعة التسجيل</string>
+
+    <!-- ============================== -->
+    <!-- Profile Setup Wizard -->
+    <!-- ============================== -->
+
+    <string name="profile_setup_title_runner">إعداد حساب كابتن توصيل</string>
+    <string name="profile_setup_title_requester">إعداد حساب طالب خدمة</string>
+    <string name="profile_setup_step_counter">الخطوة %1$d من %2$d</string>
+    <string name="profile_setup_btn_prev">السابق</string>
+    <string name="profile_setup_btn_next">التالي</string>
+    <string name="profile_setup_btn_complete">إكمال التسجيل</string>
+    <string name="profile_setup_btn_saving">جاري الحفظ…</string>
+
+    <string name="profile_setup_step_personal_title">البيانات الشخصية</string>
+    <string name="profile_setup_step_personal_sub">أدخل اسمك وبياناتك الأساسية لتخصيص تجربتك في هاتلي.</string>
+    <string name="profile_setup_step_address_title">عنوان السكن والإقامة</string>
+    <string name="profile_setup_step_address_sub">أضف عنوانك لتسهيل استلام وتوصيل الطلبات بدقة.</string>
+    <string name="profile_setup_step_transport_title">وسيلة التوصيل</string>
+    <string name="profile_setup_step_transport_sub">اختر وسيلة التنقل التي تستخدمها لتحديد نوع الطلبات المناسبة.</string>
+    <string name="profile_setup_step_verification_title">توثيق الهوية</string>
+    <string name="profile_setup_step_verification_sub">أدخل رقم الهوية الوطنية لإتمام تفعيل حسابك.</string>
+
+    <!-- Personal Info Step -->
+    <string name="profile_personal_upload_photo">تحميل صورة شخصية</string>
+    <string name="profile_personal_first_name">الاسم الأول</string>
+    <string name="profile_personal_last_name">اسم العائلة</string>
+    <string name="profile_personal_email_optional">البريد الإلكتروني (اختياري)</string>
+    <string name="profile_personal_phone">رقم الهاتف المحمول</string>
+    <string name="profile_personal_gender_label">النوع / الجنس</string>
+    <string name="profile_personal_gender_male">ذكر</string>
+    <string name="profile_personal_gender_female">أنثى</string>
+
+    <!-- Address Step -->
+    <string name="profile_address_header">عنوان استلام الطلبات</string>
+    <string name="profile_address_manual_note">إدخال يدوي مؤقتاً. سيتم تفعيل تحديد الموقع التلقائي عبر الخريطة قريباً.</string>
+    <string name="profile_address_city">المدينة / المحافظة</string>
+    <string name="profile_address_area">المنطقة / الحي</string>
+    <string name="profile_address_street">الشارع / اسم الشارع</string>
+    <string name="profile_address_building">رقم المبنى / العمارة</string>
+    <string name="profile_address_floor_optional">الطابق (اختياري)</string>
+    <string name="profile_address_apartment_optional">الشقة (اختياري)</string>
+    <string name="profile_address_notes_optional">علامة مميزة أو تفاصيل إضافية (اختياري)</string>
+    <string name="profile_address_tip">نصيحة: أضف معلماً قريباً من عمارتك (مثل: بجوار صيدلية أو مسجد) لمساعدة الكابتن.</string>
+
+    <!-- Transport Step -->
+    <string name="profile_transport_header">اختر وسيلة للتوصيل (واحدة على الأقل)</string>
+    <string name="profile_transport_vehicle_details">بيانات المركبة (الموديل · اللون · رقم اللوحة)</string>
+    <string name="profile_transport_vehicle_example">مثال: هيونداي فيرنا · أبيض · ط ر س 1234</string>
+    <string name="profile_transport_car_title">سيارة</string>
+    <string name="profile_transport_car_sub">للطلبات الكبيرة والمسافات</string>
+    <string name="profile_transport_motorcycle_title">دراجة نارية / سكوتر</string>
+    <string name="profile_transport_motorcycle_sub">توصيل سريع داخل المدينة</string>
+    <string name="profile_transport_bicycle_title">دراجة هوائية</string>
+    <string name="profile_transport_bicycle_sub">مشاوير قصيرة وسريعة</string>
+    <string name="profile_transport_walking_title">مشياً على الأقدام</string>
+    <string name="profile_transport_walking_sub">توصيل الأحياء المجاورة</string>
+    <string name="profile_transport_other_title">وسيلة أخرى</string>
+    <string name="profile_transport_other_sub">وسيلة نقل مخصصة</string>
+
+    <!-- Verification Step -->
+    <string name="profile_verification_national_id">رقم الهوية الوطنية / الرقم القومي (14 رقم)</string>
+    <string name="profile_verification_id_card_title">صورة بطاقة الرقم القومي</string>
+    <string name="profile_verification_id_card_desc">سيتطلب رفع صورة وجه وظهر البطاقة الشخصية للتحقق من هوية الكابتن قريباً.</string>
+    <string name="profile_verification_selfie_title">الصورة الشخصية (Selfie)</string>
+    <string name="profile_verification_selfie_desc">سيتم تفعيل الفحص الحيوي للوجه لمنع انتحال الشخصية في التحديث القادم.</string>
+    <string name="profile_verification_complete_ready">يمكنك إكمال التسجيل الآن</string>
+    <string name="profile_verification_note">سيتم اعتماد حسابك مؤقتاً بحالة (قيد التوثيق). رفع المستندات اختياري حتى تفعيل المرفقات.</string>
+    <string name="profile_verification_soon">قريباً</string>
 
 </resources>

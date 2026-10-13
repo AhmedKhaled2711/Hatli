@@ -144,7 +144,7 @@ fun LoginScreen(
                 text = if (state.isLoading) {
                     stringResource(R.string.auth_sending)
                 } else {
-                    "إرسال كود التحقق"
+                    stringResource(R.string.auth_send_code)
                 },
                 onClick = { onEvent(LoginUiEvent.Submit) },
                 enabled = !state.isLoading && state.phone.isNotBlank(),
