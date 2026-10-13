@@ -20,6 +20,7 @@ import com.app.hatli.feature.auth.presentation.splash.SplashRoute
 import com.app.hatli.feature.auth.presentation.start.StartRoute
 
 fun NavGraphBuilder.authGraph(
+    startDestination: Any = StartRouteKey,
     onNavigateHome: () -> Unit,
     onNavigateLogin: () -> Unit,
     onNavigateOnboarding: () -> Unit,
@@ -29,7 +30,7 @@ fun NavGraphBuilder.authGraph(
     onNavigateOtp: (verificationId: String, phone: String) -> Unit,
 ) {
     navigation<AuthGraph>(
-        startDestination = StartRouteKey,
+        startDestination = startDestination,
     ) {
         composable<SplashRouteKey> {
             SplashRoute(

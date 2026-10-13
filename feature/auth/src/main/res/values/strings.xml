@@ -13,15 +13,69 @@
     <string name="onboarding_page1_body">Need something from a supermarket, bakery, butcher, or any local shop? Create a request and let Hatli deliver it to you.</string>
     <string name="onboarding_page2_title">Create your request in seconds</string>
     <string name="onboarding_page2_body">Describe what you need, choose your location, and we\'ll take care of the rest.</string>
-    <string name="onboarding_page3_title">Nearby runners are ready</string>
-    <string name="onboarding_page3_body">Once your request is posted, nearby runners can accept it and deliver what you need quickly.</string>
-    <string name="onboarding_mock_request_title">Your request</string>
-    <string name="onboarding_mock_item_meat">🥩 2 kg of meat</string>
-    <string name="onboarding_mock_item_pepsi">🥤 2 cans of Pepsi</string>
-    <string name="onboarding_mock_item_bread">🍞 5 loaves of bread</string>
-    <string name="onboarding_mock_accepted_by">Accepted by Ahmed 🚴</string>
-    <string name="onboarding_mock_page2_hint">New request</string>
-    <string name="onboarding_mock_page3_hint">Runner nearby</string>
+    <string name="onboarding_page3_title">Nearby Captains are ready</string>
+    <string name="onboarding_page3_body">Once your request is posted, a nearby Captain will accept it and deliver what you need right to your doorstep.</string>
+    <!-- Mock Phone Preview 1: Create Request (Supermarket Step 2) -->
+    <string name="onboarding_mock_create_title">New Request</string>
+    <string name="onboarding_mock_step_2_of_3">Step 2 of 3</string>
+    <string name="onboarding_mock_step_service">Service</string>
+    <string name="onboarding_mock_step_details">Details</string>
+    <string name="onboarding_mock_step_review">Review</string>
+    <string name="onboarding_mock_category_shopping">Shopping</string>
+    <string name="onboarding_mock_category_shopping_subtitle">Supermarket, butcher, bakery, and more</string>
+    <string name="onboarding_mock_change_category">Change</string>
+    <string name="onboarding_mock_shop_name_label">Store name (optional)</string>
+    <string name="onboarding_mock_shop_name_value">Al-Amal Supermarket</string>
+    <string name="onboarding_mock_items_label">What do you want to buy?</string>
+    <string name="onboarding_mock_items_value">• 2 kg sugar\n• 2 milk packs\n• 1 kg rice\n• Feta cheese 500g</string>
+    <string name="onboarding_mock_items_char_count">42 characters entered</string>
+    <string name="onboarding_mock_notes_label">Notes (optional)</string>
+    <string name="onboarding_mock_notes_value">Please check expiration dates</string>
+    <string name="onboarding_mock_budget_label">Estimated budget (EGP, optional)</string>
+    <string name="onboarding_mock_budget_value">250 EGP</string>
+    <string name="onboarding_mock_btn_continue">Continue to details</string>
+    <string name="onboarding_mock_btn_back">Back</string>
+
+    <!-- Mock Phone Preview 2: Fee Review & Order Cost Breakdown (Step 3) -->
+    <string name="onboarding_mock_step_3_of_3">Step 3 of 3</string>
+    <string name="onboarding_mock_review_headline">Review &amp; fee calculation</string>
+    <string name="onboarding_mock_fee_stepper_title">Suggested delivery fee for captain</string>
+    <string name="onboarding_mock_fee_stepper_desc">Adjust fee to speed up acceptance by captains in your city.</string>
+    <string name="onboarding_mock_fee_stepper_amount">35 EGP</string>
+    <string name="onboarding_mock_order_cost_summary">Order calculation and status summary</string>
+    <string name="onboarding_mock_review_service_type_label">Service type</string>
+    <string name="onboarding_mock_review_service_type_val">Shopping</string>
+    <string name="onboarding_mock_review_items_cost_label">Items cost</string>
+    <string name="onboarding_mock_review_items_cost_note">Paid to captain upon delivery per receipt</string>
+    <string name="onboarding_mock_review_service_charge_label">Service and app fees</string>
+    <string name="onboarding_mock_review_service_charge_free">Free for a limited time</string>
+    <string name="onboarding_mock_review_delivery_fee_label">Delivery fee for captain</string>
+    <string name="onboarding_mock_review_delivery_fee_val">35 EGP</string>
+    <string name="onboarding_mock_btn_confirm">Confirm &amp; submit request now</string>
+
+    <!-- Mock Phone Preview 3: Live Request Details & Tracking (Searching for Captain) -->
+    <string name="onboarding_mock_tracking_detail_title">Order details</string>
+    <string name="onboarding_mock_status_hero_pending_title">Searching for a captain…</string>
+    <string name="onboarding_mock_status_hero_order_title">Shopping - Al-Amal Supermarket</string>
+    <string name="onboarding_mock_status_hero_pending_desc">You will be notified once a nearby captain accepts.</string>
+    <string name="onboarding_mock_track_progress_title">Order progress</string>
+    <string name="onboarding_mock_track_step_accepted">Accepted</string>
+    <string name="onboarding_mock_track_step_in_progress">In Progress</string>
+    <string name="onboarding_mock_track_step_purchased">Purchased</string>
+    <string name="onboarding_mock_track_step_on_the_way">On the Way</string>
+    <string name="onboarding_mock_track_step_delivered">Delivered</string>
+    <string name="onboarding_mock_track_step_completed">Completed</string>
+    <string name="onboarding_mock_order_info_title">Order details &amp; fees</string>
+    <string name="onboarding_mock_order_info_fee_badge">35 EGP</string>
+    <string name="onboarding_mock_order_info_desc_label">Description</string>
+    <string name="onboarding_mock_order_info_desc_val">2 kg sugar, 2 milk packs, 1 kg rice, feta cheese 500g</string>
+    <string name="onboarding_mock_order_info_pickup_label">Pickup location</string>
+    <string name="onboarding_mock_order_info_pickup_val">Al-Amal Supermarket</string>
+    <string name="onboarding_mock_order_info_dropoff_label">Delivery address</string>
+    <string name="onboarding_mock_order_info_dropoff_val">El Mahalla - Ashgar District - Bldg 14</string>
+    <string name="onboarding_mock_order_info_fee_label">Delivery fee</string>
+    <string name="onboarding_mock_order_info_fee_val">35 EGP</string>
+    <string name="onboarding_mock_btn_cancel_order">Cancel order</string>
 
     <!-- ============================== -->
     <!-- Auth - Start -->

@@ -44,20 +44,26 @@ fun HatliNavHost(
         navigator.navigateAndClearBackStack(AuthGraph)
     }
 
-    val navStartDestination: Any = when (initialDestination) {
+    val rootStartDestination: Any = when (initialDestination) {
         ResolveStartDestinationUseCase.StartDestination.Home -> HomeGraph
+        else -> AuthGraph
+    }
+
+    val authStartDestination: Any = when (initialDestination) {
         ResolveStartDestinationUseCase.StartDestination.Onboarding -> OnboardingRoute
         ResolveStartDestinationUseCase.StartDestination.Start -> StartRoute
         ResolveStartDestinationUseCase.StartDestination.CreateProfile -> CreateProfileRoute
         ResolveStartDestinationUseCase.StartDestination.Login -> LoginRoute
+        ResolveStartDestinationUseCase.StartDestination.Home -> StartRoute
     }
 
     NavHost(
         navController = navController,
-        startDestination = navStartDestination,
+        startDestination = rootStartDestination,
         modifier = modifier,
     ) {
         authGraph(
+            startDestination = authStartDestination,
             onNavigateHome = {
                 goHomeClearingStack()
             },

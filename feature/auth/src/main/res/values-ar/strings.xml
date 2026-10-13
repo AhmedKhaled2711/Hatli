@@ -13,15 +13,69 @@
     <string name="onboarding_page1_body">عايز حاجة من السوبر ماركت؟ من الجزار؟ من الفرن؟ أو حتى من أي محل قريب؟ اكتب طلبك وسيب هاتلي يوصلهولك.</string>
     <string name="onboarding_page2_title">اطلب اللي أنت عايزه</string>
     <string name="onboarding_page2_body">اكتب طلباتك براحتك، وحدد المكان لو حابب، وسيب باقي المشوار علينا.</string>
-    <string name="onboarding_page3_title">أقرب Runner هيجيلك</string>
-    <string name="onboarding_page3_body">أول ما تنزل طلبك، الـ Runner القريب منك يقدر يقبله ويجيب لك اللي محتاجه بسرعة.</string>
-    <string name="onboarding_mock_request_title">طلبك</string>
-    <string name="onboarding_mock_item_meat">🥩 2 كيلو لحمة</string>
-    <string name="onboarding_mock_item_pepsi">🥤 2 كانز بيبسي</string>
-    <string name="onboarding_mock_item_bread">🍞 5 أرغفة عيش</string>
-    <string name="onboarding_mock_accepted_by">تم قبول الطلب بواسطة أحمد 🚴</string>
-    <string name="onboarding_mock_page2_hint">طلب جديد</string>
-    <string name="onboarding_mock_page3_hint">Runner قريب</string>
+    <string name="onboarding_page3_title">أقرب كابتن هيجيلك</string>
+    <string name="onboarding_page3_body">أول ما تنزل طلبك، أقرب كابتن يقدر يقبله ويوصلك اللي محتاجه لحد باب بيتك بسرعة.</string>
+    <!-- Mock Phone Preview 1: Create Request (Supermarket Step 2) -->
+    <string name="onboarding_mock_create_title">طلب جديد</string>
+    <string name="onboarding_mock_step_2_of_3">الخطوة 2 من 3</string>
+    <string name="onboarding_mock_step_service">الخدمة</string>
+    <string name="onboarding_mock_step_details">التفاصيل</string>
+    <string name="onboarding_mock_step_review">المراجعة</string>
+    <string name="onboarding_mock_category_shopping">شراء مستلزمات</string>
+    <string name="onboarding_mock_category_shopping_subtitle">سوبر ماركت، جزارة، مخبز، وأكثر</string>
+    <string name="onboarding_mock_change_category">تغيير الخدمة</string>
+    <string name="onboarding_mock_shop_name_label">اسم المتجر (اختياري)</string>
+    <string name="onboarding_mock_shop_name_value">سوبر ماركت الأمل</string>
+    <string name="onboarding_mock_items_label">ما الذي تريد شراؤه؟</string>
+    <string name="onboarding_mock_items_value">• 2 كجم سكر\n• 2 كيس لبن\n• 1 كجم أرز\n• جبنة بيضاء 500 جم</string>
+    <string name="onboarding_mock_items_char_count">42 حرفاً مدخلاً</string>
+    <string name="onboarding_mock_notes_label">ملاحظات (اختياري)</string>
+    <string name="onboarding_mock_notes_value">يرجى التأكد من تاريخ الصلاحية</string>
+    <string name="onboarding_mock_budget_label">الميزانية المتوقعة بالجنيه (اختياري)</string>
+    <string name="onboarding_mock_budget_value">250 ج.م</string>
+    <string name="onboarding_mock_btn_continue">متابعة وإدخال التفاصيل</string>
+    <string name="onboarding_mock_btn_back">رجوع</string>
+
+    <!-- Mock Phone Preview 2: Fee Review & Order Cost Breakdown (Step 3) -->
+    <string name="onboarding_mock_step_3_of_3">الخطوة 3 من 3</string>
+    <string name="onboarding_mock_review_headline">مراجعة وحساب التكلفة</string>
+    <string name="onboarding_mock_fee_stepper_title">مقابل التوصيل المقترح للكابتن</string>
+    <string name="onboarding_mock_fee_stepper_desc">يمكنك تعديل الأجر المقترح لتسريع قبول كباتن التوصيل في مدينتك.</string>
+    <string name="onboarding_mock_fee_stepper_amount">35 EGP</string>
+    <string name="onboarding_mock_order_cost_summary">ملخص حساب وحالة الطلب</string>
+    <string name="onboarding_mock_review_service_type_label">نوع الخدمة</string>
+    <string name="onboarding_mock_review_service_type_val">شراء مستلزمات</string>
+    <string name="onboarding_mock_review_items_cost_label">تكلفة المشتريات</string>
+    <string name="onboarding_mock_review_items_cost_note">تُدفع للمندوب عند الاستلام حسب الفاتورة</string>
+    <string name="onboarding_mock_review_service_charge_label">رسوم الخدمة والتطبيق</string>
+    <string name="onboarding_mock_review_service_charge_free">مجاناً لفترة محدودة</string>
+    <string name="onboarding_mock_review_delivery_fee_label">مقابل التوصيل للكابتن</string>
+    <string name="onboarding_mock_review_delivery_fee_val">35 ج.م</string>
+    <string name="onboarding_mock_btn_confirm">تأكيد وإرسال الطلب الآن</string>
+
+    <!-- Mock Phone Preview 3: Live Request Details & Tracking (Searching for Captain) -->
+    <string name="onboarding_mock_tracking_detail_title">تفاصيل الطلب</string>
+    <string name="onboarding_mock_status_hero_pending_title">جاري البحث عن كابتن…</string>
+    <string name="onboarding_mock_status_hero_order_title">شراء مستلزمات - سوبر ماركت الأمل</string>
+    <string name="onboarding_mock_status_hero_pending_desc">سيتم إبلاغك فور قبول أحد الكباتن القريبين لطلبك.</string>
+    <string name="onboarding_mock_track_progress_title">مسار الطلب</string>
+    <string name="onboarding_mock_track_step_accepted">تم القبول</string>
+    <string name="onboarding_mock_track_step_in_progress">قيد التنفيذ</string>
+    <string name="onboarding_mock_track_step_purchased">تم الشراء</string>
+    <string name="onboarding_mock_track_step_on_the_way">في الطريق</string>
+    <string name="onboarding_mock_track_step_delivered">تم التوصيل</string>
+    <string name="onboarding_mock_track_step_completed">مكتمل</string>
+    <string name="onboarding_mock_order_info_title">تفاصيل الطلب والرسوم</string>
+    <string name="onboarding_mock_order_info_fee_badge">35 جنيه</string>
+    <string name="onboarding_mock_order_info_desc_label">الوصف</string>
+    <string name="onboarding_mock_order_info_desc_val">2 كجم سكر، 2 كيس لبن، 1 كجم أرز، جبنة بيضاء 500 جم</string>
+    <string name="onboarding_mock_order_info_pickup_label">عنوان الاستلام / المحل</string>
+    <string name="onboarding_mock_order_info_pickup_val">سوبر ماركت الأمل</string>
+    <string name="onboarding_mock_order_info_dropoff_label">عنوان التسليم</string>
+    <string name="onboarding_mock_order_info_dropoff_val">المحلة الكبرى - حي الأشجار - عمارة 14</string>
+    <string name="onboarding_mock_order_info_fee_label">رسوم التوصيل</string>
+    <string name="onboarding_mock_order_info_fee_val">35 جنيه</string>
+    <string name="onboarding_mock_btn_cancel_order">إلغاء الطلب</string>
 
 
     <!-- ============================== -->

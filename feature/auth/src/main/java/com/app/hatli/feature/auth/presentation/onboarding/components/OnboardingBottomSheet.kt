@@ -6,8 +6,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,18 +21,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.theme.HatliElevation
-import com.app.hatli.core.designsystem.theme.HatliRadius
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 
 /**
- * Overlay bottom sheet (~3.5/10 screen) — covers the lower third of the phone,
- * matching the FlexBox onboarding reference. Typography from [MaterialTheme] (Mada).
+ * Bottom action sheet container:
+ * Houses the animated page title, description, progress dots, and the primary navigation button.
  */
 @Composable
 fun OnboardingBottomSheet(
@@ -49,8 +48,8 @@ fun OnboardingBottomSheet(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(
-            topStart = HatliRadius.xl + 8.dp,
-            topEnd = HatliRadius.xl + 8.dp,
+            topStart = 28.dp,
+            topEnd = 28.dp,
         ),
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = HatliElevation.lg,
@@ -58,25 +57,18 @@ fun OnboardingBottomSheet(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .navigationBarsPadding()
                 .padding(
                     start = HatliSpacing.lg,
                     end = HatliSpacing.lg,
-                    top = HatliSpacing.md,
+                    top = HatliSpacing.lg,
                     bottom = HatliSpacing.md,
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(HatliSpacing.lg),
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(bottom = HatliSpacing.md)
-                    .height(4.dp)
-                    .fillMaxWidth(0.12f)
-                    .clip(RoundedCornerShape(percent = 50))
-                    .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f)),
-            )
-
+            // Text copy animated on page transition
             AnimatedContent(
                 targetState = Triple(pageKey, title, description),
                 transitionSpec = {
@@ -92,17 +84,26 @@ fun OnboardingBottomSheet(
                 ) {
                     Text(
                         text = pageTitle,
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 22.sp,
+                            lineHeight = 28.sp,
+                        ),
                         color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.Center,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.fillMaxWidth(),
                     )
+
                     Spacer(modifier = Modifier.height(HatliSpacing.sm))
+
                     Text(
                         text = pageDescription,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = 14.sp,
+                            lineHeight = 21.sp,
+                        ),
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center,
                         maxLines = 3,
@@ -112,19 +113,23 @@ fun OnboardingBottomSheet(
                 }
             }
 
-            Spacer(modifier = Modifier.weight(1f))
+            // Bottom controls: Indicators and Action Button
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+            ) {
+                OnboardingIndicator(
+                    pageCount = pageCount,
+                    currentPage = currentPage,
+                )
 
-            OnboardingIndicator(
-                pageCount = pageCount,
-                currentPage = currentPage,
-            )
-
-            Spacer(modifier = Modifier.height(HatliSpacing.md))
-
-            HatliPrimaryButton(
-                text = primaryLabel,
-                onClick = onPrimaryClick,
-            )
+                HatliPrimaryButton(
+                    text = primaryLabel,
+                    onClick = onPrimaryClick,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
     }
 }
