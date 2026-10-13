@@ -29,7 +29,7 @@ fun NavGraphBuilder.authGraph(
     onNavigateOtp: (verificationId: String, phone: String) -> Unit,
 ) {
     navigation<AuthGraph>(
-        startDestination = SplashRouteKey,
+        startDestination = StartRouteKey,
     ) {
         composable<SplashRouteKey> {
             SplashRoute(

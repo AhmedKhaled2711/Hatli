@@ -17,6 +17,7 @@ import com.app.hatli.core.ui.navigation.OtpRoute
 import com.app.hatli.core.ui.navigation.RateRunnerRoute
 import com.app.hatli.core.ui.navigation.RequestDetailRoute
 import com.app.hatli.core.ui.navigation.RoleSelectRoute
+import com.app.hatli.core.domain.usecase.user.ResolveStartDestinationUseCase
 import com.app.hatli.core.ui.navigation.SplashRoute
 import com.app.hatli.core.ui.navigation.StartRoute
 import com.app.hatli.feature.auth.navigation.authGraph
@@ -28,6 +29,7 @@ import com.app.hatli.feature.request.navigation.requestGraph
 
 @Composable
 fun HatliNavHost(
+    initialDestination: ResolveStartDestinationUseCase.StartDestination,
     onMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -42,9 +44,17 @@ fun HatliNavHost(
         navigator.navigateAndClearBackStack(AuthGraph)
     }
 
+    val navStartDestination: Any = when (initialDestination) {
+        ResolveStartDestinationUseCase.StartDestination.Home -> HomeGraph
+        ResolveStartDestinationUseCase.StartDestination.Onboarding -> OnboardingRoute
+        ResolveStartDestinationUseCase.StartDestination.Start -> StartRoute
+        ResolveStartDestinationUseCase.StartDestination.CreateProfile -> CreateProfileRoute
+        ResolveStartDestinationUseCase.StartDestination.Login -> LoginRoute
+    }
+
     NavHost(
         navController = navController,
-        startDestination = AuthGraph,
+        startDestination = navStartDestination,
         modifier = modifier,
     ) {
         authGraph(
@@ -54,18 +64,12 @@ fun HatliNavHost(
 
             onNavigateOnboarding = {
                 navController.navigate(OnboardingRoute) {
-                    popUpTo<SplashRoute> {
-                        inclusive = true
-                    }
                     launchSingleTop = true
                 }
             },
 
             onNavigateStart = {
                 navController.navigate(StartRoute) {
-                    popUpTo<SplashRoute> {
-                        inclusive = true
-                    }
                     launchSingleTop = true
                 }
             },

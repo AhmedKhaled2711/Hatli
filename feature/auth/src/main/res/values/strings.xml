@@ -72,6 +72,8 @@
     <!-- Auth - Splash -->
     <!-- ============================== -->
 
+    <string name="splash_brand">Hatli</string>
     <string name="splash_tagline">Everything you need, delivered to you</string>
+    <string name="splash_logo_content_description">Hatli logo</string>
 
 </resources>

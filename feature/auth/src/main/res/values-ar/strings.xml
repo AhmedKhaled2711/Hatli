@@ -75,6 +75,8 @@
     <!-- Auth - Splash -->
     <!-- ============================== -->
 
+    <string name="splash_brand">هاتلي</string>
     <string name="splash_tagline">كل اللي تحتاجه، من مكانك</string>
+    <string name="splash_logo_content_description">شعار هاتلي</string>
 
 </resources>

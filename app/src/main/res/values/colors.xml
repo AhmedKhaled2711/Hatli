@@ -5,4 +5,5 @@
     <color name="hatli_background">#FFF7F7F7</color>
     <color name="hatli_surface">#FFFFFFFF</color>
     <color name="hatli_on_background">#FF1E1E1E</color>
+    <color name="hatli_splash_bg">#FFF8F9FA</color>
 </resources>

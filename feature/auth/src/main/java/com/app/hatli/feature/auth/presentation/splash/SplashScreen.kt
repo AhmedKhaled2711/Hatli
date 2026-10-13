@@ -100,7 +100,7 @@ fun SplashScreen() {
             ) {
                 Image(
                     painter = painterResource(com.app.hatli.core.designsystem.R.drawable.ic_hatli_logo),
-                    contentDescription = "Hatli Logo",
+                    contentDescription = stringResource(R.string.splash_logo_content_description),
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(CircleShape),
@@ -110,7 +110,7 @@ fun SplashScreen() {
             Spacer(modifier = Modifier.height(HatliSpacing.lg))
 
             Text(
-                text = "Hatli",
+                text = stringResource(R.string.splash_brand),
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.primary,
             )

@@ -22,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.activity.viewModels
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.app.hatli.core.common.util.LocaleHelper
 import com.app.hatli.core.data.firebase.AuthActivityHolder
 import com.app.hatli.core.designsystem.theme.HatliTheme
@@ -36,6 +38,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val mainViewModel: MainViewModel by viewModels()
+
     @Inject
     lateinit var authActivityHolder: AuthActivityHolder
 
@@ -49,7 +53,13 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        splashScreen.setKeepOnScreenCondition {
+            mainViewModel.startDestination.value == null
+        }
+
         if (::authActivityHolder.isInitialized) {
             authActivityHolder.set(this)
         }
@@ -70,6 +80,9 @@ class MainActivity : ComponentActivity() {
                     // Do not clear activity reference on simple compose disposal if activity is still valid
                 }
             }
+
+            val startDestination by mainViewModel.startDestination.collectAsStateWithLifecycle()
+            val initialDestination = startDestination ?: return@setContent
 
             val themeModeState by sessionPreferences.themeMode.collectAsStateWithLifecycle(
                 initialValue = AppThemeMode.FollowSystem
@@ -98,6 +111,7 @@ class MainActivity : ComponentActivity() {
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                     ) {
                         HatliNavHost(
+                            initialDestination = initialDestination,
                             modifier = Modifier.fillMaxSize(),
                             onMessage = { message ->
                                 scope.launch { snackbarHostState.showSnackbar(message) }
