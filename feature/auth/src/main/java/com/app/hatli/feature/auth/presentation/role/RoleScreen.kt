@@ -22,9 +22,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.DirectionsBike
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.automirrored.rounded.DirectionsBike
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.ShoppingBag
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -113,7 +113,7 @@ fun RoleScreen(
                 RoleSelectionCard(
                     title = stringResource(R.string.role_requester_title),
                     tagline = stringResource(R.string.role_requester_tagline),
-                    icon = Icons.Default.ShoppingBag,
+                    icon = Icons.Rounded.ShoppingBag,
                     accentColor = extended.coralPrimary,
                     containerColor = extended.coralContainer,
                     selected = state.selected == UserRole.Requester,
@@ -129,7 +129,7 @@ fun RoleScreen(
                 RoleSelectionCard(
                     title = stringResource(R.string.role_runner_title),
                     tagline = stringResource(R.string.role_runner_tagline),
-                    icon = Icons.AutoMirrored.Filled.DirectionsBike,
+                    icon = Icons.AutoMirrored.Rounded.DirectionsBike,
                     accentColor = extended.mintAccent,
                     containerColor = extended.successContainer,
                     selected = state.selected == UserRole.Runner,
@@ -166,8 +166,10 @@ private fun RoleSelectionCard(
     onClick: () -> Unit,
 ) {
     val extended = HatliTheme.extendedColors
+    val cardShape = RoundedCornerShape(24.dp)
+
     val borderColor by animateColorAsState(
-        targetValue = if (selected) accentColor else extended.border,
+        targetValue = if (selected) accentColor else extended.border.copy(alpha = 0.65f),
         animationSpec = tween(durationMillis = 200),
         label = "roleBorderColor",
     )
@@ -181,14 +183,33 @@ private fun RoleSelectionCard(
         animationSpec = tween(durationMillis = 200),
         label = "roleCardBg",
     )
+    val checkmarkBorderColor by animateColorAsState(
+        targetValue = if (selected) accentColor else CharcoalMuted.copy(alpha = 0.35f),
+        animationSpec = tween(durationMillis = 200),
+        label = "roleCheckBorder",
+    )
+    val checkmarkBgColor by animateColorAsState(
+        targetValue = if (selected) accentColor else Color.Transparent,
+        animationSpec = tween(durationMillis = 200),
+        label = "roleCheckBg",
+    )
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
+            .shadow(
+                elevation = if (selected) 4.dp else 1.5.dp,
+                shape = cardShape,
+                ambientColor = CharcoalDark.copy(alpha = 0.04f),
+                spotColor = if (selected) accentColor.copy(alpha = 0.22f) else CharcoalDark.copy(alpha = 0.08f),
+            )
+            .clip(cardShape)
             .background(cardBackground)
-            .border(borderWidth, borderColor, RoundedCornerShape(20.dp))
-            .shadow(if (selected) 4.dp else 1.dp, RoundedCornerShape(20.dp), spotColor = accentColor.copy(alpha = 0.15f))
+            .border(
+                width = borderWidth,
+                color = borderColor,
+                shape = cardShape,
+            )
             .clickable(onClick = onClick)
             .padding(HatliSpacing.lg),
     ) {
@@ -204,9 +225,9 @@ private fun RoleSelectionCard(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(46.dp)
                             .clip(CircleShape)
-                            .background(accentColor.copy(alpha = 0.15f)),
+                            .background(accentColor.copy(alpha = if (selected) 0.18f else 0.10f)),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -235,22 +256,22 @@ private fun RoleSelectionCard(
                     }
                 }
 
-                // Checkbox / Radio Indicator
+                // Checkbox / Radio Indicator (Rounded for both Requester and Runner)
                 Box(
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(26.dp)
                         .clip(CircleShape)
-                        .background(if (selected) accentColor else Color.Transparent)
+                        .background(checkmarkBgColor)
                         .border(
                             width = if (selected) 0.dp else 2.dp,
-                            color = if (selected) Color.Transparent else CharcoalMuted.copy(alpha = 0.4f),
+                            color = checkmarkBorderColor,
                             shape = CircleShape,
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
                     if (selected) {
                         Icon(
-                            imageVector = Icons.Default.Check,
+                            imageVector = Icons.Rounded.Check,
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(16.dp),
