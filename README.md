@@ -376,8 +376,8 @@ The project includes an automated GitHub Actions workflow defined in [`.github/w
 
 * 📧 **Email:** [eng.ahmedkhaled.work@gmail.com](mailto:eng.ahmedkhaled.work@gmail.com)
 * 🐙 **GitHub:** [@AhmedKhaled2711](https://github.com/AhmedKhaled2711)
-* 💼 **LinkedIn:** [linkedin.com/in/ahmedkhaled2711](https://linkedin.com/in/ahmedkhaled2711)
-* 🌐 **Portfolio:** [ahmedkhaled.dev](https://ahmedkhaled.dev)
+* 💼 **LinkedIn:** [linkedin.com/in/ahmed-khaled-android](https://www.linkedin.com/in/ahmed-khaled-android/)
+* 🌐 **Portfolio:** [ahmedkhaled_portfolio](https://ahmedkhaled2711.github.io/ahmed-khaled-portfolio/)
 
 ---
 
