@@ -29,6 +29,12 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
+      - name: Setup Mock Google Services Configuration
+        run: |
+          if [ ! -f app/google-services.json ]; then
+            cp app/google-services.json.example app/google-services.json
+          fi
+
       - name: Assemble Debug
         run: ./gradlew :app:assembleDebug --stacktrace
 

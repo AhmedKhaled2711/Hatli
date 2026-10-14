@@ -41,8 +41,8 @@ class LoginViewModel @Inject constructor(
         if (uiState.value.isLoading || submitJob?.isActive == true) return
         val rawPhone = uiState.value.phone
         val sanitized = PhoneSanitizer.sanitizeEgyptianPhoneNumber(rawPhone)
-        
-        Log.d(TAG, "Submitting phone auth. Raw input: '$rawPhone', Sanitized E.164: '$sanitized'")
+
+        Log.d(TAG, "Submitting phone auth request")
 
         if (!PhoneSanitizer.isValidEgyptianPhoneNumber(sanitized)) {
             val isAr = java.util.Locale.getDefault().language == "ar"
