@@ -24,3 +24,7 @@ google-services.json
 google-services.json.bak
 build-out*.txt
 tmp-dump.gradle.kts
+keystoreFile
+*.jks
+*.keystore
+
