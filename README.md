@@ -1,4 +1,8 @@
-<h1 align="center">📐 Hatli (هاتلي) — Hyperlocal Community Errand Engine</h1>
+<p align="center">
+  <img src="docs/assets/hatli_logo_primary.svg" width="96" alt="Hatli Logo" />
+</p>
+
+<h1 align="center">Hatli (هاتلي) — Hyperlocal Community Errand Engine</h1>
 
 <p align="center">
   <strong>A modular, Clean Architecture Android application built with Jetpack Compose & Material 3, enabling peer-to-peer hyperlocal deliveries in emerging and small-town communities.</strong>
@@ -11,6 +15,11 @@
   <img src="https://img.shields.io/badge/Min%20SDK-29%2B%20(Android%2010%2B)-3DDC84.svg?style=for-the-badge&logo=android&logoColor=white" alt="Min SDK 29+" />
   <img src="https://img.shields.io/badge/Target%20SDK-36-3DDC84.svg?style=for-the-badge&logo=android&logoColor=white" alt="Target SDK 36" />
   <img src="https://img.shields.io/badge/Architecture-Clean%20%2B%20Modular%20MVVM-FF6B35.svg?style=for-the-badge&logo=android&logoColor=white" alt="Clean Architecture" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="MIT License" /></a>
+</p>
+
+<p align="center">
+  <img src="docs/assets/hatli_mobile_showcase.jpg" width="85%" alt="Hatli Mobile App Showcase" />
 </p>
 
 ---
@@ -160,6 +169,10 @@ Chat conversation screens and multiline input forms utilize `Modifier.imePadding
 ## 🎨 Design System Tokens
 
 Hatli is styled with a distinct, high-contrast brand identity built for visibility in bright outdoor environments:
+
+<p align="center">
+  <img src="docs/assets/hatli_brand_showcase.jpg" width="85%" alt="Hatli Brand & Design System Showcase" />
+</p>
 
 | Token Name | Hex Code | Purpose |
 | :--- | :---: | :--- |
@@ -366,6 +379,10 @@ The project includes an automated GitHub Actions workflow defined in [`.github/w
 2. **Code Standards:** Follow Kotlin official coding conventions and Android Jetpack Compose guidelines.
 3. **Architecture:** Maintain strict module boundaries. Use Cases should contain pure business logic with no Android framework dependencies.
 4. **Verification:** Ensure `./gradlew testDebugUnitTest` and `./gradlew :app:lintDebug` pass cleanly before submitting pull requests.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 

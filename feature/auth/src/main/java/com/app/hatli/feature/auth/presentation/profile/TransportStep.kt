@@ -16,9 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DirectionsBike
+import androidx.compose.material.icons.automirrored.filled.DirectionsBike
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.DirectionsCar
-import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.TwoWheeler
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -173,8 +173,8 @@ private fun TransportTile(
 private fun transportIcon(type: TransportType): ImageVector = when (type) {
     TransportType.Car -> Icons.Default.DirectionsCar
     TransportType.Motorcycle -> Icons.Default.TwoWheeler
-    TransportType.Bicycle -> Icons.Default.DirectionsBike
-    TransportType.Walking -> Icons.Default.DirectionsRun
+    TransportType.Bicycle -> Icons.AutoMirrored.Filled.DirectionsBike
+    TransportType.Walking -> Icons.AutoMirrored.Filled.DirectionsRun
     TransportType.Other -> Icons.Default.DirectionsCar
 }
 

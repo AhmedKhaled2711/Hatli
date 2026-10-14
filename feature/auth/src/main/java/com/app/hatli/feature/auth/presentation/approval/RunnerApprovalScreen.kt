@@ -26,13 +26,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.DirectionsBike
 import androidx.compose.material.icons.automirrored.rounded.DirectionsRun
+import androidx.compose.material.icons.automirrored.rounded.HelpOutline
 import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material.icons.automirrored.rounded.ManageSearch
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.DirectionsCar
-import androidx.compose.material.icons.rounded.HelpOutline
 import androidx.compose.material.icons.rounded.HourglassTop
-import androidx.compose.material.icons.rounded.ManageSearch
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material.icons.rounded.Phone
 import androidx.compose.material.icons.rounded.TwoWheeler
@@ -124,7 +124,7 @@ fun RunnerApprovalScreen(
         )
 
         VerificationStatus.UnderReview -> ApprovalVisualConfig(
-            icon = Icons.Rounded.ManageSearch,
+            icon = Icons.AutoMirrored.Rounded.ManageSearch,
             accentColor = extended.coralPrimary,
             containerColor = extended.coralContainer,
             titleRes = R.string.runner_approval_status_under_review_title,
@@ -151,7 +151,7 @@ fun RunnerApprovalScreen(
         )
 
         null -> ApprovalVisualConfig(
-            icon = Icons.Rounded.HelpOutline,
+            icon = Icons.AutoMirrored.Rounded.HelpOutline,
             accentColor = CharcoalMuted,
             containerColor = extended.surfaceVariant,
             titleRes = R.string.runner_approval_status_unknown_title,

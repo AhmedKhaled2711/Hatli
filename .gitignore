@@ -28,3 +28,6 @@ keystoreFile
 *.jks
 *.keystore
 
+# Release build outputs & profiles
+app/release/
+/app/release/
