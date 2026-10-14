@@ -1,201 +1,380 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/AhmedKhaled2711/Hatli/main/docs/assets/hatli_logo_banner.png" alt="Hatli Banner" width="100%" />
-</p>
-
 <h1 align="center">📐 Hatli (هاتلي) — Hyperlocal Community Errand Engine</h1>
 
 <p align="center">
-  <strong>A production-grade, Clean Architecture Android application built with Jetpack Compose & Material 3, enabling peer-to-peer hyperlocal deliveries in emerging and small-town markets.</strong>
+  <strong>A modular, Clean Architecture Android application built with Jetpack Compose & Material 3, enabling peer-to-peer hyperlocal deliveries in emerging and small-town communities.</strong>
 </p>
 
 <p align="center">
-  <a href="https://kotlinlang.org/"><img src="https://img.shields.io/badge/Kotlin-2.0.0-7F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin" /></a>
-  <a href="https://developer.android.com/jetpack/compose"><img src="https://img.shields.io/badge/Compose-Material%203-4285F4.svg?style=for-the-badge&logo=android&logoColor=white" alt="Jetpack Compose" /></a>
-  <a href="https://firebase.google.com/"><img src="https://img.shields.io/badge/Firebase-Firestore%20%26%20Auth-FFCA28.style=for-the-badge&style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" /></a>
-  <a href="https://developer.android.com/about/versions/14"><img src="https://img.shields.io/badge/Min%20SDK-26%2B%20(Android%208.0%2B)-3DDC84.svg?style=for-the-badge&logo=android&logoColor=white" alt="Min SDK 26+" /></a>
-  <a href="https://developer.android.com/guide/topics/ui/look-and-feel/darktheme"><img src="https://img.shields.io/badge/Architecture-Clean%20%2B%20MVVM-FF6B35.svg?style=for-the-badge&logo=architecture&logoColor=white" alt="Clean Architecture" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-008080.svg?style=for-the-badge" alt="License" /></a>
+  <img src="https://img.shields.io/badge/Kotlin-2.0.21-7F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin 2.0.21" />
+  <img src="https://img.shields.io/badge/Compose-BOM%202025.06.01-4285F4.svg?style=for-the-badge&logo=android&logoColor=white" alt="Jetpack Compose" />
+  <img src="https://img.shields.io/badge/Firebase-Auth%20%26%20Firestore-FFCA28.svg?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
+  <img src="https://img.shields.io/badge/Min%20SDK-29%2B%20(Android%2010%2B)-3DDC84.svg?style=for-the-badge&logo=android&logoColor=white" alt="Min SDK 29+" />
+  <img src="https://img.shields.io/badge/Target%20SDK-36-3DDC84.svg?style=for-the-badge&logo=android&logoColor=white" alt="Target SDK 36" />
+  <img src="https://img.shields.io/badge/Architecture-Clean%20%2B%20Modular%20MVVM-FF6B35.svg?style=for-the-badge&logo=android&logoColor=white" alt="Clean Architecture" />
 </p>
 
 ---
 
-## 📸 Showcase & Visual Experience
+## 📖 Project Overview
 
-| **Feed & Persona Switcher** | **3-Step Errand Wizard** | **Live Tracking & Chat** |
-| :---: | :---: | :---: |
-| <img src="https://raw.githubusercontent.com/AhmedKhaled2711/Hatli/main/docs/assets/showcase_feed.gif" width="260" alt="Feed & Dual Persona Switcher" /> | <img src="https://raw.githubusercontent.com/AhmedKhaled2711/Hatli/main/docs/assets/showcase_wizard.gif" width="260" alt="3-Step Errand Wizard" /> | <img src="https://raw.githubusercontent.com/AhmedKhaled2711/Hatli/main/docs/assets/showcase_tracking.gif" width="260" alt="Live Order Tracking & Chat" /> |
-| *Floating 64dp pill bar with ambient blur shadow and instant Requester ↔ Runner mode transition.* | *Interactive category matrix, flexible landmark picker, and fee calculation slider.* | *5-stage active status timeline, Warm Coral radar pulse, and real-time messaging thread.* |
+**Hatli (هاتلي)** is an on-demand, peer-to-peer hyperlocal delivery and errand marketplace developed for Android. It connects **Requesters** who need everyday goods or errands completed with verified local **Runners** who fulfill those errands within the neighborhood.
 
----
+### The Problem in Emerging & Small-Town Markets
+Conventional on-demand delivery platforms (e.g., DoorDash, Deliveroo, UberEats) face significant operational friction in small towns and developing regions:
+1. **Absence of Geocoded Street Numbers:** Most neighborhoods in small towns across the MENA region rely on landmarks and conversational instructions rather than precise geocoded building addresses.
+2. **Unstructured Errands vs. Rigid Catalogs:** Small-town commerce revolves around unstructured tasks (e.g., *"Pick up medicine from Al-Nour Pharmacy and get 2 kg of bread from the bakery on Station St."*) that rigid merchant catalog carts cannot handle.
+3. **Single-Role Binary Friction:** Traditional delivery platforms split drivers and consumers into two separate apps with disjointed verification pipelines, limiting community-driven peer fulfillment.
 
-## 🧠 The Engineering "Why": Emerging Market Hyperlocal Errand Problem
-
-Global delivery giants (e.g., UberEats, Deliveroo, DoorDash) fail in emerging small-towns, rural-adjacent districts, and dense non-standardized postal zones due to three fundamental market friction points:
-
-1. **Absence of Geocoded Street Numbers:** Conventional delivery platforms require pinpoint street addresses and building numbers—data that simply does not exist in small towns across the Middle East and North Africa.
-2. **Rigid Store Catalog Constraints:** Small-town commerce relies on unstructured, conversational errands (e.g., *"Buy 2 kg of pita bread from Al-Baraka Bakery and pick up my prescription from the corner pharmacy"*), which structured e-commerce cart engines cannot process.
-3. **Rigid Single-Role Architectures:** Traditional apps enforce hard boundaries between customers and delivery drivers, requiring two distinct binaries and onboarding bottlenecks.
-
-### How Hatli Solves This Architectural Gap:
-* **Landmark-First Navigation Engine:** Replaces street addresses with recognizable local landmarks (e.g., *"Next to Al-Nour Mosque"*), coupled with custom micro-dropoff instructions.
-* **Flexible 3-Step Errand Engine:** Supports custom shopping lists, package pick-and-drop, utility bill settlements, and unstructured custom requests with user-suggested delivery fees.
-* **Dual-Persona Single Binary Engine:** Users switch seamlessly between **Requester (طالب)** and **Runner (كابتن)** personas in real-time within a single app install, empowering community peer-to-peer fulfillment.
+### The Hatli Solution
+* **Landmark-First Navigation:** Replaces rigid building addresses with customizable landmark points and contextual micro-instructions.
+* **3-Step Errand Engine:** Supports custom multi-item shopping lists, pickup-and-drop tasks, and utility payments with user-suggested delivery fees.
+* **Dual-Persona Single Binary:** Seamlessly switch between **Requester (طالب)** and **Runner (كابتن)** personas in real-time within a single app.
+* **Runner Verification Gate:** Strict Firestore security rules and in-app approval gates prevent unverified runners from accepting customer orders until their documents and profile are reviewed.
 
 ---
 
-## 🏗 Modular Clean Architecture
+## ✨ Features
 
-Hatli strictly enforces **Clean Architecture** combined with **MVVM**, **Kotlin Flow**, and **Android Jetpack recommended practices**. The project is split into decoupled Gradle modules to ensure modularity, high build parallelization, and zero cross-feature dependency leakage.
+### Implemented Functionality
+* **Authentication & Onboarding:**
+  * Phone number authentication via Firebase Phone Auth with SMS OTP verification.
+  * Sanitized Egyptian phone number formatting and validation (`PhoneSanitizer` supporting `+20` prefixes).
+  * Auto-retrieval and manual OTP verification code inputs.
+  * Session restoration and caching backed by Jetpack DataStore (`hatli_session`).
+* **Profile & Persona Management:**
+  * User profile setup with customizable name and primary role (`Requester` or `Runner`).
+  * Runner transport mode selection (Walking, Bicycle, Motorcycle, Car).
+  * In-app persona switcher enabling real-time toggling between Requester and Runner views.
+  * Dedicated **Runner Approval Gate Screen** (`RunnerApprovalScreen`) blocking unverified runners from the marketplace until approved.
+* **Errand Creation Wizard (3-Step Flow):**
+  * Step 1: Category selection (Groceries, Pharmacy, Food & Drinks, Parcel Delivery, Custom).
+  * Step 2: Item details, quantities, notes, and store location preferences.
+  * Step 3: Landmark-first delivery location, phone contact, and suggested delivery fee slider.
+* **Hyperlocal Marketplace & Discovery:**
+  * **Requester Feed:** View active orders, order progress cards, and quick errand triggers.
+  * **Runner Feed:** Marketplace of open `Pending` requests within the community, detailed task previews, and one-tap order acceptance (gated by verification).
+* **End-to-End Request Lifecycle & Tracking:**
+  * Real-time 5-stage status progression: `Pending` ➔ `Accepted` ➔ `InProgress` ➔ `Purchased` ➔ `OnTheWay` ➔ `Delivered` ➔ `Completed`.
+  * Dynamic status action bars tailored to the active persona (e.g., Runner marks "Purchased", Requester confirms "Delivered & Complete").
+  * Safe cancellation workflow with reason tracking and persona-specific permissions.
+* **Live In-App Chat:**
+  * Real-time messaging thread between Requester and Runner for active orders.
+  * Bi-directional text formatting (Bidi) ensuring mixed Arabic and English messages display correctly.
+  * Real-time unread message counters and automated scroll-to-bottom behavior.
+* **Ratings & Feedback:**
+  * Post-delivery rating flow (1 to 5 stars) with optional feedback comments.
+* **Localization & Theming:**
+  * Native Arabic RTL layout direction support alongside English LTR isolation for prices, phone numbers, and OTP cells.
+  * Dynamic theme engine supporting System Default, Light Mode, and Dark Mode via SharedPreferences caching.
+
+### Planned / In Progress
+* **Firebase App Check with Play Integrity:** Device attestation and anti-abuse protection (planned for subsequent hardening phase).
+* **Automated Runner Verification:** Backend automated identity document verification service (currently simulated via administrative approval).
+* **Push Notifications:** Server-side Cloud Functions trigger for FCM notifications on request status changes and new chat messages.
+* **Digital In-App Payments:** Card and mobile wallet settlement (currently operates via cash on delivery / direct settlement).
+
+---
+
+## 🏗 Architecture & Module Boundaries
+
+Hatli follows **Clean Architecture** and **Unidirectional Data Flow (UDF)** combined with **MVVM** and **Android Jetpack recommended practices**. The project is decomposed into focused Gradle modules to enforce separation of concerns, improve build caching, and prevent circular dependencies.
 
 ```
 Hatli (Root Project)
-├── app/                              # Application entry point, Hilt dependency graph, Navigation Host
+├── app/                              # Application entry point, Hilt graph, Navigation Host, Firebase Messaging
 ├── core/
-│   ├── model/                        # Domain entities (Request, UserProfile, ChatMessage, Enums)
-│   ├── common/                       # Result wrappers, Dispatchers, Extensions, Utilities
-│   ├── database/                     # Room database for offline caching & pending syncs
-│   ├── datastore/                    # Proto/Preferences DataStore for auth & persona states
-│   ├── network/                      # Firebase Firestore & Auth integration layer
-│   ├── domain/                       # Pure Kotlin Use Cases (CreateRequest, ObserveRequest, Chat)
-│   ├── designsystem/                 # Hatli Brand Tokens (Color, Typography, Shape, Core Components)
-│   └── ui/                           # Base ViewModels, UiState / UiEvent / UiEffect contracts
+│   ├── model/                        # Pure Kotlin domain entities (Request, UserProfile, ChatMessage, Enums)
+│   ├── common/                       # AppError hierarchy, Result wrappers, Coroutine Dispatchers injection
+│   ├── domain/                       # Pure Kotlin Use Cases (CreateRequest, ObserveRequest, Chat, Auth)
+│   ├── data/                         # Repositories, Firestore & Firebase Auth data sources, DataStore preferences
+│   ├── database/                     # Room database (hatli.db), DAOs, entities for local caching
+│   ├── network/                      # Retrofit/OkHttp client, HTTP interceptors, error mapping
+│   ├── designsystem/                 # Brand tokens (Color, Typography, Shape), reusable UI primitives
+│   └── ui/                           # Base ViewModels, UI state contracts, Navigation routes, UI formatters
 └── feature/
-    ├── auth/                         # Splash, Onboarding Carousel, Phone Auth, OTP, Role Select
-    ├── home/                         # Main Shell, Floating Bottom Bar, Requester & Runner Feeds
-    ├── request/                      # 3-Step Errand Wizard, Stepper Timeline Tracking, Rate Runner
-    ├── chat/                         # Real-Time Chat Thread, Quick Replies, Image Attachment
-    └── profile/                      # User Profile, Driver Verification, Persona Switcher, Settings
+    ├── auth/                         # Phone Auth, OTP, Profile setup, Role select, Runner approval gate
+    ├── home/                         # Main shell, floating bottom bar, Requester & Runner feeds
+    ├── request/                      # 3-Step Errand Wizard, Status timeline tracker, Rating screen
+    ├── chat/                         # Live messaging thread, message bubbles, Bidi handling
+    └── profile/                      # Profile view, Language selector, Theme switcher, Logout
 ```
+
+### Module Responsibilities
+
+| Module | Responsibilities | Key Dependencies |
+| :--- | :--- | :--- |
+| **`:app`** | Application class, Hilt dependency root, Navigation graph integration (`HatliNavHost`), FCM service. | All feature and core modules |
+| **`:core:model`** | Domain models (`Request`, `UserProfile`, `ChatMessage`), Enums (`RequestStatus`, `UserRole`). | Pure Kotlin, no framework dependencies |
+| **`:core:common`** | Error handling (`AppError`), `Result<T>` monad, Coroutine Dispatcher qualifiers (`@IoDispatcher`). | Coroutines, `javax.inject` |
+| **`:core:domain`** | Business logic use cases (`CreateRequestUseCase`, `ObservePendingRequestsUseCase`, etc.). | `:core:model`, `:core:common`, `javax.inject` |
+| **`:core:data`** | Concrete repository implementations, Firebase Auth & Firestore data sources, DataStore session repository. | `:core:domain`, `:core:database`, Firebase, DataStore |
+| **`:core:database`** | Room database (`HatliDatabase`), DAOs, cached entities for offline support. | Room, Hilt, `:core:model` |
+| **`:core:network`** | Retrofit/OkHttp client, REST DTOs, network error interceptors. | OkHttp, Retrofit, Kotlinx Serialization |
+| **`:core:designsystem`**| Brand palette, Material 3 theme wrapper, typography styles, button/card primitives. | Jetpack Compose, Material 3 |
+| **`:core:ui`** | Type-safe Navigation routes (`@Serializable`), Base ViewModel abstractions, UI state wrappers. | Compose, Navigation, Kotlinx Serialization |
+| **`:feature:*`** | Self-contained UI feature graphs, ViewModels (`@HiltViewModel`), screens, and UI event flows. | Core modules, Compose, Hilt Navigation |
 
 ---
 
-## ⚡ Technical Highlights & Production Edge-Case Engineering
+## ⚡ Technical Highlights
 
-### 1. Resource-Safe Lifecycle-Aware Firestore Snapshots
-To prevent memory leaks, unnecessary network bandwidth consumption, and costly Firestore read spikes, real-time snapshot listeners are wrapped inside Kotlin `callbackFlow` builders with explicit resource teardown upon cancellation:
+### 1. Resource-Safe Firestore Realtime Snapshots
+To prevent memory leaks and costly redundant snapshot reads, real-time snapshot listeners are wrapped in Kotlin `callbackFlow` channels with explicit detachment in `awaitClose`:
 
 ```kotlin
-fun observeRequest(requestId: String): Flow<Result<Request>> = callbackFlow {
-    val registration = firestore.collection("requests")
-        .document(requestId)
+fun observeRequest(requestId: String): Flow<Request?> = callbackFlow {
+    val registration = requests.document(requestId)
         .addSnapshotListener { snapshot, error ->
             if (error != null) {
-                trySend(Result.Error(error))
+                handleListenErrorNullable(error)
                 return@addSnapshotListener
             }
-            snapshot?.toObject(RequestDto::class.java)?.let { dto ->
-                trySend(Result.Success(dto.toDomain()))
-            }
+            trySend(RequestFirestoreMapper.toRequest(snapshot))
         }
-    awaitClose { registration.remove() } // Guarantees listener detachment on Scope cancellation
-}.flowOn(ioDispatcher)
-```
-
-In the Compose UI layer, collectors utilize `collectAsStateWithLifecycle()` to pause data streams whenever the Activity or Fragment enters the background.
-
-### 2. Seamless IME Keyboard & System Insets Orchestration
-Chat threads and multiline input forms utilize `Modifier.imePadding()` combined with `Modifier.systemBarsPadding()` to guarantee zero layout jumps when soft keyboards animate onto the screen:
-
-```kotlin
-Surface(
-    color = Color.White,
-    shadowElevation = 8.dp,
-    modifier = Modifier.windowInsetsPadding(WindowInsets.ime) // Smooth keyboard animation sync
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = HatliSpacing.md, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) { ... }
+    awaitClose { registration.remove() } // Guarantees listener unregistration on scope cancellation
 }
 ```
+In the Compose UI layer, collectors consume flows using `collectAsStateWithLifecycle()` to automatically halt collection when the screen leaves the foreground.
 
-### 3. Bidirectional Text & Native RTL / LTR Isolation
-While the app defaults to full Arabic RTL (`LayoutDirection.Rtl`), numeric fields, phone inputs, EGP currency prices, and OTP verification cells enforce strict LTR directionality using localized composition providers to prevent reversed Arabic string bugs:
+### 2. Reflection-Free Schema Mapping
+Instead of relying on runtime reflection (`toObject(Class)`), all Firestore document reads and writes are handled via explicit mapping in `RequestFirestoreMapper` and `FirestoreUserDataSource`. This ensures total type safety, resilient null handling, and complete immunity against R8/ProGuard class-stripping regressions.
+
+### 3. Bidirectional Text (Bidi) & LTR Isolation
+While the application natively supports full Arabic RTL (`LayoutDirection.Rtl`), numeric inputs, Egyptian phone numbers, EGP currency amounts, and OTP input boxes enforce strict LTR directionality using localized composition locals:
 
 ```kotlin
 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
     Text(
-        text = "${req.deliveryFee.toInt()} EGP",
-        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-        color = BrandCoral
+        text = "${request.deliveryFee.toInt()} EGP",
+        style = MaterialTheme.typography.titleMedium,
+        color = HatliTheme.colors.primary
     )
 }
 ```
+
+### 4. IME Keyboard & Window Insets Orchestration
+Chat conversation screens and multiline input forms utilize `Modifier.imePadding()` and `WindowInsets.ime` to ensure fluid keyboard animations with zero layout jumps or covered message inputs.
 
 ---
 
 ## 🎨 Design System Tokens
 
-Hatli is styled with an energetic, modern brand palette designed for high contrast and legibility under direct sunlight:
+Hatli is styled with a distinct, high-contrast brand identity built for visibility in bright outdoor environments:
 
-| Token Name | Hex Code | Visual Swatch | Semantic Purpose |
-| :--- | :---: | :---: | :--- |
-| **Brand Warm Coral** | `#FF6B35` | <img src="https://via.placeholder.com/15/FF6B35/000000?text=+" /> | Primary Action Buttons, Active Tabs, Radar Pulses |
-| **Mint Teal** | `#30E6C1` | <img src="https://via.placeholder.com/15/30E6C1/000000?text=+" /> | Verified Badges, Completed Steppers, Success States |
-| **Off-White Canvas** | `#F8F9FA` | <img src="https://via.placeholder.com/15/F8F9FA/000000?text=+" /> | Background Canvas, Surface Containers |
-| **Deep Charcoal** | `#1E2022` | <img src="https://via.placeholder.com/15/1E2022/000000?text=+" /> | Primary Headlines & High-Contrast Typography |
+| Token Name | Hex Code | Purpose |
+| :--- | :---: | :--- |
+| **Brand Warm Coral** | `#FF6B35` | Primary buttons, active stepper nodes, active tab indicators, radar pulses |
+| **Mint Teal** | `#30E6C1` | Verified runner badges, completed errand states, success indicators |
+| **Off-White Canvas** | `#F8F9FA` | App background, light surface cards |
+| **Deep Charcoal** | `#1E2022` | High-contrast typography, dark mode surfaces, primary icons |
 
 ---
 
 ## 🛠 Tech Stack & Tooling
 
-* **UI Engine:** 100% Declarative Jetpack Compose with Material 3 components.
-* **Architecture:** Clean Architecture + MVVM + Unidirectional Data Flow (UDF).
-* **Navigation:** Jetpack Navigation 2.8+ using Type-Safe `@Serializable` routes.
-* **Dependency Injection:** Dagger Hilt (`@HiltViewModel`, `@AndroidEntryPoint`).
-* **Asynchronous Streams:** Kotlin Coroutines (`StateFlow`, `SharedFlow`, `callbackFlow`).
-* **Backend Integration:** Firebase Cloud Firestore Realtime Snapshots & Phone Auth.
-* **Image Loading:** Coil for Compose (`AsyncImage` with memory/disk caching).
-* **Testing:** JUnit 5, Mockk, kotlinx-coroutines-test, Turbine.
+* **Language & Runtime:** [Kotlin 2.0.21](https://kotlinlang.org/)
+* **Build System:** Android Gradle Plugin 9.0.1 with Gradle Convention Plugins in `build-logic`
+* **UI Framework:** [Jetpack Compose](https://developer.android.com/jetpack/compose) (BOM `2025.06.01`) + Material 3 (`1.4.0`)
+* **Navigation:** Jetpack Navigation Compose (`2.9.0`) with Type-Safe `@Serializable` routes
+* **Dependency Injection:** [Dagger Hilt 2.59.2](https://dagger.dev/hilt/) + `hilt-navigation-compose 1.2.0`
+* **Asynchronous Streams:** Kotlin Coroutines (`1.10.2`) (`StateFlow`, `SharedFlow`, `callbackFlow`)
+* **Local Persistence:**
+  * [Room Database 2.7.2](https://developer.android.com/training/data-storage/room) (`hatli.db`)
+  * [DataStore Preferences 1.1.7](https://developer.android.com/topic/libraries/architecture/datastore) (`hatli_session`)
+  * SharedPreferences (`hatli_locale`, `hatli_theme`)
+* **Backend Services:** [Firebase BOM 33.15.0](https://firebase.google.com/)
+  * Firebase Authentication (Phone Auth & SMS verification)
+  * Cloud Firestore (Document storage, transactions, real-time listeners)
+  * Firebase Cloud Messaging (FCM service)
+  * Firebase Crashlytics & Analytics
+  * Firebase Storage
+* **Image Loading:** [Coil 2.7.0](https://coil-kt.github.io/coil/) (`coil-compose`)
+* **Animations:** [Lottie Compose 6.6.6](https://airbnb.io/lottie/#/android-compose)
+* **Testing:** JUnit 4 (`4.13.2`), [MockK 1.14.2](https://mockk.io/), [Turbine 1.2.0](https://github.com/cashapp/turbine), [Truth 1.4.4](https://truth.dev/), `kotlinx-coroutines-test 1.10.2`
+
+---
+
+## 📋 Prerequisites
+
+Before setting up the project, ensure your environment meets the following requirements:
+
+* **Android Studio:** Ladybug (2024.2.1+) or newer.
+* **JDK:** Java Development Kit **17** (verified via Gradle toolchain configuration).
+* **Android SDK:**
+  * **Compile SDK:** `36`
+  * **Target SDK:** `36`
+  * **Minimum SDK:** `29` (Android 10.0+)
+* **Firebase Account:** A standard Google/Firebase account to configure the backend project.
 
 ---
 
 ## 🚀 Getting Started & Local Setup
 
-### Prerequisites
-* **Android Studio:** Ladybug (2024.2.1+) or Koala Feature Update.
-* **JDK:** Version 17+.
-* **Android SDK:** API 34+ (Min SDK 26).
+### 1. Clone the Repository
+```bash
+git clone https://github.com/AhmedKhaled2711/Hatli.git
+cd Hatli
+```
 
-### Quickstart Installation
+### 2. Firebase Configuration Setup
+To run the application with live backend capabilities, set up your own Firebase project:
 
-1. **Clone the repository:**
+1. Navigate to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
+2. Register an Android Application with package name:
+   ```
+   com.app.hatli
+   ```
+3. Enable the required Firebase services:
+   * **Authentication:** Under *Build > Authentication > Sign-in method*, enable **Phone**. Add local testing numbers (e.g., `+20 100 000 0000` with code `123456`) under *Phone numbers for testing*.
+   * **Cloud Firestore:** Under *Build > Firestore Database*, create a database in production mode.
+   * **Firebase Storage:** Under *Build > Storage*, enable default storage bucket rules.
+4. Deploy the Firestore Security Rules:
+   Deploy the repository rules using the Firebase CLI:
    ```bash
-   git clone https://github.com/AhmedKhaled2711/Hatli.git
-   cd Hatli
+   firebase login
+   firebase use <your-firebase-project-id>
+   firebase deploy --only firestore:rules
+   ```
+5. Download your generated `google-services.json` file from Firebase Console (*Project Settings > General > Your apps*).
+6. Place the file in the `app/` directory:
+   ```
+   Hatli/app/google-services.json
    ```
 
-2. **Setup Firebase Configuration:**
-   * Create a project in the [Firebase Console](https://console.firebase.google.com/).
-   * Enable **Phone Authentication** under Firebase Auth.
-   * Enable **Cloud Firestore** in test or production mode.
-   * Download `google-services.json` and place it into the `app/` directory:
-     ```
-     Hatli/app/google-services.json
-     ```
+> [!IMPORTANT]
+> **Security Warning:** `app/google-services.json` is untracked in Git and excluded by `.gitignore`. Never commit live credentials or API secrets.
+>
+> If you only wish to compile the project locally without live Firebase connection, a template is provided:
+> ```bash
+> cp app/google-services.json.example app/google-services.json
+> ```
 
-3. **Build & Execute:**
-   * Open the project in Android Studio.
-   * Sync Gradle files (`Gradle Sync`).
-   * Run unit tests via CLI:
-     ```bash
-     ./gradlew testDebugUnitTest
-     ```
-   * Build the debug APK:
-     ```bash
-     ./gradlew assembleDebug
-     ```
+---
+
+## 🧪 Build and Test
+
+Verified Gradle commands for building and testing the project:
+
+### Run Unit Tests
+Executes unit tests across all project modules:
+```bash
+./gradlew testDebugUnitTest
+```
+To run tests for a specific module:
+```bash
+./gradlew :feature:auth:testDebugUnitTest
+./gradlew :feature:request:testDebugUnitTest
+./gradlew :core:data:testDebugUnitTest
+```
+
+### Assemble Debug Build
+Compiles the application in debug mode:
+```bash
+./gradlew :app:assembleDebug
+```
+
+### Verify R8 Release Minification
+Executes release compilation with full R8 shrinking, optimization, and obfuscation:
+```bash
+./gradlew :app:minifyReleaseWithR8
+```
+
+### Assemble Release APK
+Builds the release APK (requires signing credentials configured):
+```bash
+./gradlew :app:assembleRelease
+```
+
+### Run Android Lint
+Checks code quality and manifest configurations:
+```bash
+./gradlew :app:lintDebug
+```
+
+> [!NOTE]
+> Unit tests cover domain use cases, repositories, data mappers, and ViewModels. End-to-end testing of `firestore.rules` requires the Firebase Local Emulator Suite (`firebase emulators:start`) and is executed separately from Gradle unit tests.
+
+---
+
+## 🔒 Security Architecture & Hardening
+
+The repository enforces production-grade security boundaries across data access, local storage, code shrinking, and credential handling:
+
+### 1. Credential Isolation
+* `app/google-services.json` is untracked in Git and excluded via `.gitignore`.
+* A mock template [`app/google-services.json.example`](file:///e:/Hatli/app/google-services.json.example) is provided for fresh development environments and CI pipelines.
+
+### 2. PII Log Sanitization
+* All authentication and presentation logs are sanitized to prevent Personally Identifiable Information (PII) leakage. Plaintext phone numbers and sanitized E.164 strings are strictly excluded from Logcat output in [`FirebaseAuthDataSource.kt`](file:///e:/Hatli/core/data/src/main/java/com/app/hatli/core/data/auth/FirebaseAuthDataSource.kt) and [`LoginViewModel.kt`](file:///e:/Hatli/feature/auth/src/main/java/com/app/hatli/feature/auth/presentation/login/LoginViewModel.kt).
+
+### 3. Server-Side Firestore Security Rules
+All read and write operations are validated server-side by [`firestore.rules`](file:///e:/Hatli/firestore.rules):
+* **Users Collection (`/users/{userId}`):**
+  * Profile documents are private: only the authenticated user can read their own document.
+  * Role must be `'Requester'` or `'Runner'`.
+  * Runners can only be created with `verificationStatus = 'Pending'`. Clients are strictly forbidden from self-approving or modifying verification status on update.
+* **Requests Collection (`/requests/{requestId}`):**
+  * Only authenticated requesters can create errands under their own UID with status `'Pending'`.
+  * Only verified runners (`verificationStatus == 'Approved'`) can accept available errands.
+  * Status transitions strictly follow the validated state machine (`Pending` ➔ `Accepted` ➔ `InProgress` ➔ `Purchased` ➔ `OnTheWay` ➔ `Delivered` ➔ `Completed` / `Cancelled`).
+  * Identity fields (`requestId`, `requesterId`, `runnerId`) are immutable once assigned.
+* **Chat Messages Subcollection (`/requests/{requestId}/messages/{messageId}`):**
+  * Accessible only to active participants (the requester and assigned runner).
+  * Sending messages is forbidden once an order is pending, completed, or cancelled.
+
+### 4. R8 / ProGuard Code Hardening
+* Broad blanket keep rules (`-keep class com.app.hatli.** { *; }`) have been eliminated.
+* Minimal justified rules in [`app/proguard-rules.pro`](file:///e:/Hatli/app/proguard-rules.pro) preserve only reflection-free Kotlinx Serialization serializers and Room database DAOs/entities, allowing full obfuscation and dead-code stripping across all feature and presentation code.
+
+### 5. Android Auto-Backup Boundaries
+* [`data_extraction_rules.xml`](file:///e:/Hatli/app/src/main/res/xml/data_extraction_rules.xml) (API 31+) and [`backup_rules.xml`](file:///e:/Hatli/app/src/main/res/xml/backup_rules.xml) exclude the Room cache database (`hatli.db`) and session DataStore (`hatli_session`) from Google Cloud Backup and direct device transfer.
+* Non-sensitive UI preferences (`hatli_locale`, `hatli_theme`) are preserved for seamless reinstallation continuity.
+
+### 6. Firebase App Check
+* **Status:** *Pending / Planned*. Firebase App Check with Play Integrity is not currently integrated or enforced in the mobile client or Firestore rules.
+
+---
+
+## 🤖 Continuous Integration (CI/CD)
+
+The project includes an automated GitHub Actions workflow defined in [`.github/workflows/android-ci.yml`](file:///e:/Hatli/.github/workflows/android-ci.yml):
+
+* **Triggers:** On every push and pull request targeting `main` or `develop`.
+* **Runner Environment:** Ubuntu Latest with JDK 17 (`temurin`).
+* **Automated Steps:**
+  1. Checks out repository code.
+  2. Sets up JDK 17 and Gradle wrapper caching (`gradle/actions/setup-gradle@v4`).
+  3. Proactively creates a mock `app/google-services.json` from `app/google-services.json.example` if no live Firebase config is present in the runner.
+  4. Assembles debug APK (`./gradlew :app:assembleDebug --stacktrace`).
+  5. Executes Android Lint (`./gradlew :app:lintDebug --stacktrace`).
+  6. Runs all module unit tests (`./gradlew testDebugUnitTest --stacktrace`).
+
+---
+
+## ⚠️ Known Limitations & Future Roadmap
+
+* **Administrative Back-Office:** Runner verification status is currently updated via administrative tools or direct Firebase Console modification; an automated identity verification API is planned.
+* **Push Notification Service:** `HatliFirebaseMessagingService` is registered in the Android manifest to receive FCM tokens; automated backend triggers via Cloud Functions remain to be wired to the delivery state machine.
+* **In-App Payments:** Currently supports cash-on-delivery; integration with mobile payment gateways (e.g., Fawry, Paymob) is scheduled for a future milestone.
+* **Firebase Local Emulator Suite Integration Tests:** Rules tests are defined declaratively in `firestore.rules`; automated CLI test suites with the Firebase emulator remain a future testing enhancement.
+
+---
+
+## 🤝 Contributing & Development Guidelines
+
+1. **Branching Strategy:** Work on feature branches branched from `develop` (`feat/feature-name` or `fix/bug-name`).
+2. **Code Standards:** Follow Kotlin official coding conventions and Android Jetpack Compose guidelines.
+3. **Architecture:** Maintain strict module boundaries. Use Cases should contain pure business logic with no Android framework dependencies.
+4. **Verification:** Ensure `./gradlew testDebugUnitTest` and `./gradlew :app:lintDebug` pass cleanly before submitting pull requests.
 
 ---
 
 ## 👤 Author & Engineering Contact
 
 **Ahmed Khaled**  
-* Android Engineer & Mobile UI/UX Specialist*
+*Android Engineer & Mobile UI/UX Specialist*
 
-* 📧 **Email:** [ahmedkhaled.dev@gmail.com](mailto:ahmedkhaled.dev@gmail.com)
+* 📧 **Email:** [eng.ahmedkhaled.work@gmail.com](mailto:eng.ahmedkhaled.work@gmail.com)
 * 🐙 **GitHub:** [@AhmedKhaled2711](https://github.com/AhmedKhaled2711)
 * 💼 **LinkedIn:** [linkedin.com/in/ahmedkhaled2711](https://linkedin.com/in/ahmedkhaled2711)
 * 🌐 **Portfolio:** [ahmedkhaled.dev](https://ahmedkhaled.dev)
