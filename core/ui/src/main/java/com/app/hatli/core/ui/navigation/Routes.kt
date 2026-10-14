@@ -46,13 +46,16 @@ data object RoleSelectRoute
 @Serializable
 data object CreateProfileRoute
 
+@Serializable
+data object RunnerApprovalRoute
+
 // Home & Shell Destinations
 @Serializable
 data object MainShellRoute
 
 // Request Destinations
 @Serializable
-data object CreateRequestRoute
+data class CreateRequestRoute(val initialCategory: String? = null)
 
 @Serializable
 data class RequestDetailRoute(val requestId: String)

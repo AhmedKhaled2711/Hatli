@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -24,11 +26,12 @@ fun HatliPrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isLoading: Boolean = false,
 ) {
     val extended = HatliTheme.extendedColors
     Button(
         onClick = onClick,
-        enabled = enabled,
+        enabled = enabled && !isLoading,
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = HatliSizing.minTouch),
@@ -37,11 +40,19 @@ fun HatliPrimaryButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = extended.disabledContainer,
-            disabledContentColor = extended.disabled,
+            disabledContainerColor = if (isLoading) MaterialTheme.colorScheme.primary.copy(alpha = 0.7f) else extended.disabledContainer,
+            disabledContentColor = if (isLoading) MaterialTheme.colorScheme.onPrimary else extended.disabled,
         ),
     ) {
-        Text(text = text, style = MaterialTheme.typography.labelLarge)
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                color = MaterialTheme.colorScheme.onPrimary,
+                strokeWidth = 2.dp,
+            )
+        } else {
+            Text(text = text, style = MaterialTheme.typography.labelLarge)
+        }
     }
 }
 
@@ -51,25 +62,34 @@ fun HatliSecondaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    isLoading: Boolean = false,
 ) {
     val extended = HatliTheme.extendedColors
     OutlinedButton(
         onClick = onClick,
-        enabled = enabled,
+        enabled = enabled && !isLoading,
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = HatliSizing.minTouch),
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(
             width = 1.dp,
-            color = if (enabled) MaterialTheme.colorScheme.outline else extended.disabled,
+            color = if (enabled && !isLoading) MaterialTheme.colorScheme.outline else extended.disabled,
         ),
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colorScheme.primary,
-            disabledContentColor = extended.disabled,
+            disabledContentColor = if (isLoading) MaterialTheme.colorScheme.primary else extended.disabled,
         ),
     ) {
-        Text(text = text, style = MaterialTheme.typography.labelLarge)
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 2.dp,
+            )
+        } else {
+            Text(text = text, style = MaterialTheme.typography.labelLarge)
+        }
     }
 }
 

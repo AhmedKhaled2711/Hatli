@@ -21,7 +21,7 @@ fun NavGraphBuilder.requestGraph(
     onMessage: (String) -> Unit,
 ) {
     navigation<RequestGraph>(
-        startDestination = CreateRequestRouteKey,
+        startDestination = CreateRequestRouteKey(),
     ) {
         composable<CreateRequestRouteKey> {
             CreateRequestRoute(

@@ -1,9 +1,11 @@
 package com.app.hatli.feature.request.presentation.request
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.app.hatli.core.common.result.Result
 import com.app.hatli.core.common.result.userMessage
 import com.app.hatli.core.domain.usecase.request.CreateRequestUseCase
+import com.app.hatli.core.domain.usecase.user.GetUserProfileUseCase
 import com.app.hatli.core.model.BillsDetails
 import com.app.hatli.core.model.CreateRequestInput
 import com.app.hatli.core.model.CustomDetails
@@ -12,20 +14,81 @@ import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.ShoppingDetails
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateRequestViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val createRequest: CreateRequestUseCase,
+    private val getUserProfile: GetUserProfileUseCase,
 ) : BaseViewModel<CreateRequestUiState, CreateRequestUiEvent, CreateRequestUiEffect>(
     CreateRequestUiState(),
 ) {
+    private var submitJob: Job? = null
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
+
+    init {
+        loadUserProfileAddress()
+        val initialCategory: String? = savedStateHandle["initialCategory"]
+        val mapped = mapInitialCategory(initialCategory)
+        if (mapped != null) {
+            val (category, subtype) = mapped
+            setState {
+                copy(
+                    category = category,
+                    step = CreateWizardStep.Details,
+                    wasDirectCategory = true,
+                    categorySubtype = subtype,
+                    fieldError = null,
+                )
+            }
+        }
+    }
+
+    private fun loadUserProfileAddress() {
+        viewModelScope.launch {
+            when (val result = getUserProfile()) {
+                is Result.Success -> {
+                    val address = result.data?.address
+                    val formatted = address?.takeIf { !it.isEmpty }?.formattedDeliveryAddress()
+                    if (!formatted.isNullOrBlank()) {
+                        setState { copy(savedDeliveryAddress = formatted) }
+                    }
+                }
+                else -> Unit
+            }
+        }
+    }
+
+    private fun mapInitialCategory(raw: String?): Pair<RequestCategory, String?>? = when (raw?.lowercase()) {
+        "grocery" -> RequestCategory.Shopping to "grocery"
+        "pharmacy" -> RequestCategory.Shopping to "pharmacy"
+        "courier", "pickup" -> RequestCategory.Pickup to "courier"
+        "bills" -> RequestCategory.Bills to "bills"
+        "custom_errand", "custom" -> RequestCategory.Custom to "custom"
+        "shopping" -> RequestCategory.Shopping to null
+        else -> null
+    }
 
     override fun handleEvent(event: CreateRequestUiEvent) {
         when (event) {
             is CreateRequestUiEvent.CategorySelected -> setState {
-                copy(category = event.category, step = CreateWizardStep.Details, fieldError = null)
+                copy(
+                    category = event.category,
+                    step = CreateWizardStep.Details,
+                    wasDirectCategory = false,
+                    categorySubtype = null,
+                    fieldError = null,
+                )
+            }
+            CreateRequestUiEvent.ChangeCategory -> setState {
+                copy(
+                    step = CreateWizardStep.Category,
+                    wasDirectCategory = false,
+                    fieldError = null,
+                )
             }
             CreateRequestUiEvent.Back -> onBack()
             CreateRequestUiEvent.Next -> onNext()
@@ -37,6 +100,7 @@ class CreateRequestViewModel @Inject constructor(
                 setState { copy(pickupAddress = event.value, fieldError = null) }
             is CreateRequestUiEvent.DropoffAddressChanged ->
                 setState { copy(dropoffAddress = event.value, fieldError = null) }
+            is CreateRequestUiEvent.UseSavedAddress -> useSavedAddress(event.fallback)
             is CreateRequestUiEvent.PickupItemChanged ->
                 setState { copy(pickupItemDescription = event.value, fieldError = null) }
             is CreateRequestUiEvent.BillTypeChanged ->
@@ -55,12 +119,47 @@ class CreateRequestViewModel @Inject constructor(
         }
     }
 
+    private fun useSavedAddress(fallback: String) {
+        val cached = uiState.value.savedDeliveryAddress
+        if (!cached.isNullOrBlank()) {
+            setState { copy(dropoffAddress = cached, fieldError = null) }
+            return
+        }
+        viewModelScope.launch {
+            when (val result = getUserProfile()) {
+                is Result.Success -> {
+                    val address = result.data?.address
+                    val formatted = address?.takeIf { !it.isEmpty }?.formattedDeliveryAddress()
+                    val targetAddress = if (!formatted.isNullOrBlank()) formatted else fallback
+                    setState {
+                        copy(
+                            savedDeliveryAddress = formatted ?: savedDeliveryAddress,
+                            dropoffAddress = if (targetAddress.isNotBlank()) targetAddress else dropoffAddress,
+                            fieldError = null,
+                        )
+                    }
+                }
+                else -> {
+                    if (fallback.isNotBlank()) {
+                        setState { copy(dropoffAddress = fallback, fieldError = null) }
+                    }
+                }
+            }
+        }
+    }
+
     private fun onBack() {
         val state = uiState.value
         when (state.step) {
             CreateWizardStep.Category -> sendEffect(CreateRequestUiEffect.NavigateBack)
-            CreateWizardStep.Details -> setState {
-                copy(step = CreateWizardStep.Category, category = null, fieldError = null)
+            CreateWizardStep.Details -> {
+                if (state.wasDirectCategory) {
+                    sendEffect(CreateRequestUiEffect.NavigateBack)
+                } else {
+                    setState {
+                        copy(step = CreateWizardStep.Category, category = null, fieldError = null)
+                    }
+                }
             }
             CreateWizardStep.FeeReview -> setState {
                 copy(step = CreateWizardStep.Details, fieldError = null)
@@ -86,48 +185,64 @@ class CreateRequestViewModel @Inject constructor(
 
     private fun validateDetails(state: CreateRequestUiState): String? = when (state.category) {
         RequestCategory.Shopping ->
-            if (state.itemsText.isBlank()) "Enter what you need (shopping list)." else null
+            if (state.itemsText.isBlank()) {
+                if (isAr) "أدخل ما تحتاجه (قائمة المشتريات)." else "Enter what you need (shopping list)."
+            } else null
         RequestCategory.Pickup -> when {
-            state.pickupAddress.isBlank() -> "Enter pickup address."
-            state.dropoffAddress.isBlank() -> "Enter drop-off address."
-            state.pickupItemDescription.isBlank() -> "Describe the item."
+            state.pickupAddress.isBlank() ->
+                if (isAr) "أدخل عنوان الاستلام." else "Enter pickup address."
+            state.dropoffAddress.isBlank() ->
+                if (isAr) "أدخل عنوان التسليم." else "Enter drop-off address."
+            state.pickupItemDescription.isBlank() ->
+                if (isAr) "صف الغرض المطلوب نقله." else "Describe the item."
             else -> null
         }
         RequestCategory.Bills -> when {
-            state.billType.isBlank() -> "Enter bill type."
-            state.accountRef.isBlank() -> "Enter account / reference number."
-            state.billAmountText.toDoubleOrNull() == null -> "Enter a valid amount."
+            state.billType.isBlank() ->
+                if (isAr) "أدخل نوع الفاتورة." else "Enter bill type."
+            state.accountRef.isBlank() ->
+                if (isAr) "أدخل رقم الحساب أو المرجع." else "Enter account / reference number."
+            state.billAmountText.toDoubleOrNull() == null ->
+                if (isAr) "أدخل مبلغاً صحيحاً." else "Enter a valid amount."
             else -> null
         }
         RequestCategory.Custom -> when {
-            state.customTitle.isBlank() -> "Enter a short title."
-            state.customBody.isBlank() -> "Describe your request."
+            state.customTitle.isBlank() ->
+                if (isAr) "أدخل عنواناً مختصراً." else "Enter a short title."
+            state.customBody.isBlank() ->
+                if (isAr) "صف طلبك بالتفصيل." else "Describe your request."
             else -> null
         }
-        null -> "Select a category."
+        null -> if (isAr) "اختر نوع الخدمة." else "Select a category."
     }
 
     private fun submit() {
         val state = uiState.value
-        if (state.isSubmitting) return
+        if (state.isSubmitting || submitJob?.isActive == true) return
         val fee = state.deliveryFeeText.toDoubleOrNull()
         if (fee == null || fee < 0) {
-            setState { copy(fieldError = "Enter a valid delivery fee.") }
+            setState { copy(fieldError = if (isAr) "أدخل رسوم توصيل صحيحة." else "Enter a valid delivery fee.") }
             return
         }
-        val input = state.toInput(fee) ?: return
+        val input = state.toInput(fee)
+        if (input == null) {
+            setState { copy(fieldError = if (isAr) "بيانات الطلب غير مكتملة." else "Incomplete request details.") }
+            return
+        }
         setState { copy(isSubmitting = true, fieldError = null) }
-        viewModelScope.launch {
-            when (val result = createRequest(input)) {
-                is Result.Success -> {
-                    setState { copy(isSubmitting = false) }
-                    sendEffect(CreateRequestUiEffect.Submitted)
+        submitJob = viewModelScope.launch {
+            try {
+                when (val result = createRequest(input)) {
+                    is Result.Success -> {
+                        sendEffect(CreateRequestUiEffect.Submitted)
+                    }
+                    is Result.Error -> {
+                        sendEffect(CreateRequestUiEffect.ShowMessage(result.userMessage()))
+                    }
+                    Result.Loading -> Unit
                 }
-                is Result.Error -> {
-                    setState { copy(isSubmitting = false) }
-                    sendEffect(CreateRequestUiEffect.ShowMessage(result.userMessage()))
-                }
-                Result.Loading -> Unit
+            } finally {
+                setState { copy(isSubmitting = false) }
             }
         }
     }
@@ -138,7 +253,7 @@ class CreateRequestViewModel @Inject constructor(
             RequestCategory.Shopping -> CreateRequestInput(
                 category = cat,
                 title = shopName.ifBlank { itemsText.lineSequence().firstOrNull().orEmpty() }
-                    .ifBlank { "Shopping request" },
+                    .ifBlank { if (isAr) "طلب شراء" else "Shopping request" },
                 description = buildString {
                     append(itemsText.trim())
                     if (notes.isNotBlank()) append("\n").append(notes.trim())
@@ -154,7 +269,7 @@ class CreateRequestViewModel @Inject constructor(
             )
             RequestCategory.Pickup -> CreateRequestInput(
                 category = cat,
-                title = pickupItemDescription.trim().ifBlank { "Pickup" },
+                title = pickupItemDescription.trim().ifBlank { if (isAr) "توصيل طرد" else "Pickup" },
                 description = pickupItemDescription.trim(),
                 deliveryFee = fee,
                 pickupLabel = pickupAddress.trim(),
@@ -166,7 +281,7 @@ class CreateRequestViewModel @Inject constructor(
                 CreateRequestInput(
                     category = cat,
                     title = "$billType — $accountRef",
-                    description = "Pay $billType ($accountRef) — $amount EGP",
+                    description = if (isAr) "دفع $billType ($accountRef) — $amount ج.م" else "Pay $billType ($accountRef) — $amount EGP",
                     budget = amount,
                     deliveryFee = fee,
                     bills = BillsDetails(

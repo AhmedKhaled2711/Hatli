@@ -1,7 +1,6 @@
 package com.app.hatli.core.network.di
 
 import com.app.hatli.core.network.BuildConfig
-import com.app.hatli.core.network.HatliApi
 import com.app.hatli.core.network.interceptor.ErrorInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -63,8 +62,4 @@ object NetworkModule {
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
-
-    @Provides
-    @Singleton
-    fun provideHatliApi(retrofit: Retrofit): HatliApi = retrofit.create(HatliApi::class.java)
 }

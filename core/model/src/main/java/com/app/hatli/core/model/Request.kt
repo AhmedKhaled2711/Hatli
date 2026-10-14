@@ -118,26 +118,6 @@ fun Request.nextRunnerStatus(): RequestStatus? = when (status) {
     else -> null
 }
 
-fun RequestStatus.requesterLabelAr(runnerName: String?): String = when (this) {
-    RequestStatus.Pending -> "جاري البحث عن Runner"
-    RequestStatus.Accepted -> "${runnerName ?: "Runner"} قبل طلبك"
-    RequestStatus.InProgress -> "جاري التنفيذ"
-    RequestStatus.Purchased -> "تم الشراء"
-    RequestStatus.OnTheWay -> "في الطريق"
-    RequestStatus.Delivered -> "تم التسليم — أكّد الاستلام"
-    RequestStatus.Completed -> "مكتمل"
-    RequestStatus.Cancelled -> "ملغي"
-}
-
-fun RequestStatus.runnerCtaLabel(): String? = when (this) {
-    RequestStatus.Accepted -> "Start work"
-    RequestStatus.InProgress -> "Mark purchased" // Shopping; UI overrides for non-shopping
-    RequestStatus.Purchased -> "On the way"
-    RequestStatus.OnTheWay -> "Mark delivered"
-    RequestStatus.Delivered -> null
-    else -> null
-}
-
 fun Request.toSummary(): RequestSummary = RequestSummary(
     id = id,
     title = title,
@@ -150,6 +130,10 @@ fun Request.toSummary(): RequestSummary = RequestSummary(
     lastMessage = lastMessage,
     hasRating = rating != null,
     updatedAtEpochMs = updatedAtEpochMs,
+    createdAtEpochMs = createdAtEpochMs,
+    pickupLabel = pickupLabel,
+    dropoffLabel = dropoffLabel,
+    description = description,
 )
 
 /**
@@ -178,28 +162,45 @@ fun RequestStatus.stepperIndex(category: RequestCategory?): Int {
     // Purchased skipped for non-shopping — map onto OnTheWay slot.
     return when (this) {
         RequestStatus.Purchased -> steps.indexOf(RequestStatus.OnTheWay).coerceAtLeast(0)
-        else -> 0
+        else -> -1
     }
 }
 
-fun RequestStatus.shortLabelEn(): String = when (this) {
-    RequestStatus.Pending -> "Searching"
-    RequestStatus.Accepted -> "Accepted"
-    RequestStatus.InProgress -> "In progress"
-    RequestStatus.Purchased -> "Purchased"
-    RequestStatus.OnTheWay -> "On the way"
-    RequestStatus.Delivered -> "Delivered"
-    RequestStatus.Completed -> "Completed"
-    RequestStatus.Cancelled -> "Cancelled"
+/**
+ * Visual rendering state of an individual step in the lifecycle timeline/stepper.
+ */
+enum class StepperStepVisualState {
+    Unreached,
+    ActiveStable,
+    ActivePulsing,
+    Completed,
 }
 
-fun RequestStatus.shortLabelAr(): String = when (this) {
-    RequestStatus.Pending -> "بحث"
-    RequestStatus.Accepted -> "مقبول"
-    RequestStatus.InProgress -> "تنفيذ"
-    RequestStatus.Purchased -> "شراء"
-    RequestStatus.OnTheWay -> "في الطريق"
-    RequestStatus.Delivered -> "تسليم"
-    RequestStatus.Completed -> "مكتمل"
-    RequestStatus.Cancelled -> "ملغي"
+fun stepperStepVisualState(
+    step: RequestStatus,
+    currentStatus: RequestStatus,
+    category: RequestCategory?,
+): StepperStepVisualState {
+    if (currentStatus == RequestStatus.Completed) {
+        return StepperStepVisualState.Completed
+    }
+    if (currentStatus == RequestStatus.Pending || currentStatus == RequestStatus.Cancelled) {
+        return StepperStepVisualState.Unreached
+    }
+    val steps = lifecycleSteps(category)
+    val currentIdx = currentStatus.stepperIndex(category)
+    val stepIdx = steps.indexOf(step)
+    if (currentIdx < 0 || stepIdx < 0) {
+        return StepperStepVisualState.Unreached
+    }
+    return when {
+        stepIdx < currentIdx -> StepperStepVisualState.Completed
+        stepIdx == currentIdx -> when (step) {
+            RequestStatus.InProgress,
+            RequestStatus.Purchased,
+            RequestStatus.OnTheWay -> StepperStepVisualState.ActivePulsing
+            else -> StepperStepVisualState.ActiveStable
+        }
+        else -> StepperStepVisualState.Unreached
+    }
 }

@@ -9,8 +9,10 @@ import com.app.hatli.core.ui.navigation.LoginRoute as LoginRouteKey
 import com.app.hatli.core.ui.navigation.OnboardingRoute as OnboardingRouteKey
 import com.app.hatli.core.ui.navigation.OtpRoute as OtpRouteKey
 import com.app.hatli.core.ui.navigation.RoleSelectRoute as RoleSelectRouteKey
+import com.app.hatli.core.ui.navigation.RunnerApprovalRoute as RunnerApprovalRouteKey
 import com.app.hatli.core.ui.navigation.SplashRoute as SplashRouteKey
 import com.app.hatli.core.ui.navigation.StartRoute as StartRouteKey
+import com.app.hatli.feature.auth.presentation.approval.RunnerApprovalRoute
 import com.app.hatli.feature.auth.presentation.login.LoginRoute
 import com.app.hatli.feature.auth.presentation.onboarding.OnboardingRoute
 import com.app.hatli.feature.auth.presentation.otp.OtpRoute
@@ -20,6 +22,7 @@ import com.app.hatli.feature.auth.presentation.splash.SplashRoute
 import com.app.hatli.feature.auth.presentation.start.StartRoute
 
 fun NavGraphBuilder.authGraph(
+    startDestination: Any = StartRouteKey,
     onNavigateHome: () -> Unit,
     onNavigateLogin: () -> Unit,
     onNavigateOnboarding: () -> Unit,
@@ -27,16 +30,20 @@ fun NavGraphBuilder.authGraph(
     onNavigateRole: () -> Unit,
     onNavigateCreateProfile: () -> Unit,
     onNavigateOtp: (verificationId: String, phone: String) -> Unit,
+    onNavigateRunnerApproval: () -> Unit = {},
+    onBackFromStart: () -> Unit = onNavigateOnboarding,
 ) {
     navigation<AuthGraph>(
-        startDestination = SplashRouteKey,
+        startDestination = startDestination,
     ) {
         composable<SplashRouteKey> {
             SplashRoute(
                 onOnboarding = onNavigateOnboarding,
                 onStart = onNavigateStart,
                 onLogin = onNavigateLogin,
+                onRoleSelect = onNavigateRole,
                 onCreateProfile = onNavigateCreateProfile,
+                onRunnerApproval = onNavigateRunnerApproval,
                 onHome = onNavigateHome,
             )
         }
@@ -49,7 +56,7 @@ fun NavGraphBuilder.authGraph(
 
         composable<StartRouteKey> {
             StartRoute(
-                onBack = onNavigateOnboarding,
+                onBack = onBackFromStart,
                 onPhoneLogin = onNavigateLogin,
             )
         }
@@ -66,6 +73,7 @@ fun NavGraphBuilder.authGraph(
                 onBack = onNavigateLogin,
                 onRoleSelect = onNavigateRole,
                 onCreateProfile = onNavigateCreateProfile,
+                onRunnerApproval = onNavigateRunnerApproval,
                 onHome = onNavigateHome,
             )
         }
@@ -79,6 +87,14 @@ fun NavGraphBuilder.authGraph(
         composable<CreateProfileRouteKey> {
             CreateProfileRoute(
                 onHome = onNavigateHome,
+                onRunnerApproval = onNavigateRunnerApproval,
+            )
+        }
+
+        composable<RunnerApprovalRouteKey> {
+            RunnerApprovalRoute(
+                onApproved = onNavigateHome,
+                onLogout = onNavigateStart,
             )
         }
     }

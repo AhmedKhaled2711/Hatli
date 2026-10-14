@@ -251,7 +251,10 @@ fun CreateRequestScreen(
                             verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
                         ) {
                             when (step) {
-                                CreateWizardStep.Category -> CategoryStep(onEvent)
+                                CreateWizardStep.Category -> CategoryStep(
+                                    selectedCategory = state.category,
+                                    onEvent = onEvent,
+                                )
                                 CreateWizardStep.Details -> DetailsStep(state, onEvent)
                                 CreateWizardStep.FeeReview -> FeeReviewStep(state, onEvent)
                             }
@@ -301,28 +304,19 @@ fun CreateRequestScreen(
                         )
                     }
                     CreateWizardStep.FeeReview -> {
-                        if (state.isSubmitting) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(48.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                            }
-                        } else {
-                            HatliPrimaryButton(
-                                text = stringResource(R.string.create_request_confirm),
-                                onClick = { onEvent(CreateRequestUiEvent.Submit) },
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-                            Spacer(modifier = Modifier.height(HatliSpacing.xs))
-                            HatliSecondaryButton(
-                                text = stringResource(R.string.create_request_back),
-                                onClick = { onEvent(CreateRequestUiEvent.Back) },
-                                modifier = Modifier.fillMaxWidth(),
-                            )
-                        }
+                        HatliPrimaryButton(
+                            text = stringResource(R.string.create_request_confirm),
+                            onClick = { onEvent(CreateRequestUiEvent.Submit) },
+                            modifier = Modifier.fillMaxWidth(),
+                            isLoading = state.isSubmitting,
+                        )
+                        Spacer(modifier = Modifier.height(HatliSpacing.xs))
+                        HatliSecondaryButton(
+                            text = stringResource(R.string.create_request_back),
+                            onClick = { onEvent(CreateRequestUiEvent.Back) },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = !state.isSubmitting,
+                        )
                     }
                 }
             }

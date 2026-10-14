@@ -1,24 +1,19 @@
 package com.app.hatli.feature.auth.presentation.onboarding
 
 import android.content.res.Configuration
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingBackground
@@ -26,9 +21,6 @@ import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingB
 import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingPage
 import com.app.hatli.feature.auth.presentation.onboarding.components.OnboardingTopBar
 import kotlinx.coroutines.flow.distinctUntilChanged
-
-/** Bottom sheet height — matches FlexBox-style reference (3.5/10). */
-private const val OnboardingSheetHeightFraction = 3.5f / 10f
 
 @Composable
 fun OnboardingRoute(
@@ -78,39 +70,26 @@ fun OnboardingScreen(
     }
 
     val currentPage = state.currentPage
-    val backgroundRes = when (pagerState.currentPage) {
-        0 -> OnboardingStrings.bgPage1
-        1 -> OnboardingStrings.bgPage2
-        else -> OnboardingStrings.bgPage3
-    }
-    val darkHeader = pagerState.currentPage == 1
 
-    OnboardingBackground(backgroundRes = backgroundRes) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                // TopBar owns statusBarsPadding once (root Scaffold insets are zero).
-                OnboardingTopBar(
-                    showSkip = !state.isLast,
-                    onSkip = { onEvent(OnboardingUiEvent.Skip) },
-                    darkHeader = darkHeader,
+    OnboardingBackground {
+        Column(modifier = Modifier.fillMaxSize()) {
+            OnboardingTopBar(
+                showSkip = !state.isLast,
+                onSkip = { onEvent(OnboardingUiEvent.Skip) },
+            )
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+            ) { page ->
+                OnboardingPage(
+                    page = state.pages[page],
+                    modifier = Modifier.fillMaxSize(),
                 )
-
-                // Phone fills remaining height (including area behind the sheet).
-                HorizontalPager(
-                    state = pagerState,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth()
-                        .padding(horizontal = HatliSpacing.md),
-                ) { page ->
-                    OnboardingPage(
-                        page = state.pages[page],
-                        modifier = Modifier.fillMaxSize(),
-                    )
-                }
             }
 
-            // Sheet overlays the lower portion of the phone (reference layout).
             OnboardingBottomSheet(
                 title = currentPage.titleText(),
                 description = currentPage.bodyText(),
@@ -122,10 +101,7 @@ fun OnboardingScreen(
                     if (state.isLast) onEvent(OnboardingUiEvent.GetStarted)
                     else onEvent(OnboardingUiEvent.Next)
                 },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .fillMaxHeight(OnboardingSheetHeightFraction),
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

@@ -47,20 +47,24 @@ class UserRepositoryImpl @Inject constructor(
         emit(null)
     }
 
-    override suspend fun getProfile(uid: String): Result<UserProfile?> =
+    override suspend fun getProfile(uid: String, forceRefresh: Boolean): Result<UserProfile?> =
         withContext(ioDispatcher) {
+            if (!forceRefresh) {
+                val cached = local.get(uid)
+                if (cached != null) {
+                    return@withContext Result.Success(cached)
+                }
+            }
             try {
                 val remoteProfile = remote.get(uid)
                 if (remoteProfile != null) {
                     local.upsert(remoteProfile)
                     Result.Success(remoteProfile)
                 } else {
-                    Result.Success(local.get(uid))
+                    Result.Success(null)
                 }
             } catch (t: Throwable) {
-                val cached = local.get(uid)
-                if (cached != null) Result.Success(cached)
-                else Result.Error(FirebaseErrorMapper.map(t))
+                Result.Error(FirebaseErrorMapper.map(t))
             }
         }
 
@@ -122,7 +126,7 @@ class UserRepositoryImpl @Inject constructor(
         if (input.firstName.isBlank() || input.lastName.isBlank()) {
             throw AppError.InvalidInput("First and last name are required.")
         }
-        if (!input.email.matches(Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))) {
+        if (input.email.isNotBlank() && !input.email.matches(Regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"))) {
             throw AppError.InvalidInput("Enter a valid email address.")
         }
         if (input.phone.isBlank()) {

@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 680" width="1200" height="680">
+  <defs>
+    <!-- Background Canvas: Clean Off-White -->
+    <linearGradient id="boardBg" x1="0" y1="0" x2="1200" y2="680" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F8FAF9"/>
+      <stop offset="100%" stop-color="#EFF3F2"/>
+    </linearGradient>
+
+    <!-- Card Backgrounds -->
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F8FAF9"/>
+    </linearGradient>
+
+    <!-- Logo Background Canvas: Ice Sage Mist (#EAF2F1 -> #F5F8F7) -->
+    <linearGradient id="logoCanvasGrad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EAF2F1"/>
+      <stop offset="100%" stop-color="#F5F8F7"/>
+    </linearGradient>
+
+    <!-- Dynamic Courier Wings Gradient: Vibrant Coral (#F16B5A -> #F05C4C) -->
+    <linearGradient id="coralWingsGrad" x1="110" y1="212" x2="375" y2="309" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F16B5A"/>
+      <stop offset="100%" stop-color="#F05C4C"/>
+    </linearGradient>
+
+    <!-- Shadow Filters -->
+    <filter id="softShadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#102F34" flood-opacity="0.08"/>
+    </filter>
+    <filter id="emblemShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#102F34" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Board Canvas -->
+  <rect width="1200" height="680" rx="20" fill="url(#boardBg)" stroke="#DDE5E3" stroke-width="1.5"/>
+
+  <!-- Top Header -->
+  <g transform="translate(60, 55)">
+    <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="3" fill="#F16B5A">OFFICIAL DESIGN SYSTEM &amp; BRAND ASSETS</text>
+    <text x="0" y="34" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="800" fill="#102F34">Hatli (هاتلي) Brand Identity</text>
+    <text x="0" y="62" font-family="system-ui, -apple-system, sans-serif" font-size="15" fill="#526467">Verified palette and vector emblem extracted directly from core:designsystem/ic_hatli_logo.xml</text>
+  </g>
+
+  <!-- LEFT COLUMN: Vector Logo & Adaptive Launcher Icon Display -->
+  <g transform="translate(60, 160)">
+    <!-- Primary Circular Logo Card -->
+    <rect width="480" height="460" rx="20" fill="url(#cardGrad)" stroke="#E1EBE8" stroke-width="1" filter="url(#softShadow)"/>
+
+    <text x="35" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#102F34">Primary Vector Emblem</text>
+    <text x="35" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="13" fill="#6B7E81">Native circular representation in SplashScreen.kt</text>
+
+    <!-- Embedded Scaled ic_hatli_logo Vector -->
+    <g transform="translate(115, 95) scale(0.48)" filter="url(#emblemShadow)">
+      <!-- Canvas Circle -->
+      <circle cx="256" cy="256" r="248" fill="url(#logoCanvasGrad)" stroke="#E1ECE9" stroke-width="3"/>
+      <!-- Top H Structural Crown: Deep Petroleum Teal (#102F34) -->
+      <path d="M201,145h17c8,0 15,7 15,15v38h46v-38c0,-8 7,-15 15,-15h17c8,0 15,7 15,15v47H186v-47c0,-8 7,-15 15,-15z" fill="#102F34"/>
+      <!-- Bottom H Foundation: Deep Petroleum Teal (#102F34) -->
+      <path d="M186,251h140v70c0,9 -7,16 -16,16h-15c-9,0 -16,-7 -16,-16v-38l-24,-19 -23,19v38c0,9 -7,16 -16,16h-14c-9,0 -16,-7 -16,-16v-70z" fill="#102F34"/>
+      <!-- Dynamic Courier Wings & Speed Swooshes: Vibrant Coral (#F16B5A -> #F05C4C) -->
+      <path d="M110,212C159,212 210,212 253,212L344,212L369,229L375,229L372,241C371,244 369,245 366,245L286,245C239,245 205,260 188,286C183,294 180,302 179,309C174,282 187,258 211,242C229,230 253,223 281,223L339,223L329,219L253,219C206,219 155,219 121,218Z" fill="url(#coralWingsGrad)"/>
+      <path d="M110,225C143,226 173,226 205,226L224,226C209,230 199,234 190,239C164,238 142,235 121,231Z" fill="url(#coralWingsGrad)"/>
+      <path d="M132,240C155,241 176,241 195,241C188,245 183,248 179,252C163,250 148,247 132,244Z" fill="url(#coralWingsGrad)"/>
+      <path d="M147,254C160,255 171,255 182,255L177,261C166,259 157,257 147,254Z" fill="url(#coralWingsGrad)"/>
+      <!-- Accent Notch -->
+      <path d="M329,219h17l8,8h-25z" fill="#EAF2F1"/>
+    </g>
+
+    <!-- Bottom Brand Title & Arabic Tagline -->
+    <text x="240" y="380" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="800" fill="#F16B5A">Hatli (هاتلي)</text>
+    <text x="240" y="415" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#102F34">كل اللي تحتاجه، من مكانك</text>
+  </g>
+
+  <!-- RIGHT COLUMN: Production Color System & Architectural Tokens -->
+  <g transform="translate(570, 160)">
+    <!-- Swatch 1: Deep Petroleum Teal -->
+    <g transform="translate(0, 0)">
+      <rect width="570" height="78" rx="14" fill="#FFFFFF" stroke="#E1EBE8" stroke-width="1"/>
+      <rect x="12" y="12" width="54" height="54" rx="10" fill="#102F34"/>
+      <text x="80" y="35" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#102F34">Deep Petroleum Teal</text>
+      <text x="80" y="55" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#526467">#102F34 · RGB(16, 47, 52)</text>
+      <text x="550" y="45" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#102F34">Logo 'H' Monogram · Brand Anchor</text>
+    </g>
+
+    <!-- Swatch 2: Vibrant Coral Gradient -->
+    <g transform="translate(0, 95)">
+      <rect width="570" height="78" rx="14" fill="#FFFFFF" stroke="#E1EBE8" stroke-width="1"/>
+      <rect x="12" y="12" width="54" height="54" rx="10" fill="url(#coralWingsGrad)"/>
+      <text x="80" y="35" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#102F34">Vibrant Coral / Terracotta</text>
+      <text x="80" y="55" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#526467">#F16B5A → #F05C4C (#FF6B35)</text>
+      <text x="550" y="45" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#F16B5A">Courier Wings · Interactive CTAs</text>
+    </g>
+
+    <!-- Swatch 3: Soft Ice Sage / Pale Mint -->
+    <g transform="translate(0, 190)">
+      <rect width="570" height="78" rx="14" fill="#FFFFFF" stroke="#E1EBE8" stroke-width="1"/>
+      <rect x="12" y="12" width="54" height="54" rx="10" fill="url(#logoCanvasGrad)" stroke="#D4DFDC" stroke-width="1"/>
+      <text x="80" y="35" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#102F34">Soft Ice Sage Mist</text>
+      <text x="80" y="55" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#526467">#EAF2F1 → #F5F8F7</text>
+      <text x="550" y="45" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#526467">Logo Canvas · Ambient Surface</text>
+    </g>
+
+    <!-- Swatch 4: Semantic Success Emerald -->
+    <g transform="translate(0, 285)">
+      <rect width="570" height="78" rx="14" fill="#FFFFFF" stroke="#E1EBE8" stroke-width="1"/>
+      <rect x="12" y="12" width="54" height="54" rx="10" fill="#0F9F55"/>
+      <text x="80" y="35" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#102F34">Semantic Emerald Green</text>
+      <text x="80" y="55" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#526467">#0F9F55 · Container #E8F8F0</text>
+      <text x="550" y="45" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#0F9F55">Verified Runner Badges · Delivery Success</text>
+    </g>
+
+    <!-- Swatch 5: Charcoal Dark & Night Surface -->
+    <g transform="translate(0, 380)">
+      <rect width="570" height="78" rx="14" fill="#FFFFFF" stroke="#E1EBE8" stroke-width="1"/>
+      <rect x="12" y="12" width="54" height="54" rx="10" fill="#1E2022"/>
+      <text x="80" y="35" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#102F34">Deep Charcoal &amp; Dark Base</text>
+      <text x="80" y="55" font-family="ui-monospace, monospace" font-size="13" font-weight="600" fill="#526467">#1E2022 / Dark #121418</text>
+      <text x="550" y="45" text-anchor="end" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#1E2022">Primary Typography · Dark Mode Surface</text>
+    </g>
+  </g>
+</svg>

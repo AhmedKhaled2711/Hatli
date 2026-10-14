@@ -7,8 +7,8 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,22 +22,23 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.app.hatli.core.designsystem.component.HatliLottieAnimation
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.ui.base.CollectUiEffect
-
-private const val SPLASH_LOTTIE_ASSET = "lottie/splash/delivery_man.json"
+import com.app.hatli.feature.auth.R
 
 @Composable
 fun SplashRoute(
@@ -46,6 +47,8 @@ fun SplashRoute(
     onCreateProfile: () -> Unit,
     onHome: () -> Unit,
     onStart: () -> Unit,
+    onRoleSelect: () -> Unit = {},
+    onRunnerApproval: () -> Unit = onHome,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
     CollectUiEffect(viewModel.uiEffect) { effect ->
@@ -53,7 +56,9 @@ fun SplashRoute(
             SplashUiEffect.GoOnboarding -> onOnboarding()
             SplashUiEffect.GoStart -> onStart()
             SplashUiEffect.GoLogin -> onLogin()
+            SplashUiEffect.GoRoleSelect -> onRoleSelect()
             SplashUiEffect.GoCreateProfile -> onCreateProfile()
+            SplashUiEffect.GoRunnerApproval -> onRunnerApproval()
             SplashUiEffect.GoHome -> onHome()
         }
     }
@@ -66,10 +71,10 @@ fun SplashScreen() {
     val extended = HatliTheme.extendedColors
     val infiniteTransition = rememberInfiniteTransition(label = "SplashPulse")
     val pulseScale by infiniteTransition.animateFloat(
-        initialValue = 0.95f,
-        targetValue = 1.08f,
+        initialValue = 0.97f,
+        targetValue = 1.03f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 800, easing = FastOutSlowInEasing),
+            animation = tween(durationMillis = 900, easing = FastOutSlowInEasing),
             repeatMode = RepeatMode.Reverse,
         ),
         label = "PulseScaleAnimation",
@@ -89,31 +94,27 @@ fun SplashScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Box(
-                modifier = Modifier.size(280.dp),
-                contentAlignment = Alignment.Center,
+            Surface(
+                modifier = Modifier
+                    .size(152.dp)
+                    .scale(pulseScale),
+                shape = CircleShape,
+                shadowElevation = 10.dp,
+                color = MaterialTheme.colorScheme.surface,
             ) {
-                // Pulsing focal ring behind brand mark
-                Box(
+                Image(
+                    painter = painterResource(com.app.hatli.core.designsystem.R.drawable.ic_hatli_logo),
+                    contentDescription = stringResource(R.string.splash_logo_content_description),
                     modifier = Modifier
-                        .size(260.dp)
-                        .scale(pulseScale)
-                        .border(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.25f),
-                            shape = CircleShape,
-                        ),
-                )
-                HatliLottieAnimation(
-                    assetPath = SPLASH_LOTTIE_ASSET,
-                    modifier = Modifier.size(240.dp),
+                        .fillMaxSize()
+                        .clip(CircleShape),
                 )
             }
 
             Spacer(modifier = Modifier.height(HatliSpacing.lg))
 
             Text(
-                text = "Hatli",
+                text = stringResource(R.string.splash_brand),
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.primary,
             )
@@ -121,7 +122,7 @@ fun SplashScreen() {
             Spacer(modifier = Modifier.height(HatliSpacing.xs))
 
             Text(
-                text = "كل اللي تحتاجه، من مكانك",
+                text = stringResource(R.string.splash_tagline),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -31,8 +31,11 @@ class OnboardingViewModel @Inject constructor(
         }
     }
 
+    private var completeJob: kotlinx.coroutines.Job? = null
+
     private fun complete() {
-        viewModelScope.launch {
+        if (completeJob?.isActive == true) return
+        completeJob = viewModelScope.launch {
             setOnboardingCompleted()
             sendEffect(OnboardingUiEffect.GoStart)
         }

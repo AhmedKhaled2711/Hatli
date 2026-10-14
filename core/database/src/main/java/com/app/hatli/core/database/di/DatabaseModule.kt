@@ -2,8 +2,9 @@ package com.app.hatli.core.database.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.app.hatli.core.database.HatliDatabase
-import com.app.hatli.core.database.dao.PostDao
 import com.app.hatli.core.database.dao.UserProfileDao
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
+    private val MIGRATION_3_4 = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("DROP TABLE IF EXISTS posts")
+        }
+    }
+
     @Provides
     @Singleton
     fun provideDatabase(
@@ -25,11 +32,9 @@ object DatabaseModule {
         HatliDatabase::class.java,
         "hatli.db",
     )
+        .addMigrations(MIGRATION_3_4)
         .fallbackToDestructiveMigration(dropAllTables = true)
         .build()
-
-    @Provides
-    fun providePostDao(database: HatliDatabase): PostDao = database.postDao()
 
     @Provides
     fun provideUserProfileDao(database: HatliDatabase): UserProfileDao = database.userProfileDao()

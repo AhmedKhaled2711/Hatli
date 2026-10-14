@@ -13,12 +13,15 @@ class RoleViewModel @Inject constructor(
     private val setPendingRole: SetPendingRoleUseCase,
 ) : BaseViewModel<RoleUiState, RoleUiEvent, RoleUiEffect>(RoleUiState()) {
 
+    private var continueJob: kotlinx.coroutines.Job? = null
+
     override fun handleEvent(event: RoleUiEvent) {
         when (event) {
             is RoleUiEvent.Select -> setState { copy(selected = event.role) }
             RoleUiEvent.Continue -> {
+                if (continueJob?.isActive == true) return
                 val role = uiState.value.selected ?: return
-                viewModelScope.launch {
+                continueJob = viewModelScope.launch {
                     setPendingRole(role)
                     sendEffect(RoleUiEffect.GoCreateProfile)
                 }

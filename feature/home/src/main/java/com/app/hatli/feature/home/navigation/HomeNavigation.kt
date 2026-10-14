@@ -11,10 +11,11 @@ import com.app.hatli.feature.home.presentation.MainShellRoute
 fun NavGraphBuilder.homeGraph(
     profileTab: @Composable () -> Unit,
     onMessage: (String) -> Unit,
-    onNavigateCreateRequest: () -> Unit,
+    onNavigateCreateRequest: (String?) -> Unit,
     onOpenChat: (String) -> Unit,
     onOpenDetail: (String) -> Unit,
     onOpenRate: (String) -> Unit,
+    onRunnerApproval: () -> Unit = {},
 ) {
     navigation<HomeGraph>(
         startDestination = MainShellRouteKey,
@@ -27,6 +28,7 @@ fun NavGraphBuilder.homeGraph(
                 onOpenDetail = onOpenDetail,
                 onOpenRate = onOpenRate,
                 onMessage = onMessage,
+                onRunnerApproval = onRunnerApproval,
             )
         }
     }

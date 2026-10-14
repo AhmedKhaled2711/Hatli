@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -29,37 +28,41 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.home.R
+import com.app.hatli.feature.home.presentation.components.HomeErrorState
 import com.app.hatli.feature.home.presentation.components.JobsListContent
 import com.app.hatli.feature.home.presentation.components.MainBottomBar
-import com.app.hatli.feature.home.presentation.components.MainTopBar
 import com.app.hatli.feature.home.presentation.components.RequestsListContent
+import com.app.hatli.feature.home.presentation.components.bar.MainTopBar
 import com.app.hatli.feature.home.presentation.messages.MessagesContent
+import com.app.hatli.core.model.UserRole
 import com.app.hatli.feature.home.presentation.requester.RequesterHomeContent
+import com.app.hatli.feature.home.presentation.requester.RequesterHomeShimmer
 import com.app.hatli.feature.home.presentation.runner.RunnerHomeContent
+import com.app.hatli.feature.home.presentation.runner.RunnerHomeShimmer
 
 @Composable
 fun MainShellRoute(
     profileTab: @Composable () -> Unit,
-    onCreateRequest: () -> Unit,
+    onCreateRequest: (String?) -> Unit,
     onOpenChat: (String) -> Unit,
     onOpenDetail: (String) -> Unit,
     onOpenRate: (String) -> Unit,
     onMessage: (String) -> Unit,
+    onRunnerApproval: () -> Unit = {},
     viewModel: MainShellViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
-            MainShellUiEffect.NavigateCreateRequest -> onCreateRequest()
+            is MainShellUiEffect.NavigateCreateRequest -> onCreateRequest(effect.initialCategory)
             is MainShellUiEffect.NavigateChat -> onOpenChat(effect.requestId)
             is MainShellUiEffect.NavigateDetail -> onOpenDetail(effect.requestId)
             is MainShellUiEffect.NavigateRate -> onOpenRate(effect.requestId)
             is MainShellUiEffect.ShowMessage -> onMessage(effect.message)
+            MainShellUiEffect.NavigateRunnerApproval -> onRunnerApproval()
         }
     }
 
@@ -76,17 +79,20 @@ fun MainShellScreen(
     onEvent: (MainShellUiEvent) -> Unit,
     profileTab: @Composable () -> Unit,
 ) {
+    if (state.isError && state.role == null) {
+        HomeErrorState(
+            errorMessage = state.errorMessage,
+            onRetry = { onEvent(MainShellUiEvent.Retry) },
+        )
+        return
+    }
+
     if (state.isLoadingProfile || state.role == null) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = OffWhiteCanvas,
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                CircularProgressIndicator(color = BrandCoral)
-            }
+        val isRunner = state.role == UserRole.Runner
+        if (isRunner) {
+            RunnerHomeShimmer()
+        } else {
+            RequesterHomeShimmer()
         }
         return
     }
@@ -216,6 +222,7 @@ private fun MainShellReady(
                                 onOpenDetail = { onEvent(MainShellUiEvent.OpenDetail(it)) },
                                 onOpenChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
                                 onRate = { onEvent(MainShellUiEvent.OpenRate(it)) },
+                                isAr = isAr,
                             )
                         } else {
                             JobsListContent(
@@ -225,7 +232,6 @@ private fun MainShellReady(
                                 onAccept = { onEvent(MainShellUiEvent.AcceptRequest(it)) },
                                 onOpenDetail = { onEvent(MainShellUiEvent.OpenDetail(it)) },
                                 onOpenChat = { onEvent(MainShellUiEvent.OpenChat(it)) },
-                                isAr = isAr,
                             )
                         }
                     }

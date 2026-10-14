@@ -81,12 +81,9 @@ fun CancelWorkflowSection(
                     ) {
                         BounceScaleClickable {
                             HatliPrimaryButton(
-                                text = if (state.isCancelling) {
-                                    stringResource(R.string.request_detail_cancelling)
-                                } else {
-                                    stringResource(R.string.request_detail_confirm_cancel)
-                                },
+                                text = stringResource(R.string.request_detail_confirm_cancel),
                                 onClick = { onEvent(RequestDetailUiEvent.ConfirmCancel) },
+                                isLoading = state.isCancelling,
                                 enabled = !state.isCancelling && state.cancelReason.isNotBlank(),
                                 modifier = Modifier.weight(1f)
                             )
@@ -96,6 +93,7 @@ fun CancelWorkflowSection(
                             HatliSecondaryButton(
                                 text = stringResource(R.string.request_detail_dismiss),
                                 onClick = { onEvent(RequestDetailUiEvent.HideCancel) },
+                                enabled = !state.isCancelling,
                                 modifier = Modifier.weight(1f)
                             )
                         }

@@ -23,4 +23,12 @@
     <string name="chat_attach_image">Attach image</string>
     <string name="chat_empty_title">Start a conversation</string>
     <string name="chat_empty_subtitle">Ask about your order details or send a message.</string>
+
+    <!-- Quick Replies & Accessibility -->
+    <string name="chat_quick_at_shop">I\'m at the shop now 🛒</string>
+    <string name="chat_quick_item_unavailable">This item is unavailable ⚠️</string>
+    <string name="chat_quick_arrived">I\'ve arrived at your address 📍</string>
+    <string name="chat_quick_acknowledged">All good! 👍</string>
+    <string name="chat_desc_read">Read</string>
+    <string name="chat_desc_send_message">Send message</string>
 </resources>

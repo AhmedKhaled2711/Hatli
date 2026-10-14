@@ -13,15 +13,69 @@
     <string name="onboarding_page1_body">Need something from a supermarket, bakery, butcher, or any local shop? Create a request and let Hatli deliver it to you.</string>
     <string name="onboarding_page2_title">Create your request in seconds</string>
     <string name="onboarding_page2_body">Describe what you need, choose your location, and we\'ll take care of the rest.</string>
-    <string name="onboarding_page3_title">Nearby runners are ready</string>
-    <string name="onboarding_page3_body">Once your request is posted, nearby runners can accept it and deliver what you need quickly.</string>
-    <string name="onboarding_mock_request_title">Your request</string>
-    <string name="onboarding_mock_item_meat">🥩 2 kg of meat</string>
-    <string name="onboarding_mock_item_pepsi">🥤 2 cans of Pepsi</string>
-    <string name="onboarding_mock_item_bread">🍞 5 loaves of bread</string>
-    <string name="onboarding_mock_accepted_by">Accepted by Ahmed 🚴</string>
-    <string name="onboarding_mock_page2_hint">New request</string>
-    <string name="onboarding_mock_page3_hint">Runner nearby</string>
+    <string name="onboarding_page3_title">Nearby Captains are ready</string>
+    <string name="onboarding_page3_body">Once your request is posted, a nearby Captain will accept it and deliver what you need right to your doorstep.</string>
+    <!-- Mock Phone Preview 1: Create Request (Supermarket Step 2) -->
+    <string name="onboarding_mock_create_title">New Request</string>
+    <string name="onboarding_mock_step_2_of_3">Step 2 of 3</string>
+    <string name="onboarding_mock_step_service">Service</string>
+    <string name="onboarding_mock_step_details">Details</string>
+    <string name="onboarding_mock_step_review">Review</string>
+    <string name="onboarding_mock_category_shopping">Shopping</string>
+    <string name="onboarding_mock_category_shopping_subtitle">Supermarket, butcher, bakery, and more</string>
+    <string name="onboarding_mock_change_category">Change</string>
+    <string name="onboarding_mock_shop_name_label">Store name (optional)</string>
+    <string name="onboarding_mock_shop_name_value">Al-Amal Supermarket</string>
+    <string name="onboarding_mock_items_label">What do you want to buy?</string>
+    <string name="onboarding_mock_items_value">• 2 kg sugar\n• 2 milk packs\n• 1 kg rice\n• Feta cheese 500g</string>
+    <string name="onboarding_mock_items_char_count">42 characters entered</string>
+    <string name="onboarding_mock_notes_label">Notes (optional)</string>
+    <string name="onboarding_mock_notes_value">Please check expiration dates</string>
+    <string name="onboarding_mock_budget_label">Estimated budget (EGP, optional)</string>
+    <string name="onboarding_mock_budget_value">250 EGP</string>
+    <string name="onboarding_mock_btn_continue">Continue to details</string>
+    <string name="onboarding_mock_btn_back">Back</string>
+
+    <!-- Mock Phone Preview 2: Fee Review & Order Cost Breakdown (Step 3) -->
+    <string name="onboarding_mock_step_3_of_3">Step 3 of 3</string>
+    <string name="onboarding_mock_review_headline">Review &amp; fee calculation</string>
+    <string name="onboarding_mock_fee_stepper_title">Suggested delivery fee for captain</string>
+    <string name="onboarding_mock_fee_stepper_desc">Adjust fee to speed up acceptance by captains in your city.</string>
+    <string name="onboarding_mock_fee_stepper_amount">35 EGP</string>
+    <string name="onboarding_mock_order_cost_summary">Order calculation and status summary</string>
+    <string name="onboarding_mock_review_service_type_label">Service type</string>
+    <string name="onboarding_mock_review_service_type_val">Shopping</string>
+    <string name="onboarding_mock_review_items_cost_label">Items cost</string>
+    <string name="onboarding_mock_review_items_cost_note">Paid to captain upon delivery per receipt</string>
+    <string name="onboarding_mock_review_service_charge_label">Service and app fees</string>
+    <string name="onboarding_mock_review_service_charge_free">Free for a limited time</string>
+    <string name="onboarding_mock_review_delivery_fee_label">Delivery fee for captain</string>
+    <string name="onboarding_mock_review_delivery_fee_val">35 EGP</string>
+    <string name="onboarding_mock_btn_confirm">Confirm &amp; submit request now</string>
+
+    <!-- Mock Phone Preview 3: Live Request Details & Tracking (Searching for Captain) -->
+    <string name="onboarding_mock_tracking_detail_title">Order details</string>
+    <string name="onboarding_mock_status_hero_pending_title">Searching for a captain…</string>
+    <string name="onboarding_mock_status_hero_order_title">Shopping - Al-Amal Supermarket</string>
+    <string name="onboarding_mock_status_hero_pending_desc">You will be notified once a nearby captain accepts.</string>
+    <string name="onboarding_mock_track_progress_title">Order progress</string>
+    <string name="onboarding_mock_track_step_accepted">Accepted</string>
+    <string name="onboarding_mock_track_step_in_progress">In Progress</string>
+    <string name="onboarding_mock_track_step_purchased">Purchased</string>
+    <string name="onboarding_mock_track_step_on_the_way">On the Way</string>
+    <string name="onboarding_mock_track_step_delivered">Delivered</string>
+    <string name="onboarding_mock_track_step_completed">Completed</string>
+    <string name="onboarding_mock_order_info_title">Order details &amp; fees</string>
+    <string name="onboarding_mock_order_info_fee_badge">35 EGP</string>
+    <string name="onboarding_mock_order_info_desc_label">Description</string>
+    <string name="onboarding_mock_order_info_desc_val">2 kg sugar, 2 milk packs, 1 kg rice, feta cheese 500g</string>
+    <string name="onboarding_mock_order_info_pickup_label">Pickup location</string>
+    <string name="onboarding_mock_order_info_pickup_val">Al-Amal Supermarket</string>
+    <string name="onboarding_mock_order_info_dropoff_label">Delivery address</string>
+    <string name="onboarding_mock_order_info_dropoff_val">El Mahalla - Ashgar District - Bldg 14</string>
+    <string name="onboarding_mock_order_info_fee_label">Delivery fee</string>
+    <string name="onboarding_mock_order_info_fee_val">35 EGP</string>
+    <string name="onboarding_mock_btn_cancel_order">Cancel order</string>
 
     <!-- ============================== -->
     <!-- Auth - Start -->
@@ -63,9 +117,135 @@
     <string name="auth_verifying">Verifying…</string>
     <string name="auth_resend_code">Resend code</string>
     <string name="auth_resend_code_in">Resend code in %1$s</string>
+    <string name="auth_didnt_receive_code">Didn\'t receive the code?</string>
     <string name="auth_invalid_otp">
         Incorrect verification code. Please try again.
     </string>
     <string name="auth_mobile_verification">Mobile verification</string>
+
+    <string name="auth_send_code">Send Verification Code</string>
+
+    <!-- ============================== -->
+    <!-- Auth - Splash -->
+    <!-- ============================== -->
+
+    <string name="splash_brand">Hatli</string>
+    <string name="splash_tagline">Everything you need, delivered to you</string>
+    <string name="splash_logo_content_description">Hatli logo</string>
+
+    <!-- ============================== -->
+    <!-- Role Selection -->
+    <!-- ============================== -->
+
+    <string name="role_selection_title">Choose your Hatli account type</string>
+    <string name="role_selection_subtitle">Select how you would like to use the app. You can switch roles at any time.</string>
+    <string name="role_requester_title">Order Services (Client)</string>
+    <string name="role_requester_tagline">Request anything from any shop in your city</string>
+    <string name="role_requester_feature_1">Store, pharmacy, and supermarket delivery</string>
+    <string name="role_requester_feature_2">Track delivery map and captain in real time</string>
+    <string name="role_requester_feature_3">Coordinate custom errands and special requests</string>
+    <string name="role_runner_title">Delivery Captain</string>
+    <string name="role_runner_tagline">Deliver orders and earn great income</string>
+    <string name="role_runner_feature_1">Accept nearby orders with a single tap</string>
+    <string name="role_runner_feature_2">Low commissions and fast earnings payouts</string>
+    <string name="role_runner_feature_3">Complete flexibility in choosing working hours</string>
+    <string name="role_continue_button">Continue Registration</string>
+
+    <!-- ============================== -->
+    <!-- Profile Setup Wizard -->
+    <!-- ============================== -->
+
+    <string name="profile_setup_title_runner">Captain Profile Setup</string>
+    <string name="profile_setup_title_requester">Client Profile Setup</string>
+    <string name="profile_setup_step_counter">Step %1$d of %2$d</string>
+    <string name="profile_setup_btn_prev">Back</string>
+    <string name="profile_setup_btn_next">Next</string>
+    <string name="profile_setup_btn_complete">Complete Registration</string>
+    <string name="profile_setup_btn_saving">Saving…</string>
+
+    <string name="profile_setup_step_personal_title">Personal Info</string>
+    <string name="profile_setup_step_personal_sub">Enter your name and basic information to customize your experience.</string>
+    <string name="profile_setup_step_address_title">Address &amp; Location</string>
+    <string name="profile_setup_step_address_sub">Add your address for accurate pickup and delivery.</string>
+    <string name="profile_setup_step_transport_title">Vehicle &amp; Transport</string>
+    <string name="profile_setup_step_transport_sub">Choose your vehicle type to match you with suitable delivery orders.</string>
+    <string name="profile_setup_step_verification_title">Identity Verification</string>
+    <string name="profile_setup_step_verification_sub">Enter your national ID number to complete your account activation.</string>
+
+    <!-- Personal Info Step -->
+    <string name="profile_personal_upload_photo">Upload profile photo</string>
+    <string name="profile_personal_first_name">First Name</string>
+    <string name="profile_personal_last_name">Last Name</string>
+    <string name="profile_personal_email_optional">Email Address (Optional)</string>
+    <string name="profile_personal_phone">Mobile Number</string>
+    <string name="profile_personal_gender_label">Gender</string>
+    <string name="profile_personal_gender_male">Male</string>
+    <string name="profile_personal_gender_female">Female</string>
+
+    <!-- Address Step -->
+    <string name="profile_address_header">Delivery Address</string>
+    <string name="profile_address_manual_note">Manual entry for now. Automatic map location will be enabled soon.</string>
+    <string name="profile_address_city">City / Governorate</string>
+    <string name="profile_address_area">Area / Neighborhood</string>
+    <string name="profile_address_street">Street Name</string>
+    <string name="profile_address_building">Building / House Number</string>
+    <string name="profile_address_floor_optional">Floor (Optional)</string>
+    <string name="profile_address_apartment_optional">Apartment (Optional)</string>
+    <string name="profile_address_notes_optional">Landmark or Additional Notes (Optional)</string>
+    <string name="profile_address_tip">Tip: Add a clear nearby landmark (such as next to a pharmacy or mosque) to help the Captain.</string>
+
+    <!-- Transport Step -->
+    <string name="profile_transport_header">Choose your transport method (at least one)</string>
+    <string name="profile_transport_vehicle_details">Vehicle Details (Model · Color · Plate Number)</string>
+    <string name="profile_transport_vehicle_example">Example: Hyundai Verna · White · ABC 1234</string>
+    <string name="profile_transport_car_title">Car</string>
+    <string name="profile_transport_car_sub">For larger orders and longer distances</string>
+    <string name="profile_transport_motorcycle_title">Motorcycle / Scooter</string>
+    <string name="profile_transport_motorcycle_sub">Fast delivery within the city</string>
+    <string name="profile_transport_bicycle_title">Bicycle</string>
+    <string name="profile_transport_bicycle_sub">Short and quick errands</string>
+    <string name="profile_transport_walking_title">On Foot</string>
+    <string name="profile_transport_walking_sub">Nearby neighborhood delivery</string>
+    <string name="profile_transport_other_title">Other Transport</string>
+    <string name="profile_transport_other_sub">Custom delivery vehicle</string>
+
+    <!-- Verification Step -->
+    <string name="profile_verification_national_id">National ID Number (14 digits)</string>
+    <string name="profile_verification_id_card_title">National ID Card Photo</string>
+    <string name="profile_verification_id_card_desc">Front and back ID photos will be required to verify Captain identity soon.</string>
+    <string name="profile_verification_selfie_title">Personal Photo (Selfie)</string>
+    <string name="profile_verification_selfie_desc">Live face check will be enabled in an upcoming update.</string>
+    <string name="profile_verification_complete_ready">You can complete registration now</string>
+    <string name="profile_verification_note">Your account will be provisionally approved under (Pending Verification). Document upload is optional until attachments are enabled.</string>
+    <string name="profile_verification_soon">Soon</string>
+
+    <!-- ============================== -->
+    <!-- Runner Approval Status -->
+    <!-- ============================== -->
+    <string name="runner_approval_screen_title">Account Status</string>
+    <string name="runner_approval_status_pending_title">Application Under Review</string>
+    <string name="runner_approval_status_pending_badge">Pending Review ⏳</string>
+    <string name="runner_approval_status_pending_desc">We have received your registration details. Our operations team is reviewing your information to activate your Captain account.</string>
+    <string name="runner_approval_status_under_review_title">Active Verification</string>
+    <string name="runner_approval_status_under_review_badge">Under Review 🔍</string>
+    <string name="runner_approval_status_under_review_desc">Your documents and details are actively being verified. Your account will be activated as soon as review completes.</string>
+    <string name="runner_approval_status_approved_title">Account Approved!</string>
+    <string name="runner_approval_status_approved_badge">Approved 🟢</string>
+    <string name="runner_approval_status_approved_desc">Welcome to the Hatli delivery team! Redirecting to your Captain dashboard…</string>
+    <string name="runner_approval_status_rejected_title">Application Not Approved</string>
+    <string name="runner_approval_status_rejected_badge">Not Approved 🔴</string>
+    <string name="runner_approval_status_rejected_desc">We apologize, but your Captain application could not be approved at this time. Please contact support for assistance.</string>
+    <string name="runner_approval_status_unknown_title">Account Status Unspecified</string>
+    <string name="runner_approval_status_unknown_badge">Unspecified ⚠️</string>
+    <string name="runner_approval_status_unknown_desc">Could not determine your account approval status. Please check your connection and tap Check Status.</string>
+    <string name="runner_approval_steps_title">What happens next?</string>
+    <string name="runner_approval_step_1">Reviewing submitted details and national ID</string>
+    <string name="runner_approval_step_2">Verifying delivery safety and vehicle criteria</string>
+    <string name="runner_approval_step_3">Instant activation to start receiving delivery orders</string>
+    <string name="runner_approval_last_checked_just_now">Last checked: Just now</string>
+    <string name="runner_approval_refresh_button">Check Status</string>
+    <string name="runner_approval_refreshing">Checking…</string>
+    <string name="runner_approval_logout_button">Sign Out</string>
+    <string name="runner_approval_captain_badge">Delivery Captain</string>
 
 </resources>

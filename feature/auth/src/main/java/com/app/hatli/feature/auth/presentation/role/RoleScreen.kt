@@ -22,9 +22,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DirectionsBike
-import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.automirrored.rounded.DirectionsBike
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.ShoppingBag
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,20 +37,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.designsystem.component.HatliPrimaryButton
-import com.app.hatli.core.designsystem.theme.BrandCoral
-import com.app.hatli.core.designsystem.theme.BrandTeal
 import com.app.hatli.core.designsystem.theme.CharcoalDark
 import com.app.hatli.core.designsystem.theme.CharcoalMuted
 import com.app.hatli.core.designsystem.theme.HatliSpacing
-import com.app.hatli.core.designsystem.theme.OffWhiteCanvas
+import com.app.hatli.core.designsystem.theme.HatliTheme
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.CollectUiEffect
+import com.app.hatli.feature.auth.R
 
 @Composable
 fun RoleRoute(
@@ -71,9 +71,11 @@ fun RoleScreen(
     state: RoleUiState,
     onEvent: (RoleUiEvent) -> Unit,
 ) {
+    val extended = HatliTheme.extendedColors
+
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = OffWhiteCanvas,
+        color = extended.offWhiteCanvas,
     ) {
         Column(
             modifier = Modifier
@@ -91,7 +93,7 @@ fun RoleScreen(
 
                 // Header Section
                 Text(
-                    text = "اختر نوع حسابك في هاتلي",
+                    text = stringResource(R.string.role_selection_title),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold,
                         color = CharcoalDark,
@@ -99,7 +101,7 @@ fun RoleScreen(
                     ),
                 )
                 Text(
-                    text = "حدد كيف تود استخدام التطبيق. يمكنك تغيير دورك أو التبديل بينهما بسهولة لاحقاً.",
+                    text = stringResource(R.string.role_selection_subtitle),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         color = CharcoalMuted,
                         lineHeight = 22.sp,
@@ -108,34 +110,33 @@ fun RoleScreen(
 
                 Spacer(modifier = Modifier.height(HatliSpacing.xs))
 
-                // Role Option 1: Requester (طالب خدمة)
                 RoleSelectionCard(
-                    title = "طالب خدمة (عميل)",
-                    tagline = "اطلب أي حاجة من أي مكان في مدينتك",
-                    icon = Icons.Default.ShoppingBag,
-                    accentColor = BrandCoral,
-                    containerColor = Color(0xFFFFF4F0),
+                    title = stringResource(R.string.role_requester_title),
+                    tagline = stringResource(R.string.role_requester_tagline),
+                    icon = Icons.Rounded.ShoppingBag,
+                    accentColor = extended.coralPrimary,
+                    containerColor = extended.coralContainer,
                     selected = state.selected == UserRole.Requester,
                     benefits = listOf(
-                        "توصيل طلبات المتاجر والصيدليات والسوبرماركت",
-                        "متابعة خريطة التوصيل والمنسق لحظة بلحظة",
-                        "تنسيق مشاوير خاصة وطلبات مخصصة بسهولة",
+                        stringResource(R.string.role_requester_feature_1),
+                        stringResource(R.string.role_requester_feature_2),
+                        stringResource(R.string.role_requester_feature_3),
                     ),
                     onClick = { onEvent(RoleUiEvent.Select(UserRole.Requester)) },
                 )
 
-                // Role Option 2: Runner (كابتن توصيل)
+
                 RoleSelectionCard(
-                    title = "مندوب توصيل (كابتن)",
-                    tagline = "وصل الطلبات وحقق دخلاً ممتازاً بأوقات حرّة",
-                    icon = Icons.Default.DirectionsBike,
-                    accentColor = BrandTeal,
-                    containerColor = Color(0xFFEAFDF9),
+                    title = stringResource(R.string.role_runner_title),
+                    tagline = stringResource(R.string.role_runner_tagline),
+                    icon = Icons.AutoMirrored.Rounded.DirectionsBike,
+                    accentColor = extended.mintAccent,
+                    containerColor = extended.successContainer,
                     selected = state.selected == UserRole.Runner,
                     benefits = listOf(
-                        "استلم طلبات قريبة منك بضغط زر واحدة",
-                        "عمولات منخفضة وتسوية سريعة لأرباحك",
-                        "مرونة كاملة في تحديد أوقات العمل",
+                        stringResource(R.string.role_runner_feature_1),
+                        stringResource(R.string.role_runner_feature_2),
+                        stringResource(R.string.role_runner_feature_3),
                     ),
                     onClick = { onEvent(RoleUiEvent.Select(UserRole.Runner)) },
                 )
@@ -143,9 +144,8 @@ fun RoleScreen(
 
             Spacer(modifier = Modifier.height(HatliSpacing.md))
 
-            // Sticky Bottom CTA Button
             HatliPrimaryButton(
-                text = "متابعة التسجيل",
+                text = stringResource(R.string.role_continue_button),
                 onClick = { onEvent(RoleUiEvent.Continue) },
                 enabled = state.selected != null,
                 modifier = Modifier.fillMaxWidth(),
@@ -165,8 +165,11 @@ private fun RoleSelectionCard(
     benefits: List<String>,
     onClick: () -> Unit,
 ) {
+    val extended = HatliTheme.extendedColors
+    val cardShape = RoundedCornerShape(24.dp)
+
     val borderColor by animateColorAsState(
-        targetValue = if (selected) accentColor else Color(0xFFE5E7EB),
+        targetValue = if (selected) accentColor else extended.border.copy(alpha = 0.65f),
         animationSpec = tween(durationMillis = 200),
         label = "roleBorderColor",
     )
@@ -176,18 +179,37 @@ private fun RoleSelectionCard(
         label = "roleBorderWidth",
     )
     val cardBackground by animateColorAsState(
-        targetValue = if (selected) containerColor else Color.White,
+        targetValue = if (selected) containerColor else MaterialTheme.colorScheme.surface,
         animationSpec = tween(durationMillis = 200),
         label = "roleCardBg",
+    )
+    val checkmarkBorderColor by animateColorAsState(
+        targetValue = if (selected) accentColor else CharcoalMuted.copy(alpha = 0.35f),
+        animationSpec = tween(durationMillis = 200),
+        label = "roleCheckBorder",
+    )
+    val checkmarkBgColor by animateColorAsState(
+        targetValue = if (selected) accentColor else Color.Transparent,
+        animationSpec = tween(durationMillis = 200),
+        label = "roleCheckBg",
     )
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
+            .shadow(
+                elevation = if (selected) 4.dp else 1.5.dp,
+                shape = cardShape,
+                ambientColor = CharcoalDark.copy(alpha = 0.04f),
+                spotColor = if (selected) accentColor.copy(alpha = 0.22f) else CharcoalDark.copy(alpha = 0.08f),
+            )
+            .clip(cardShape)
             .background(cardBackground)
-            .border(borderWidth, borderColor, RoundedCornerShape(20.dp))
-            .shadow(if (selected) 4.dp else 1.dp, RoundedCornerShape(20.dp), spotColor = accentColor.copy(alpha = 0.15f))
+            .border(
+                width = borderWidth,
+                color = borderColor,
+                shape = cardShape,
+            )
             .clickable(onClick = onClick)
             .padding(HatliSpacing.lg),
     ) {
@@ -203,9 +225,9 @@ private fun RoleSelectionCard(
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(46.dp)
                             .clip(CircleShape)
-                            .background(accentColor.copy(alpha = 0.15f)),
+                            .background(accentColor.copy(alpha = if (selected) 0.18f else 0.10f)),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -234,22 +256,22 @@ private fun RoleSelectionCard(
                     }
                 }
 
-                // Checkbox / Radio Indicator
+                // Checkbox / Radio Indicator (Rounded for both Requester and Runner)
                 Box(
                     modifier = Modifier
-                        .size(24.dp)
+                        .size(26.dp)
                         .clip(CircleShape)
-                        .background(if (selected) accentColor else Color.Transparent)
+                        .background(checkmarkBgColor)
                         .border(
                             width = if (selected) 0.dp else 2.dp,
-                            color = if (selected) Color.Transparent else CharcoalMuted.copy(alpha = 0.4f),
+                            color = checkmarkBorderColor,
                             shape = CircleShape,
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
                     if (selected) {
                         Icon(
-                            imageVector = Icons.Default.Check,
+                            imageVector = Icons.Rounded.Check,
                             contentDescription = null,
                             tint = Color.White,
                             modifier = Modifier.size(16.dp),

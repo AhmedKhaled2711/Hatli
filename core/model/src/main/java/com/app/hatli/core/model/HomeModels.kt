@@ -17,6 +17,10 @@ data class RequestSummary(
     val lastMessage: String? = null,
     val hasRating: Boolean = false,
     val updatedAtEpochMs: Long = 0L,
+    val createdAtEpochMs: Long = 0L,
+    val pickupLabel: String? = null,
+    val dropoffLabel: String? = null,
+    val description: String? = null,
 ) {
     val needsRating: Boolean
         get() = status == RequestStatus.Completed && !hasRating
@@ -42,7 +46,7 @@ data class RequesterHomeSnapshot(
 )
 
 data class RunnerPresence(
-    val isOnline: Boolean,
+    val isOnline: Boolean = true,
 )
 
 data class RunnerHomeStats(

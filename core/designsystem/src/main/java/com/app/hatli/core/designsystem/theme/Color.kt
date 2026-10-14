@@ -5,10 +5,24 @@ import androidx.compose.ui.graphics.Color
 /**
  * Hatli production color system.
  *
- * Brand direction: Warm Coral primary (#FF6B35) + Charcoal (#1E2022) + Off-White canvas (#F8F9FA).
- * Semantic Green: Success (#0F9F55) & SuccessContainer (#E8F8F0).
+ * Official Brand Identity (from ic_hatli_logo.xml):
+ * - Deep Petroleum Teal (#102F34): Logo structural anchor & primary brand tone.
+ * - Vibrant Coral Gradient (#F16B5A -> #F05C4C / #FF6B35): Dynamic courier wings & high-energy CTAs.
+ * - Soft Ice Sage Mist (#EAF2F1 -> #F5F8F7): Logo canvas & ambient surface background.
+ * - Semantic Emerald (#0F9F55 / Container #E8F8F0): Verified runner status & success states.
+ * - Deep Charcoal (#1E2022) / Night Canvas (#121418): High-contrast typography & dark mode surfaces.
  */
 object HatliColors {
+
+    // -------------------------------------------------------------------------
+    // Official Logo & Vector Identity Tokens (from ic_hatli_logo.xml)
+    // -------------------------------------------------------------------------
+
+    val LogoDeepTeal = Color(0xFF102F34)      // Top crown & bottom foundation of 'H'
+    val LogoCoralStart = Color(0xFFF16B5A)    // Courier speed-wing gradient start
+    val LogoCoralEnd = Color(0xFFF05C4C)      // Courier speed-wing gradient end
+    val LogoCanvasStart = Color(0xFFEAF2F1)   // Ice sage background gradient start
+    val LogoCanvasEnd = Color(0xFFF5F8F7)     // Ice sage background gradient end
 
     // -------------------------------------------------------------------------
     // Definitive Primary Brand Tokens
@@ -135,3 +149,8 @@ val CharcoalMuted = HatliColors.CharcoalMuted
 val AmberPending = HatliColors.AmberPending
 val SuccessGreen = HatliColors.Success
 val SuccessContainerGreen = HatliColors.SuccessContainer
+val LogoDeepTeal = HatliColors.LogoDeepTeal
+val LogoCoralStart = HatliColors.LogoCoralStart
+val LogoCoralEnd = HatliColors.LogoCoralEnd
+val LogoCanvasStart = HatliColors.LogoCanvasStart
+val LogoCanvasEnd = HatliColors.LogoCanvasEnd

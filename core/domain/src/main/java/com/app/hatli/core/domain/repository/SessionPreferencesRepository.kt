@@ -11,6 +11,7 @@ interface SessionPreferencesRepository {
     val runnerOnlineBannerShownCount: Flow<Int>
     val themeMode: Flow<AppThemeMode>
     val appLanguage: Flow<String>
+    val cachedThemeMode: AppThemeMode
 
     suspend fun setOnboardingCompleted(completed: Boolean)
     suspend fun setPendingRole(role: UserRole?)

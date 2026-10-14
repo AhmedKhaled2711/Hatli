@@ -13,6 +13,8 @@ import com.app.hatli.core.domain.usecase.request.SendMessageUseCase
 import com.app.hatli.core.model.UserRole
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -37,6 +39,8 @@ class ChatViewModel @Inject constructor(
 ) {
     private val requestId: String = checkNotNull(savedStateHandle["requestId"])
     private val cachedProfileNames = ConcurrentHashMap<String, String>()
+    private var sendJob: Job? = null
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
 
     init {
         val currentUid = authRepository.currentUser()?.uid.orEmpty()
@@ -76,10 +80,10 @@ class ChatViewModel @Inject constructor(
             val messageUis = messages.map { message ->
                 val isMine = message.senderId == currentUid
                 val senderLabel = when {
-                    isMine -> "You"
+                    isMine -> if (isAr) "أنت" else "You"
                     !resolvedName.isNullOrBlank() -> resolvedName
-                    isRequester -> "Runner"
-                    else -> "Requester"
+                    isRequester -> if (isAr) "الكابتن" else "Runner"
+                    else -> if (isAr) "صاحب الطلب" else "Requester"
                 }
                 ChatMessageUi(
                     id = message.id,
@@ -91,6 +95,9 @@ class ChatViewModel @Inject constructor(
 
             Triple(messageUis, resolvedName, Pair(isRequester, request))
         }
+            .catch { e ->
+                setState { copy(isRequestLoading = false) }
+            }
             .onEach { (messageUis, resolvedName, roleAndReq) ->
                 val (isRequester, request) = roleAndReq
                 setState {
@@ -136,19 +143,23 @@ class ChatViewModel @Inject constructor(
         when (event) {
             is ChatUiEvent.DraftChanged -> setState { copy(draft = event.value) }
             ChatUiEvent.Send -> {
-                val text = uiState.value.draft
+                if (uiState.value.isSending || sendJob?.isActive == true) return
+                val text = uiState.value.draft.trim()
                 if (text.isBlank()) return
-                viewModelScope.launch {
+                sendJob = viewModelScope.launch {
                     setState { copy(isSending = true) }
-                    when (
-                        val result = sendMessage(requestId, text, UUID.randomUUID().toString())
-                    ) {
-                        is Result.Success -> setState { copy(isSending = false, draft = "") }
-                        is Result.Error -> {
-                            setState { copy(isSending = false) }
-                            sendEffect(ChatUiEffect.ShowMessage(result.userMessage()))
+                    try {
+                        when (
+                            val result = sendMessage(requestId, text, UUID.randomUUID().toString())
+                        ) {
+                            is Result.Success -> setState { copy(draft = "") }
+                            is Result.Error -> {
+                                sendEffect(ChatUiEffect.ShowMessage(result.userMessage()))
+                            }
+                            Result.Loading -> Unit
                         }
-                        Result.Loading -> Unit
+                    } finally {
+                        setState { copy(isSending = false) }
                     }
                 }
             }

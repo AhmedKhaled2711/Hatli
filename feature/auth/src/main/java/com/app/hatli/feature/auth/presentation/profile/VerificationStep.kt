@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Badge
 import androidx.compose.material.icons.filled.CheckCircle
@@ -23,10 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.app.hatli.feature.auth.R
 import com.app.hatli.core.designsystem.component.HatliCard
 import com.app.hatli.core.designsystem.component.HatliTextField
 import com.app.hatli.core.designsystem.theme.BrandCoral
@@ -48,20 +53,27 @@ internal fun VerificationStep(
         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             HatliTextField(
                 value = state.nationalId,
-                onValueChange = { onEvent(CreateProfileUiEvent.NationalId(it)) },
-                label = "رقم الهوية الوطنية / الرقم القومي (14 رقم)",
+                onValueChange = { input ->
+                    val filtered = input.filter { it.isDigit() }.take(14)
+                    onEvent(CreateProfileUiEvent.NationalId(filtered))
+                },
+                label = stringResource(R.string.profile_verification_national_id),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done,
+                ),
                 modifier = Modifier.fillMaxWidth(),
             )
         }
 
         ComingSoonUploadCard(
-            title = "صورة بطاقة الرقم القومي",
-            body = "سيتطلب رفع صورة وجه وظهر البطاقة الشخصية للتحقق من هوية الكابتن قريباً.",
+            title = stringResource(R.string.profile_verification_id_card_title),
+            body = stringResource(R.string.profile_verification_id_card_desc),
         )
 
         ComingSoonUploadCard(
-            title = "الصورة الشخصية (Selfie)",
-            body = "سيتم تفعيل الفحص الحيوي للوجه لمنع انتحال الشخصية في التحديث القادم.",
+            title = stringResource(R.string.profile_verification_selfie_title),
+            body = stringResource(R.string.profile_verification_selfie_desc),
         )
 
         HatliCard {
@@ -86,14 +98,14 @@ internal fun VerificationStep(
 
                 Column(verticalArrangement = Arrangement.spacedBy(HatliSpacing.xxs)) {
                     Text(
-                        text = "يمكنك إكمال التسجيل الآن",
+                        text = stringResource(R.string.profile_verification_complete_ready),
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             color = CharcoalDark,
                         ),
                     )
                     Text(
-                        text = "سيتم اعتماد حسابك مؤقتاً بحالة (قيد التوثيق). رفع المستندات اختياري حتى تفعيل المرفقات.",
+                        text = stringResource(R.string.profile_verification_note),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = CharcoalMuted,
                             fontSize = 12.sp,
@@ -154,7 +166,7 @@ private fun ComingSoonUploadCard(
                             .padding(horizontal = 8.dp, vertical = 2.dp),
                     ) {
                         Text(
-                            text = "قريباً",
+                            text = stringResource(R.string.profile_verification_soon),
                             style = MaterialTheme.typography.labelMedium.copy(
                                 color = Color(0xFFD97706),
                                 fontWeight = FontWeight.Bold,

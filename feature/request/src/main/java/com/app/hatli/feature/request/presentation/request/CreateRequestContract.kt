@@ -22,6 +22,7 @@ data class CreateRequestUiState(
     // Pickup
     val pickupAddress: String = "",
     val dropoffAddress: String = "",
+    val savedDeliveryAddress: String? = null,
     val pickupItemDescription: String = "",
     // Bills
     val billType: String = "",
@@ -34,10 +35,13 @@ data class CreateRequestUiState(
     val deliveryFeeText: String = RequestDefaults.SUGGESTED_DELIVERY_FEE_EGP.toInt().toString(),
     val fieldError: String? = null,
     val isSubmitting: Boolean = false,
+    val wasDirectCategory: Boolean = false,
+    val categorySubtype: String? = null,
 ) : UiState
 
 sealed interface CreateRequestUiEvent : UiEvent {
     data class CategorySelected(val category: RequestCategory) : CreateRequestUiEvent
+    data object ChangeCategory : CreateRequestUiEvent
     data object Back : CreateRequestUiEvent
     data object Next : CreateRequestUiEvent
     data object Submit : CreateRequestUiEvent
@@ -46,6 +50,7 @@ sealed interface CreateRequestUiEvent : UiEvent {
     data class NotesChanged(val value: String) : CreateRequestUiEvent
     data class PickupAddressChanged(val value: String) : CreateRequestUiEvent
     data class DropoffAddressChanged(val value: String) : CreateRequestUiEvent
+    data class UseSavedAddress(val fallback: String = "") : CreateRequestUiEvent
     data class PickupItemChanged(val value: String) : CreateRequestUiEvent
     data class BillTypeChanged(val value: String) : CreateRequestUiEvent
     data class AccountRefChanged(val value: String) : CreateRequestUiEvent

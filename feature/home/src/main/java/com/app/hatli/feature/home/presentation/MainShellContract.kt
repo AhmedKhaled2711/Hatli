@@ -122,11 +122,12 @@ sealed interface MainShellUiEvent : UiEvent {
 }
 
 sealed interface MainShellUiEffect : UiEffect {
-    data object NavigateCreateRequest : MainShellUiEffect
+    data class NavigateCreateRequest(val initialCategory: String? = null) : MainShellUiEffect
     data class NavigateChat(val requestId: String) : MainShellUiEffect
     data class NavigateDetail(val requestId: String) : MainShellUiEffect
     data class NavigateRate(val requestId: String) : MainShellUiEffect
     data class ShowMessage(val message: String) : MainShellUiEffect
+    data object NavigateRunnerApproval : MainShellUiEffect
 }
 
 fun RequestSummary.runnerNextStatus(): RequestStatus? {

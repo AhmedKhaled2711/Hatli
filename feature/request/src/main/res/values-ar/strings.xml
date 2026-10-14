@@ -10,8 +10,8 @@
     <string name="request_detail_description">الوصف</string>
     <string name="request_detail_delivery_fee">رسوم التوصيل</string>
     <string name="request_detail_delivery_fee_format">%1$d جنيه</string>
-    <string name="request_detail_runner_title">الكابتن (Runner)</string>
-    <string name="request_detail_client_title">صاحب الطلب (Requester)</string>
+    <string name="request_detail_runner_title">كابتن التوصيل</string>
+    <string name="request_detail_client_title">صاحب الطلب</string>
     <string name="request_detail_timeline_title">الجدول الزمني للطلب</string>
     <string name="request_detail_open_chat">محادثة الكابتن</string>
     <string name="request_detail_updating">جاري التحديث…</string>
@@ -84,8 +84,25 @@
     <string name="create_request_budget_label">الميزانية المتوقعة بالجنيه (اختياري)</string>
 
     <string name="create_request_pickup_address_label">عنوان الاستلام</string>
+    <string name="create_request_pickup_address_placeholder">مثال: اسم المحل، معلم معروف، أو عنوان تفصيلي</string>
     <string name="create_request_dropoff_address_label">عنوان التسليم</string>
+    <string name="create_request_dropoff_address_placeholder">مثال: المنزل، العمل، رقم العمارة والشقة</string>
     <string name="create_request_item_desc_label">وصف الغرض</string>
+    <string name="create_request_item_desc_placeholder">مثال: مفاتيح منزل، ظرف مستندات، حقيبة صغيرة</string>
+    <string name="create_request_use_saved_address">استخدام العنوان المسجل</string>
+
+    <string name="create_request_review_service_type">نوع الخدمة</string>
+    <string name="create_request_review_delivery_fee">مقابل التوصيل للكابتن</string>
+    <string name="create_request_review_items_cost">تكلفة المشتريات</string>
+    <string name="create_request_review_items_cost_note">تُدفع للكابتن عند الاستلام حسب الفاتورة</string>
+    <string name="create_request_review_service_charge">رسوم الخدمة والتطبيق</string>
+    <string name="create_request_review_service_charge_free">مجاناً لفترة محدودة</string>
+    <string name="create_request_review_egp_suffix">%1$d ج.م</string>
+    <string name="create_request_fee_stepper_title">مقابل التوصيل المقترح للكابتن</string>
+    <string name="create_request_fee_stepper_desc">يمكنك تعديل الأجر المقترح لتسريع قبول كباتن التوصيل في مدينتك.</string>
+    <string name="create_request_fee_stepper_decrease">تقليل المقابل</string>
+    <string name="create_request_fee_stepper_increase">زيادة المقابل</string>
+    <string name="create_request_order_cost_summary">ملخص حساب وحالة الطلب</string>
 
     <string name="create_request_bill_type_label">نوع الفاتورة</string>
     <string name="create_request_bill_type_supporting">مثال: كهرباء، مياه، إنترنت</string>
@@ -120,5 +137,32 @@
     <string name="rate_feedback_1">سيء جداً ❌</string>
     <string name="rate_runner_comment_hint">أضف ملاحظاتك للكابتن (اختياري)…</string>
     <string name="rate_runner_submit">إرسال التقييم</string>
+    <string name="rate_runner_star_desc">نجمة %1$d</string>
+
+    <string name="create_request_change_category">تغيير الخدمة</string>
+    <string name="create_request_pharmacy_shop_label">اسم الصيدلية (مثال: صيدلية العزبي / 19011)</string>
+    <string name="create_request_pharmacy_items_hint">اكتب أسماء الأدوية أو المستلزمات الطبية المطلوبة…</string>
+    <string name="create_request_grocery_shop_label">اسم السوبرماركت أو المتجر (مثال: كارفور / خير زمان)</string>
+    <string name="create_request_grocery_items_hint">اكتب قائمة المشتريات (مثال: 2 كجم سكر، لبن، خبز)…</string>
+    <string name="create_request_char_count">%1$d حرفاً مدخلاً</string>
+    <string name="create_request_common_landmarks">معالم محلية شائعة لنقطة الاستلام</string>
+    <string name="create_request_default_dropoff_address">المحلة الكبرى - حي الأشجار - عمارة 14</string>
+    <string name="create_request_landmark_old_square">الميدان القديم</string>
+    <string name="create_request_landmark_sea_street">شارع البحر الرئيسي</string>
+    <string name="create_request_landmark_hospital">أمام المستشفى العام</string>
+    <string name="create_request_landmark_bus_station">موقف السيارات الرئيسي</string>
+    <string name="create_request_landmark_governorate">مبنى المحافظة</string>
+
+    <!-- Timeline & Track Status Labels (Arabic) -->
+    <string name="request_status_step_pending">جاري البحث</string>
+    <string name="request_status_step_accepted">تم القبول</string>
+    <string name="request_status_step_in_progress">قيد التنفيذ</string>
+    <string name="request_status_step_purchased">تم الشراء</string>
+    <string name="request_status_step_on_the_way">في الطريق</string>
+    <string name="request_status_step_delivered">تم التوصيل</string>
+    <string name="request_status_step_completed">مكتمل</string>
+    <string name="request_status_step_cancelled">ملغي</string>
+    <string name="request_status_track_in_progress">قيد\nالتنفيذ</string>
+    <string name="request_status_track_on_the_way">في\nالطريق</string>
 
 </resources>

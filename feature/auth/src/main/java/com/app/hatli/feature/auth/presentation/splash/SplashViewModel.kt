@@ -43,8 +43,14 @@ class SplashViewModel @Inject constructor(
                     ResolveStartDestinationUseCase.StartDestination.Login ->
                         SplashUiEffect.GoLogin
 
+                    ResolveStartDestinationUseCase.StartDestination.RoleSelect ->
+                        SplashUiEffect.GoRoleSelect
+
                     ResolveStartDestinationUseCase.StartDestination.CreateProfile ->
                         SplashUiEffect.GoCreateProfile
+
+                    ResolveStartDestinationUseCase.StartDestination.RunnerApproval ->
+                        SplashUiEffect.GoRunnerApproval
 
                     ResolveStartDestinationUseCase.StartDestination.Home ->
                         SplashUiEffect.GoHome
@@ -54,7 +60,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private companion object {
-        /** Lets the branded delivery Lottie read before routing (~1.5s). */
-        const val MIN_SPLASH_MS = 1_500L
+        /** Minimum branded splash delay (300ms) for smooth visual transition without blocking startup. */
+        const val MIN_SPLASH_MS = 300L
     }
 }

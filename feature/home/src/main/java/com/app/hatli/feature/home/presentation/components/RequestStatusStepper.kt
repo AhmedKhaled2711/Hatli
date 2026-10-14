@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -23,10 +24,23 @@ import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.RequestStatus
+import com.app.hatli.core.model.StepperStepVisualState
 import com.app.hatli.core.model.lifecycleSteps
-import com.app.hatli.core.model.shortLabelAr
-import com.app.hatli.core.model.shortLabelEn
 import com.app.hatli.core.model.stepperIndex
+import com.app.hatli.core.model.stepperStepVisualState
+import com.app.hatli.feature.home.R
+
+@Composable
+fun RequestStatus.stepperLabel(): String = when (this) {
+    RequestStatus.Pending -> stringResource(R.string.home_stepper_step_pending)
+    RequestStatus.Accepted -> stringResource(R.string.home_stepper_step_accepted)
+    RequestStatus.InProgress -> stringResource(R.string.home_stepper_step_in_progress)
+    RequestStatus.Purchased -> stringResource(R.string.home_stepper_step_purchased)
+    RequestStatus.OnTheWay -> stringResource(R.string.home_stepper_step_on_the_way)
+    RequestStatus.Delivered -> stringResource(R.string.home_stepper_step_delivered)
+    RequestStatus.Completed -> stringResource(R.string.home_stepper_step_completed)
+    RequestStatus.Cancelled -> stringResource(R.string.home_status_cancelled)
+}
 
 /**
  * Compact lifecycle visualization for Current Request / Job cards.
@@ -36,27 +50,29 @@ import com.app.hatli.core.model.stepperIndex
 fun RequestStatusStepper(
     status: RequestStatus,
     category: RequestCategory?,
-    isAr: Boolean,
     modifier: Modifier = Modifier,
 ) {
     when (status) {
         RequestStatus.Pending -> {
             StatusChip(
-                label = if (isAr) "جاري البحث عن Runner" else "Looking for a Runner",
+                label = stringResource(R.string.home_stepper_looking_for_runner),
                 emphasized = true,
                 modifier = modifier.fillMaxWidth(),
             )
         }
         RequestStatus.Cancelled -> {
             StatusChip(
-                label = if (isAr) "ملغي" else "Cancelled",
+                label = stringResource(R.string.home_status_cancelled),
                 emphasized = false,
                 modifier = modifier.fillMaxWidth(),
             )
         }
         else -> {
             val steps = lifecycleSteps(category)
-            val current = status.stepperIndex(category).coerceIn(0, steps.lastIndex)
+            val isOrderCompleted = status == RequestStatus.Completed
+            val currentIdx = status.stepperIndex(category)
+            val activeIdx = if (currentIdx in 0..steps.lastIndex) currentIdx else 0
+
             Column(
                 modifier = modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(HatliSpacing.xs),
@@ -66,16 +82,21 @@ fun RequestStatusStepper(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     steps.forEachIndexed { index, step ->
-                        val reached = index <= current
-                        val isCurrent = index == current
+                        val visualState = stepperStepVisualState(step, status, category)
+                        val isReached = visualState != StepperStepVisualState.Unreached
+                        val isCurrent = visualState == StepperStepVisualState.ActiveStable ||
+                            visualState == StepperStepVisualState.ActivePulsing
+                        val isCompleted = visualState == StepperStepVisualState.Completed
+
                         Box(
                             modifier = Modifier
                                 .size(if (isCurrent) 12.dp else 8.dp)
                                 .clip(CircleShape)
                                 .background(
                                     when {
+                                        isOrderCompleted -> MaterialTheme.colorScheme.primary
                                         isCurrent -> MaterialTheme.colorScheme.primary
-                                        reached -> MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)
+                                        isReached -> MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)
                                         else -> MaterialTheme.colorScheme.outlineVariant
                                     },
                                 ),
@@ -86,8 +107,8 @@ fun RequestStatusStepper(
                                     .weight(1f)
                                     .height(2.dp)
                                     .background(
-                                        if (index < current) {
-                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.55f)
+                                        if (isCompleted) {
+                                            MaterialTheme.colorScheme.primary.copy(alpha = if (isOrderCompleted) 1f else 0.55f)
                                         } else {
                                             MaterialTheme.colorScheme.outlineVariant
                                         },
@@ -103,15 +124,20 @@ fun RequestStatusStepper(
                     // Show first, current, and last labels to avoid clutter on small phones.
                     val labels = listOf(
                         steps.first(),
-                        steps[current],
+                        steps[activeIdx],
                         steps.last(),
                     ).distinct()
                     labels.forEach { step ->
+                        val isHighlight = if (isOrderCompleted) {
+                            step == steps.last()
+                        } else {
+                            step == steps[activeIdx] && currentIdx >= 0
+                        }
                         Text(
-                            text = if (isAr) step.shortLabelAr() else step.shortLabelEn(),
+                            text = step.stepperLabel(),
                             style = MaterialTheme.typography.labelSmall,
-                            fontWeight = if (step == steps[current]) FontWeight.SemiBold else FontWeight.Normal,
-                            color = if (step == steps[current]) {
+                            fontWeight = if (isHighlight) FontWeight.SemiBold else FontWeight.Normal,
+                            color = if (isHighlight) {
                                 MaterialTheme.colorScheme.primary
                             } else {
                                 MaterialTheme.colorScheme.onSurfaceVariant

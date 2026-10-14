@@ -3,55 +3,192 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper functions
-    function isSignedIn() {
-      return request.auth != null;
-    }
+    // =========================================================
+    // USERS COLLECTION
+    // =========================================================
 
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
-    }
-
-    function isParticipant(requestData) {
-      return isSignedIn() && (
-        request.auth.uid == requestData.requesterId ||
-        request.auth.uid == requestData.runnerId
-      );
-    }
-
-    // User profiles collection
     match /users/{userId} {
-      allow read: if isSignedIn();
-      allow create, update: if isOwner(userId);
+      function signedIn() {
+        return request.auth != null;
+      }
+      function isUser() {
+        return signedIn() && request.auth.uid == userId;
+      }
+
+      // Users can only read their own profile document.
+      allow read: if isUser();
+
+      // On creation:
+      // - Must be the authenticated owner of the document UID.
+      // - Role must be valid ('Requester' or 'Runner').
+      // - If role is 'Runner', verificationStatus can only start as 'Pending' (cannot self-approve).
+      // - If role is 'Requester', verificationStatus must be null or omitted.
+      allow create: if isUser()
+        && request.resource.data.role in ['Requester', 'Runner']
+        && (
+          (request.resource.data.role == 'Runner'
+            && request.resource.data.get('verificationStatus', 'Pending') == 'Pending')
+          ||
+          (request.resource.data.role == 'Requester'
+            && (!('verificationStatus' in request.resource.data)
+                || request.resource.data.verificationStatus == null))
+        );
+
+      // On update:
+      // - User can update their own personal info (name, address, vehicle, etc.).
+      // - Role cannot be changed.
+      // - verificationStatus cannot be modified by the client (prevents self-approval).
+      allow update: if isUser()
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.get('verificationStatus', null)
+          == resource.data.get('verificationStatus', null);
+
+      // Client profile deletion is disallowed.
       allow delete: if false;
     }
 
-    // Requests marketplace collection
-    match /requests/{requestId} {
-      allow read: if isSignedIn();
-      
-      // Requesters can create requests under their own UID
-      allow create: if isSignedIn() 
-        && request.resource.data.requesterId == request.auth.uid
-        && request.resource.data.status == 'Pending';
+    // =========================================================
+    // REQUESTS COLLECTION
+    // =========================================================
 
-      // Updates are constrained by lifecycle transactions
-      allow update: if isSignedIn() && (
-        // Requester updating their request or confirming delivery / rating
-        request.auth.uid == resource.data.requesterId ||
-        // Runner accepting an unassigned pending request
-        (resource.data.status == 'Pending' && resource.data.runnerId == null) ||
-        // Assigned runner advancing task status
-        request.auth.uid == resource.data.runnerId
+    match /requests/{requestId} {
+      function signedIn() {
+        return request.auth != null;
+      }
+      function isOwner() {
+        return signedIn() && resource.data.requesterId == request.auth.uid;
+      }
+      function isRunner() {
+        return signedIn() && resource.data.runnerId == request.auth.uid;
+      }
+      function isParticipant() {
+        return isOwner() || isRunner();
+      }
+      function isOpenPending() {
+        return resource.data.status == 'Pending'
+          && (resource.data.runnerId == null || !('runnerId' in resource.data));
+      }
+      function isApprovedRunner(userId) {
+        return exists(/databases/$(database)/documents/users/$(userId))
+          && get(/databases/$(database)/documents/users/$(userId)).data.role == 'Runner'
+          && get(/databases/$(database)/documents/users/$(userId)).data.get('verificationStatus', '') == 'Approved';
+      }
+
+      // Validates request acceptance by an approved runner
+      function isAcceptingRequest() {
+        return isOpenPending()
+          && isApprovedRunner(request.auth.uid)
+          && request.resource.data.requesterId == resource.data.requesterId
+          && request.resource.data.runnerId == request.auth.uid
+          && request.resource.data.status == 'Accepted';
+      }
+
+      // Validates allowed status progressions according to the application state machine
+      function isValidLifecycleTransition() {
+        return
+          // Status unchanged: permitted for participants (chat metadata, unread counter reset, rating)
+          (
+            request.resource.data.status == resource.data.status
+            && (
+              // Submitting rating: Requester only, order must be Completed, rating must be 1..5 stars
+              (
+                'rating' in request.resource.data
+                && resource.data.get('rating', null) == null
+                && isOwner()
+                && resource.data.status == 'Completed'
+                && request.resource.data.rating.stars >= 1
+                && request.resource.data.rating.stars <= 5
+              )
+              ||
+              // Chat metadata & unread counters: participants only, rating is not being forged
+              (!('rating' in request.resource.data) && isParticipant())
+              ||
+              // Preserving existing rating
+              (
+                resource.data.get('rating', null) != null
+                && request.resource.data.get('rating', null) == resource.data.get('rating', null)
+                && isParticipant()
+              )
+            )
+          )
+          ||
+          // Runner advancing delivery status:
+          (
+            isRunner()
+            && (
+              (resource.data.status == 'Accepted' && request.resource.data.status == 'InProgress')
+              || (resource.data.status == 'InProgress' && (request.resource.data.status == 'Purchased' || request.resource.data.status == 'OnTheWay'))
+              || (resource.data.status == 'Purchased' && request.resource.data.status == 'OnTheWay')
+              || (resource.data.status in ['Accepted', 'InProgress', 'OnTheWay'] && request.resource.data.status == 'Delivered')
+            )
+          )
+          ||
+          // Requester confirming delivery:
+          (
+            isOwner()
+            && resource.data.status == 'Delivered'
+            && request.resource.data.status == 'Completed'
+          )
+          ||
+          // Cancellation by participant before delivery:
+          (
+            isParticipant()
+            && !(resource.data.status in ['Delivered', 'Completed', 'Cancelled'])
+            && request.resource.data.status == 'Cancelled'
+          );
+      }
+
+      // Requesters can create a new request under their own UID
+      allow create: if signedIn()
+        && request.resource.data.requesterId == request.auth.uid
+        && request.resource.data.status == 'Pending'
+        && request.resource.data.runnerId == null
+        && request.resource.data.requestId == requestId;
+
+      // Restricts reads to participants and open pending requests in the marketplace feed
+      allow read: if signedIn() && (
+        resource.data.requesterId == request.auth.uid
+        || resource.data.runnerId == request.auth.uid
+        || resource.data.status == 'Pending'
       );
+
+      // Allows acceptance and validated lifecycle transitions with immutable identity fields
+      allow update: if signedIn()
+        && request.resource.data.requestId == resource.data.requestId
+        && request.resource.data.requesterId == resource.data.requesterId
+        && (resource.data.runnerId == null || request.resource.data.runnerId == resource.data.runnerId)
+        && (
+          isAcceptingRequest()
+          || isValidLifecycleTransition()
+        );
 
       allow delete: if false;
 
-      // Chat sub-collection within a request
+      // =======================================================
+      // CHAT MESSAGES SUBCOLLECTION
+      // =======================================================
+
       match /messages/{messageId} {
-        allow read: if isParticipant(get(/databases/$(database)/documents/requests/$(requestId)).data);
-        allow create: if isParticipant(get(/databases/$(database)/documents/requests/$(requestId)).data)
-          && request.resource.data.senderId == request.auth.uid;
+        function parentRequest() {
+          return get(/databases/$(database)/documents/requests/$(requestId)).data;
+        }
+
+        // Only participants can read messages
+        allow read: if signedIn() && (
+          parentRequest().requesterId == request.auth.uid
+          || parentRequest().runnerId == request.auth.uid
+        );
+
+        // Only participants can send messages, and only while the request is active
+        allow create: if signedIn()
+          && request.resource.data.senderId == request.auth.uid
+          && (
+            parentRequest().requesterId == request.auth.uid
+            || parentRequest().runnerId == request.auth.uid
+          )
+          && parentRequest().status != 'Pending'
+          && parentRequest().status != 'Cancelled';
+
         allow update, delete: if false;
       }
     }

@@ -14,10 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,9 +30,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.app.hatli.core.designsystem.component.HatliPrimaryButton
 import com.app.hatli.core.designsystem.component.auth.HatliAuthTopBar
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestStatus
@@ -112,15 +118,44 @@ fun RequestDetailScreen(
                     }
 
                     isNull -> {
-                        Box(
+                        Column(
                             modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center,
                         ) {
-                            Text(
-                                text = stringResource(R.string.request_detail_not_found),
-                                color = MaterialTheme.colorScheme.error,
-                                style = MaterialTheme.typography.titleMedium,
+                            HatliAuthTopBar(
+                                title = stringResource(R.string.request_detail_title),
+                                onBack = onBack,
                             )
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth()
+                                    .padding(HatliSpacing.xl),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(HatliSpacing.md),
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.ErrorOutline,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier.size(56.dp),
+                                    )
+                                    Text(
+                                        text = state.errorMessage ?: stringResource(R.string.request_detail_not_found),
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        textAlign = TextAlign.Center,
+                                    )
+                                    Spacer(modifier = Modifier.height(HatliSpacing.sm))
+                                    HatliPrimaryButton(
+                                        text = stringResource(R.string.request_detail_back),
+                                        onClick = onBack,
+                                        modifier = Modifier.fillMaxWidth(0.6f),
+                                    )
+                                }
+                            }
                         }
                     }
 

@@ -8,6 +8,8 @@ import com.app.hatli.core.ui.base.UiState
 
 data class ProfileUiState(
     val isLoading: Boolean = true,
+    val isRefreshing: Boolean = false,
+    val isLoggingOut: Boolean = false,
     val profile: UserProfile? = null,
     val errorMessage: String? = null,
     val themeMode: AppThemeMode = AppThemeMode.FollowSystem,

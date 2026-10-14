@@ -24,5 +24,6 @@ sealed interface OtpUiEvent : UiEvent {
 sealed interface OtpUiEffect : UiEffect {
     data object GoRoleSelect : OtpUiEffect
     data object GoHome : OtpUiEffect
+    data object GoRunnerApproval : OtpUiEffect
     data object GoCreateProfile : OtpUiEffect
 }

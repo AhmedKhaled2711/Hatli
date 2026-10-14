@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
     id("hatli.android.library")
     id("hatli.android.hilt")
     alias(libs.plugins.kotlin.serialization)
@@ -10,7 +10,7 @@ android {
         buildConfig = true
     }
     defaultConfig {
-        buildConfigField("String", "BASE_URL", "\"https://jsonplaceholder.typicode.com/\"")
+        buildConfigField("String", "BASE_URL", "\"https://api.hatli.app/\"")
     }
 }
 

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
@@ -116,7 +118,17 @@ fun LoginScreen(
                     placeholder = "01007394856",
                     isError = state.errorMessage != null,
                     supportingText = state.errorMessage,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Done,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (!state.isLoading && state.phone.isNotBlank()) {
+                                onEvent(LoginUiEvent.Submit)
+                            }
+                        },
+                    ),
                     leadingIcon = {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -144,7 +156,7 @@ fun LoginScreen(
                 text = if (state.isLoading) {
                     stringResource(R.string.auth_sending)
                 } else {
-                    "إرسال كود التحقق"
+                    stringResource(R.string.auth_send_code)
                 },
                 onClick = { onEvent(LoginUiEvent.Submit) },
                 enabled = !state.isLoading && state.phone.isNotBlank(),

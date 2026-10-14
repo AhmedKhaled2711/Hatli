@@ -28,6 +28,13 @@ class SessionPreferencesRepositoryImpl @Inject constructor(
 
     private val dataStore = context.sessionDataStore
     private val localeSharedPrefs = context.getSharedPreferences("hatli_locale", Context.MODE_PRIVATE)
+    private val themeSharedPrefs = context.getSharedPreferences("hatli_theme", Context.MODE_PRIVATE)
+
+    override val cachedThemeMode: AppThemeMode
+        get() {
+            val saved = themeSharedPrefs.getString("selected_theme", null)
+            return saved?.let { runCatching { AppThemeMode.valueOf(it) }.getOrNull() } ?: AppThemeMode.Light
+        }
 
     override val onboardingCompleted: Flow<Boolean> = dataStore.data.map { prefs ->
         prefs[KEY_ONBOARDING] ?: false
@@ -48,7 +55,7 @@ class SessionPreferencesRepositoryImpl @Inject constructor(
     override val themeMode: Flow<AppThemeMode> = dataStore.data.map { prefs ->
         prefs[KEY_THEME_MODE]?.let { modeName ->
             runCatching { AppThemeMode.valueOf(modeName) }.getOrNull()
-        } ?: AppThemeMode.FollowSystem
+        } ?: cachedThemeMode
     }
 
     override val appLanguage: Flow<String> = dataStore.data.map { prefs ->
@@ -87,6 +94,7 @@ class SessionPreferencesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setThemeMode(mode: AppThemeMode) {
+        themeSharedPrefs.edit().putString("selected_theme", mode.name).apply()
         dataStore.edit { prefs ->
             prefs[KEY_THEME_MODE] = mode.name
         }

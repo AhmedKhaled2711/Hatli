@@ -40,6 +40,14 @@ class RequestDetailViewModel @Inject constructor(
 
     init {
         observeRequest(requestId)
+            .catch { e ->
+                setState {
+                    copy(
+                        isLoading = false,
+                        errorMessage = e.message ?: if (isAr) "تعذر تحميل الطلب" else "Failed to load request",
+                    )
+                }
+            }
             .onEach { req ->
                 val uid = authRepository.currentUser()?.uid.orEmpty()
                 val isRequester = req != null && req.requesterId == uid
@@ -89,6 +97,8 @@ class RequestDetailViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
+
     override fun handleEvent(event: RequestDetailUiEvent) {
         when (event) {
             RequestDetailUiEvent.Refresh -> Unit
@@ -96,34 +106,44 @@ class RequestDetailViewModel @Inject constructor(
                 sendEffect(RequestDetailUiEffect.NavigateChat(requestId))
             RequestDetailUiEvent.OpenRate ->
                 sendEffect(RequestDetailUiEffect.NavigateRate(requestId))
-            RequestDetailUiEvent.AdvanceStatus -> viewModelScope.launch {
-                val req = uiState.value.request ?: return@launch
-                val next = req.nextRunnerStatus() ?: return@launch
-                setState { copy(isAdvancing = true) }
-                when (val result = advanceStatus(requestId, next)) {
-                    is Result.Success -> {
+            RequestDetailUiEvent.AdvanceStatus -> {
+                if (uiState.value.isAdvancing) return
+                viewModelScope.launch {
+                    val req = uiState.value.request ?: return@launch
+                    val next = req.nextRunnerStatus() ?: return@launch
+                    setState { copy(isAdvancing = true) }
+                    try {
+                        when (val result = advanceStatus(requestId, next)) {
+                            is Result.Success -> {
+                                sendEffect(RequestDetailUiEffect.ShowMessage(if (isAr) "تم تحديث الحالة" else "Status updated"))
+                            }
+                            is Result.Error -> {
+                                sendEffect(RequestDetailUiEffect.ShowMessage(result.userMessage()))
+                            }
+                            Result.Loading -> Unit
+                        }
+                    } finally {
                         setState { copy(isAdvancing = false) }
-                        sendEffect(RequestDetailUiEffect.ShowMessage("Status updated"))
                     }
-                    is Result.Error -> {
-                        setState { copy(isAdvancing = false) }
-                        sendEffect(RequestDetailUiEffect.ShowMessage(result.userMessage()))
-                    }
-                    Result.Loading -> Unit
                 }
             }
-            RequestDetailUiEvent.ConfirmDelivery -> viewModelScope.launch {
-                setState { copy(isConfirming = true) }
-                when (val result = confirmDelivery(requestId)) {
-                    is Result.Success -> {
+            RequestDetailUiEvent.ConfirmDelivery -> {
+                if (uiState.value.isConfirming) return
+                viewModelScope.launch {
+                    setState { copy(isConfirming = true) }
+                    try {
+                        when (val result = confirmDelivery(requestId)) {
+                            is Result.Success -> {
+                                sendEffect(RequestDetailUiEffect.NavigateRate(requestId))
+                            }
+                            is Result.Error -> {
+                                sendEffect(RequestDetailUiEffect.ShowMessage(result.userMessage()))
+                            }
+                            Result.Loading -> Unit
+                        }
+                    } finally {
                         setState { copy(isConfirming = false) }
-                        sendEffect(RequestDetailUiEffect.NavigateRate(requestId))
                     }
-                    is Result.Error -> {
-                        setState { copy(isConfirming = false) }
-                        sendEffect(RequestDetailUiEffect.ShowMessage(result.userMessage()))
-                    }
-                    Result.Loading -> Unit
                 }
             }
             RequestDetailUiEvent.ShowCancel -> setState { copy(showCancelSheet = true) }
@@ -131,19 +151,25 @@ class RequestDetailViewModel @Inject constructor(
                 setState { copy(showCancelSheet = false, cancelReason = "") }
             is RequestDetailUiEvent.CancelReasonChanged ->
                 setState { copy(cancelReason = event.value) }
-            RequestDetailUiEvent.ConfirmCancel -> viewModelScope.launch {
-                setState { copy(isCancelling = true) }
-                when (val result = cancelRequest(requestId, uiState.value.cancelReason)) {
-                    is Result.Success -> {
-                        setState { copy(isCancelling = false, showCancelSheet = false) }
-                        sendEffect(RequestDetailUiEffect.ShowMessage("Request cancelled"))
-                        sendEffect(RequestDetailUiEffect.NavigateBack)
-                    }
-                    is Result.Error -> {
+            RequestDetailUiEvent.ConfirmCancel -> {
+                if (uiState.value.isCancelling) return
+                viewModelScope.launch {
+                    setState { copy(isCancelling = true) }
+                    try {
+                        when (val result = cancelRequest(requestId, uiState.value.cancelReason)) {
+                            is Result.Success -> {
+                                setState { copy(showCancelSheet = false) }
+                                sendEffect(RequestDetailUiEffect.ShowMessage(if (isAr) "تم إلغاء الطلب" else "Request cancelled"))
+                                sendEffect(RequestDetailUiEffect.NavigateBack)
+                            }
+                            is Result.Error -> {
+                                sendEffect(RequestDetailUiEffect.ShowMessage(result.userMessage()))
+                            }
+                            Result.Loading -> Unit
+                        }
+                    } finally {
                         setState { copy(isCancelling = false) }
-                        sendEffect(RequestDetailUiEffect.ShowMessage(result.userMessage()))
                     }
-                    Result.Loading -> Unit
                 }
             }
             RequestDetailUiEvent.Back -> sendEffect(RequestDetailUiEffect.NavigateBack)

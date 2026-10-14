@@ -54,11 +54,11 @@ class FirebaseAuthDataSource @Inject constructor(
                 return@suspendCancellableCoroutine
             }
 
-            Log.d(TAG, "Initiating phone verification for: $phoneNumber (resend=$resend)")
+            Log.d(TAG, "Initiating phone verification (resend=$resend)")
 
             val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                 override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    Log.d(TAG, "Instant verification completed automatically for: $phoneNumber")
+                    Log.d(TAG, "Instant verification completed automatically")
                     if (cont.isActive) {
                         firebaseAuth.signInWithCredential(credential)
                             .addOnCompleteListener { task ->
@@ -81,7 +81,7 @@ class FirebaseAuthDataSource @Inject constructor(
                 }
 
                 override fun onVerificationFailed(e: FirebaseException) {
-                    Log.e(TAG, "Phone verification failed for $phoneNumber. Code: ${e.message}", e)
+                    Log.e(TAG, "Phone verification failed. Code: ${e.message}", e)
                     if (cont.isActive) {
                         cont.resumeWithException(e)
                     }

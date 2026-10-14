@@ -23,4 +23,12 @@
     <string name="chat_attach_image">إرفاق صورة</string>
     <string name="chat_empty_title">ابدأ المحادثة</string>
     <string name="chat_empty_subtitle">استفسر عن تفاصيل طلبك أو أرسل رسالة.</string>
+
+    <!-- Quick Replies & Accessibility -->
+    <string name="chat_quick_at_shop">أنا في المحل حالياً 🛒</string>
+    <string name="chat_quick_item_unavailable">الصنف ده ناقص ⚠️</string>
+    <string name="chat_quick_arrived">وصلت تحت البيت 📍</string>
+    <string name="chat_quick_acknowledged">تمام يا غالي 👍</string>
+    <string name="chat_desc_read">تمت القراءة</string>
+    <string name="chat_desc_send_message">إرسال الرسالة</string>
 </resources>

@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.findLibrary("androidx-activity-compose").get())
     implementation(libs.findLibrary("androidx-lifecycle-runtime-ktx").get())
     implementation(libs.findLibrary("androidx-navigation-compose").get())
+    implementation(libs.findLibrary("androidx-core-splashscreen").get())
     implementation(libs.findLibrary("hilt-navigation-compose").get())
     implementation(libs.findLibrary("kotlinx-serialization-json").get())
 

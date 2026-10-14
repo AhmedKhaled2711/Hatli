@@ -35,7 +35,7 @@ class HomeRepositoryImpl @Inject constructor(
     private val userRepository: UserRepository,
 ) : HomeRepository {
 
-    private val isOnline = MutableStateFlow(false)
+    private val isOnline = MutableStateFlow(true)
 
     private val quickActions = listOf(
         QuickAction("shopping", "Shopping", "تسوق"),

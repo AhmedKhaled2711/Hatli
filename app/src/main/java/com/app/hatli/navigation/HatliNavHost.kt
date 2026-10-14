@@ -17,6 +17,8 @@ import com.app.hatli.core.ui.navigation.OtpRoute
 import com.app.hatli.core.ui.navigation.RateRunnerRoute
 import com.app.hatli.core.ui.navigation.RequestDetailRoute
 import com.app.hatli.core.ui.navigation.RoleSelectRoute
+import com.app.hatli.core.ui.navigation.RunnerApprovalRoute
+import com.app.hatli.core.domain.usecase.user.ResolveStartDestinationUseCase
 import com.app.hatli.core.ui.navigation.SplashRoute
 import com.app.hatli.core.ui.navigation.StartRoute
 import com.app.hatli.feature.auth.navigation.authGraph
@@ -28,6 +30,7 @@ import com.app.hatli.feature.request.navigation.requestGraph
 
 @Composable
 fun HatliNavHost(
+    initialDestination: ResolveStartDestinationUseCase.StartDestination,
     onMessage: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -42,32 +45,54 @@ fun HatliNavHost(
         navigator.navigateAndClearBackStack(AuthGraph)
     }
 
+    val onNavigateRunnerApproval: () -> Unit = {
+        navController.navigate(RunnerApprovalRoute) {
+            popUpTo(StartRoute) { inclusive = false }
+            launchSingleTop = true
+        }
+    }
+
+    val rootStartDestination: Any = when (initialDestination) {
+        ResolveStartDestinationUseCase.StartDestination.Home -> HomeGraph
+        else -> AuthGraph
+    }
+
+    val authStartDestination: Any = when (initialDestination) {
+        ResolveStartDestinationUseCase.StartDestination.Onboarding -> OnboardingRoute
+        ResolveStartDestinationUseCase.StartDestination.Start -> StartRoute
+        ResolveStartDestinationUseCase.StartDestination.RoleSelect -> RoleSelectRoute
+        ResolveStartDestinationUseCase.StartDestination.CreateProfile -> CreateProfileRoute
+        ResolveStartDestinationUseCase.StartDestination.Login -> LoginRoute
+        ResolveStartDestinationUseCase.StartDestination.RunnerApproval -> RunnerApprovalRoute
+        ResolveStartDestinationUseCase.StartDestination.Home -> StartRoute
+    }
+
     NavHost(
         navController = navController,
-        startDestination = AuthGraph,
+        startDestination = rootStartDestination,
         modifier = modifier,
     ) {
         authGraph(
+            startDestination = authStartDestination,
             onNavigateHome = {
                 goHomeClearingStack()
             },
 
             onNavigateOnboarding = {
                 navController.navigate(OnboardingRoute) {
-                    popUpTo<SplashRoute> {
-                        inclusive = true
-                    }
                     launchSingleTop = true
                 }
             },
 
             onNavigateStart = {
                 navController.navigate(StartRoute) {
-                    popUpTo<SplashRoute> {
-                        inclusive = true
-                    }
+                    popUpTo(OnboardingRoute) { inclusive = true }
                     launchSingleTop = true
                 }
+            },
+
+            onBackFromStart = {
+                navController.popBackStack()
             },
 
             onNavigateLogin = {
@@ -87,6 +112,8 @@ fun HatliNavHost(
                     launchSingleTop = true
                 }
             },
+
+            onNavigateRunnerApproval = onNavigateRunnerApproval,
 
             onNavigateOtp = { verificationId, phone ->
                 navController.navigate(
@@ -108,8 +135,8 @@ fun HatliNavHost(
                 )
             },
             onMessage = onMessage,
-            onNavigateCreateRequest = {
-                navController.navigate(CreateRequestRoute) {
+            onNavigateCreateRequest = { category ->
+                navController.navigate(CreateRequestRoute(initialCategory = category)) {
                     launchSingleTop = true
                 }
             },
@@ -122,6 +149,7 @@ fun HatliNavHost(
             onOpenRate = { id ->
                 navController.navigate(RateRunnerRoute(id)) { launchSingleTop = true }
             },
+            onRunnerApproval = onNavigateRunnerApproval,
         )
         requestGraph(
             onBack = { navController.popBackStack() },

@@ -14,8 +14,10 @@ import com.app.hatli.core.domain.usecase.request.AdvanceRequestStatusUseCase
 import com.app.hatli.core.domain.usecase.request.ConfirmDeliveryUseCase
 import com.app.hatli.core.domain.usecase.user.ObserveUserProfileUseCase
 import com.app.hatli.core.model.UserRole
+import com.app.hatli.core.model.VerificationStatus
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
@@ -44,6 +46,10 @@ class MainShellViewModel @Inject constructor(
     private var requesterStarted = false
     private var runnerStarted = false
     private var runnerBannerCountedForSession = false
+    private var toggleOnlineJob: Job? = null
+    private val inFlightAcceptIds = java.util.Collections.synchronizedSet(mutableSetOf<String>())
+    private val inFlightAdvanceIds = java.util.Collections.synchronizedSet(mutableSetOf<String>())
+    private val inFlightConfirmIds = java.util.Collections.synchronizedSet(mutableSetOf<String>())
 
     private fun loadProfileAndFeeds() {
         observeUserProfile()
@@ -67,7 +73,13 @@ class MainShellViewModel @Inject constructor(
                 }
                 when (profile?.role) {
                     UserRole.Requester -> startRequesterFeeds()
-                    UserRole.Runner -> startRunnerFeeds()
+                    UserRole.Runner -> {
+                        if (profile.verificationStatus == VerificationStatus.Approved) {
+                            startRunnerFeeds()
+                        } else {
+                            sendEffect(MainShellUiEffect.NavigateRunnerApproval)
+                        }
+                    }
                     null -> Unit
                 }
             }
@@ -134,6 +146,8 @@ class MainShellViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
+
     override fun handleEvent(event: MainShellUiEvent) {
         when (event) {
             MainShellUiEvent.Retry -> {
@@ -144,12 +158,15 @@ class MainShellViewModel @Inject constructor(
                 loadProfileAndFeeds()
             }
             is MainShellUiEvent.TabSelected -> setState { copy(selectedTab = event.tab) }
-            MainShellUiEvent.CreateRequest -> sendEffect(MainShellUiEffect.NavigateCreateRequest)
+            MainShellUiEvent.CreateRequest -> sendEffect(MainShellUiEffect.NavigateCreateRequest(null))
             MainShellUiEvent.OpenNotifications ->
-                sendEffect(MainShellUiEffect.ShowMessage("Notifications coming soon"))
-            MainShellUiEvent.ToggleRunnerOnline -> viewModelScope.launch {
-                val online = uiState.value.runnerHome?.presence?.isOnline == true
-                setRunnerOnline(!online)
+                sendEffect(MainShellUiEffect.ShowMessage(if (isAr) "ميزة الإشعارات قريباً" else "Notifications coming soon"))
+            MainShellUiEvent.ToggleRunnerOnline -> {
+                if (toggleOnlineJob?.isActive == true) return
+                toggleOnlineJob = viewModelScope.launch {
+                    val online = uiState.value.runnerHome?.presence?.isOnline == true
+                    setRunnerOnline(!online)
+                }
             }
             MainShellUiEvent.DismissRunnerOnlineInfoBanner -> viewModelScope.launch {
                 sessionPreferences.dismissRunnerOnlineBanner()
@@ -161,34 +178,59 @@ class MainShellViewModel @Inject constructor(
             is MainShellUiEvent.JobFilterSelected ->
                 setState { copy(jobFilter = event.filter) }
             is MainShellUiEvent.QuickActionClicked ->
-                sendEffect(MainShellUiEffect.NavigateCreateRequest)
-            is MainShellUiEvent.AcceptRequest -> viewModelScope.launch {
-                when (val result = acceptRequest(event.requestId)) {
-                    is Result.Success -> {
-                        sendEffect(MainShellUiEffect.ShowMessage("Job accepted — it's now your Active Job"))
-                        sendEffect(MainShellUiEffect.NavigateDetail(event.requestId))
+                sendEffect(MainShellUiEffect.NavigateCreateRequest(event.id))
+            is MainShellUiEvent.AcceptRequest -> {
+                if (!inFlightAcceptIds.add(event.requestId)) return
+                viewModelScope.launch {
+                    try {
+                        when (val result = acceptRequest(event.requestId)) {
+                            is Result.Success -> {
+                                sendEffect(
+                                    MainShellUiEffect.ShowMessage(
+                                        if (isAr) "تم قبول المهمة — أصبحت مهمتك الحالية" else "Job accepted — added to your active jobs"
+                                    )
+                                )
+                                sendEffect(MainShellUiEffect.NavigateDetail(event.requestId))
+                            }
+                            is Result.Error ->
+                                sendEffect(MainShellUiEffect.ShowMessage(result.userMessage()))
+                            Result.Loading -> Unit
+                        }
+                    } finally {
+                        inFlightAcceptIds.remove(event.requestId)
                     }
-                    is Result.Error ->
-                        sendEffect(MainShellUiEffect.ShowMessage(result.userMessage()))
-                    Result.Loading -> Unit
                 }
             }
-            is MainShellUiEvent.AdvanceStatus -> viewModelScope.launch {
-                when (val result = advanceStatus(event.requestId, event.toStatus)) {
-                    is Result.Success ->
-                        sendEffect(MainShellUiEffect.ShowMessage("Status updated"))
-                    is Result.Error ->
-                        sendEffect(MainShellUiEffect.ShowMessage(result.userMessage()))
-                    Result.Loading -> Unit
+            is MainShellUiEvent.AdvanceStatus -> {
+                if (!inFlightAdvanceIds.add(event.requestId)) return
+                viewModelScope.launch {
+                    try {
+                        when (val result = advanceStatus(event.requestId, event.toStatus)) {
+                            is Result.Success ->
+                                sendEffect(MainShellUiEffect.ShowMessage(if (isAr) "تم تحديث الحالة" else "Status updated"))
+                            is Result.Error ->
+                                sendEffect(MainShellUiEffect.ShowMessage(result.userMessage()))
+                            Result.Loading -> Unit
+                        }
+                    } finally {
+                        inFlightAdvanceIds.remove(event.requestId)
+                    }
                 }
             }
-            is MainShellUiEvent.ConfirmDelivery -> viewModelScope.launch {
-                when (val result = confirmDelivery(event.requestId)) {
-                    is Result.Success ->
-                        sendEffect(MainShellUiEffect.NavigateRate(event.requestId))
-                    is Result.Error ->
-                        sendEffect(MainShellUiEffect.ShowMessage(result.userMessage()))
-                    Result.Loading -> Unit
+            is MainShellUiEvent.ConfirmDelivery -> {
+                if (!inFlightConfirmIds.add(event.requestId)) return
+                viewModelScope.launch {
+                    try {
+                        when (val result = confirmDelivery(event.requestId)) {
+                            is Result.Success ->
+                                sendEffect(MainShellUiEffect.NavigateRate(event.requestId))
+                            is Result.Error ->
+                                sendEffect(MainShellUiEffect.ShowMessage(result.userMessage()))
+                            Result.Loading -> Unit
+                        }
+                    } finally {
+                        inFlightConfirmIds.remove(event.requestId)
+                    }
                 }
             }
             is MainShellUiEvent.OpenChat ->

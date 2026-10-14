@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.Hatli" parent="android:Theme.Material.NoActionBar">
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
@@ -7,5 +7,13 @@
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowBackground">@color/hatli_background</item>
         <item name="android:colorPrimary">@color/hatli_primary</item>
+    </style>
+
+    <!-- Official AndroidX System SplashScreen Theme (Matches the light brand splash) -->
+    <style name="Theme.Hatli.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/hatli_splash_bg</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenIconBackgroundColor">#FFEAF2F1</item>
+        <item name="postSplashScreenTheme">@style/Theme.Hatli</item>
     </style>
 </resources>

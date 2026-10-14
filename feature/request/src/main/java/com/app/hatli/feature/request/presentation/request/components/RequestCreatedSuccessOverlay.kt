@@ -88,7 +88,7 @@ fun RequestCreatedSuccessOverlay(
                         AnimatedSuccessCheckmark(
                             size = 100.dp,
                             circleColor = HatliColors.BrandTeal,
-                            checkColor = HatliColors.DeepTeal,
+                            checkColor = HatliColors.CoralContainer,
                             repeatCheckmark = true
                         )
 

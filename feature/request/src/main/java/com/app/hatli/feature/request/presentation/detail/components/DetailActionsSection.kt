@@ -37,10 +37,9 @@ fun DetailActionsSection(
         if (isRunner && (nextStatus != null || nextCta != null)) {
             BounceScaleClickable {
                 HatliPrimaryButton(
-                    text = if (isAdvancing) {
-                        stringResource(R.string.request_detail_updating)
-                    } else runnerButtonText,
+                    text = runnerButtonText,
                     onClick = { onEvent(RequestDetailUiEvent.AdvanceStatus) },
+                    isLoading = isAdvancing,
                     enabled = !isAdvancing,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -50,12 +49,9 @@ fun DetailActionsSection(
         if (isRequester && req.status == RequestStatus.Delivered) {
             BounceScaleClickable {
                 HatliPrimaryButton(
-                    text = if (isConfirming) {
-                        stringResource(R.string.request_detail_confirming)
-                    } else {
-                        stringResource(R.string.request_detail_confirm_delivery)
-                    },
+                    text = stringResource(R.string.request_detail_confirm_delivery),
                     onClick = { onEvent(RequestDetailUiEvent.ConfirmDelivery) },
+                    isLoading = isConfirming,
                     enabled = !isConfirming,
                     modifier = Modifier.fillMaxWidth(),
                 )

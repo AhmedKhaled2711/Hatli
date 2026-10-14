@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.app.hatli.core.designsystem.theme.HatliSpacing
 import com.app.hatli.core.model.RequestSummary
 import com.app.hatli.feature.home.R
-import com.app.hatli.feature.home.presentation.components.ConversationRowCard
+import com.app.hatli.feature.home.presentation.components.card.ConversationRowCard
 
 @Composable
 fun MessagesContent(
