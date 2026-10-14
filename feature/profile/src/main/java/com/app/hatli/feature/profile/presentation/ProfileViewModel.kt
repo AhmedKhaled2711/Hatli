@@ -31,6 +31,8 @@ class ProfileViewModel @Inject constructor(
 
     private var observeJob: Job? = null
     private var runnerStatsJob: Job? = null
+    private var refreshJob: Job? = null
+    private var logoutJob: Job? = null
 
     init {
         observeJob = observeUserProfile()
@@ -110,34 +112,47 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun refresh() {
-        viewModelScope.launch {
+        if (refreshJob?.isActive == true) return
+        refreshJob = viewModelScope.launch {
             if (uiState.value.profile == null) {
-                setState { copy(isLoading = true, errorMessage = null) }
+                setState { copy(isLoading = true, isRefreshing = true, errorMessage = null) }
+            } else {
+                setState { copy(isRefreshing = true, errorMessage = null) }
             }
-            when (val result = getUserProfile()) {
-                is Result.Success -> setState {
-                    copy(isLoading = false, profile = result.data, errorMessage = null)
+            try {
+                when (val result = getUserProfile(forceRefresh = true)) {
+                    is Result.Success -> setState {
+                        copy(isLoading = false, profile = result.data, errorMessage = null)
+                    }
+                    is Result.Error -> setState {
+                        copy(
+                            isLoading = false,
+                            errorMessage = if (profile == null) result.userMessage() else null
+                        )
+                    }
+                    Result.Loading -> Unit
                 }
-                is Result.Error -> setState {
-                    copy(
-                        isLoading = false,
-                        errorMessage = if (profile == null) result.userMessage() else null
-                    )
-                }
-                Result.Loading -> Unit
+            } finally {
+                setState { copy(isRefreshing = false) }
             }
         }
     }
 
     private fun signOut() {
-        viewModelScope.launch {
-            // Stop Firestore listen before Auth.signOut() to avoid PERMISSION_DENIED crash.
-            observeJob?.cancel()
-            observeJob = null
-            runnerStatsJob?.cancel()
-            runnerStatsJob = null
-            logout()
-            sendEffect(ProfileUiEffect.LoggedOut)
+        if (logoutJob?.isActive == true) return
+        logoutJob = viewModelScope.launch {
+            setState { copy(isLoggingOut = true) }
+            try {
+                // Stop Firestore listen before Auth.signOut() to avoid PERMISSION_DENIED crash.
+                observeJob?.cancel()
+                observeJob = null
+                runnerStatsJob?.cancel()
+                runnerStatsJob = null
+                logout()
+                sendEffect(ProfileUiEffect.LoggedOut)
+            } finally {
+                setState { copy(isLoggingOut = false) }
+            }
         }
     }
 }

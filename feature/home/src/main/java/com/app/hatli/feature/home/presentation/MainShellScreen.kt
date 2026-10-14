@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.app.hatli.core.ui.base.CollectUiEffect
 import com.app.hatli.feature.home.R
+import com.app.hatli.feature.home.presentation.components.HomeErrorState
 import com.app.hatli.feature.home.presentation.components.JobsListContent
 import com.app.hatli.feature.home.presentation.components.MainBottomBar
 import com.app.hatli.feature.home.presentation.components.RequestsListContent
@@ -78,6 +79,14 @@ fun MainShellScreen(
     onEvent: (MainShellUiEvent) -> Unit,
     profileTab: @Composable () -> Unit,
 ) {
+    if (state.isError && state.role == null) {
+        HomeErrorState(
+            errorMessage = state.errorMessage,
+            onRetry = { onEvent(MainShellUiEvent.Retry) },
+        )
+        return
+    }
+
     if (state.isLoadingProfile || state.role == null) {
         val isRunner = state.role == UserRole.Runner
         if (isRunner) {

@@ -162,7 +162,7 @@ fun ChatComposer(
                 val isSendActive = value.isNotBlank() && !isSending
                 Surface(
                     shape = CircleShape,
-                    color = if (isSendActive) {
+                    color = if (isSendActive || isSending) {
                         MaterialTheme.colorScheme.primary
                     } else {
                         MaterialTheme.colorScheme.surfaceVariant

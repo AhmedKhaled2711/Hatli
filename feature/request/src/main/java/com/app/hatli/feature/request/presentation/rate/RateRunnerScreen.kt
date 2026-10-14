@@ -86,24 +86,30 @@ class RateRunnerViewModel @Inject constructor(
     private val submitRating: SubmitRatingUseCase,
 ) : BaseViewModel<RateUiState, RateUiEvent, RateUiEffect>(RateUiState()) {
     private val requestId: String = checkNotNull(savedStateHandle["requestId"])
+    private var submitJob: kotlinx.coroutines.Job? = null
 
     override fun handleEvent(event: RateUiEvent) {
         when (event) {
             is RateUiEvent.StarsChanged -> setState { copy(stars = event.stars) }
             is RateUiEvent.CommentChanged -> setState { copy(comment = event.value) }
-            RateUiEvent.Submit -> viewModelScope.launch {
-                setState { copy(isSubmitting = true) }
-                val current = uiState.value
-                when (val result = submitRating(requestId, current.stars, current.comment.ifBlank { null })) {
-                    is Result.Success -> {
+            RateUiEvent.Submit -> {
+                if (uiState.value.isSubmitting || submitJob?.isActive == true) return
+                submitJob = viewModelScope.launch {
+                    setState { copy(isSubmitting = true) }
+                    try {
+                        val current = uiState.value
+                        when (val result = submitRating(requestId, current.stars, current.comment.ifBlank { null })) {
+                            is Result.Success -> {
+                                sendEffect(RateUiEffect.Done)
+                            }
+                            is Result.Error -> {
+                                sendEffect(RateUiEffect.ShowMessage(result.userMessage()))
+                            }
+                            Result.Loading -> Unit
+                        }
+                    } finally {
                         setState { copy(isSubmitting = false) }
-                        sendEffect(RateUiEffect.Done)
                     }
-                    is Result.Error -> {
-                        setState { copy(isSubmitting = false) }
-                        sendEffect(RateUiEffect.ShowMessage(result.userMessage()))
-                    }
-                    Result.Loading -> Unit
                 }
             }
             RateUiEvent.Back -> sendEffect(RateUiEffect.Done)
@@ -260,6 +266,7 @@ fun RateRunnerScreen(
                 HatliPrimaryButton(
                     text = stringResource(R.string.rate_runner_submit),
                     onClick = { onEvent(RateUiEvent.Submit) },
+                    isLoading = state.isSubmitting,
                     enabled = !state.isSubmitting,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -267,6 +274,7 @@ fun RateRunnerScreen(
                 HatliSecondaryButton(
                     text = stringResource(R.string.create_request_back),
                     onClick = onBack,
+                    enabled = !state.isSubmitting,
                     modifier = Modifier.fillMaxWidth(),
                 )
             }

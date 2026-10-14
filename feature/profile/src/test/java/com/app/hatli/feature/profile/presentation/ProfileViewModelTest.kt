@@ -78,7 +78,7 @@ class ProfileViewModelTest {
     fun `initialization observes profile and triggers refresh successfully`() = runTest {
         val testProfile = createTestProfile()
         every { observeUserProfile() } returns flowOf(testProfile)
-        coEvery { getUserProfile() } returns Result.Success(testProfile)
+        coEvery { getUserProfile(any()) } returns Result.Success(testProfile)
 
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
@@ -102,7 +102,7 @@ class ProfileViewModelTest {
     fun `refresh failure with no prior profile sets error message`() = runTest {
         val profileFlow = MutableSharedFlow<UserProfile?>()
         every { observeUserProfile() } returns profileFlow
-        coEvery { getUserProfile() } returns Result.Error(Exception("Network failure"))
+        coEvery { getUserProfile(any()) } returns Result.Error(Exception("Network failure"))
 
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
@@ -126,7 +126,7 @@ class ProfileViewModelTest {
     fun `logout triggers logoutUseCase and emits LoggedOut effect`() = runTest {
         val testProfile = createTestProfile()
         every { observeUserProfile() } returns flowOf(testProfile)
-        coEvery { getUserProfile() } returns Result.Success(testProfile)
+        coEvery { getUserProfile(any()) } returns Result.Success(testProfile)
         coEvery { logout() } returns Result.Success(Unit)
 
         val viewModel = ProfileViewModel(
@@ -157,7 +157,7 @@ class ProfileViewModelTest {
             transportType = TransportType.Motorcycle
         )
         every { observeUserProfile() } returns flowOf(runnerProfile)
-        coEvery { getUserProfile() } returns Result.Success(runnerProfile)
+        coEvery { getUserProfile(any()) } returns Result.Success(runnerProfile)
 
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
@@ -181,7 +181,7 @@ class ProfileViewModelTest {
     fun `setThemeMode updates themeMode in sessionPreferences and state`() = runTest {
         val testProfile = createTestProfile()
         every { observeUserProfile() } returns flowOf(testProfile)
-        coEvery { getUserProfile() } returns Result.Success(testProfile)
+        coEvery { getUserProfile(any()) } returns Result.Success(testProfile)
 
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
@@ -204,7 +204,7 @@ class ProfileViewModelTest {
     fun `setAppLanguage updates appLanguage and emits AppLanguageChanged effect`() = runTest {
         val testProfile = createTestProfile()
         every { observeUserProfile() } returns flowOf(testProfile)
-        coEvery { getUserProfile() } returns Result.Success(testProfile)
+        coEvery { getUserProfile(any()) } returns Result.Success(testProfile)
 
         val viewModel = ProfileViewModel(
             observeUserProfile = observeUserProfile,
@@ -244,7 +244,7 @@ class ProfileViewModelTest {
         }
 
         every { observeUserProfile() } returns flowOf(runnerProfile)
-        coEvery { getUserProfile() } returns Result.Success(runnerProfile)
+        coEvery { getUserProfile(any()) } returns Result.Success(runnerProfile)
         every { observeRunnerAssigned(runnerProfile.uid) } returns flowOf(listOf(mockCompletedRequest1, mockCompletedRequest2))
 
         val viewModel = ProfileViewModel(

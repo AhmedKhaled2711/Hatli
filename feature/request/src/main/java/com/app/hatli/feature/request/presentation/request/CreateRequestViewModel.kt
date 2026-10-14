@@ -14,6 +14,7 @@ import com.app.hatli.core.model.RequestCategory
 import com.app.hatli.core.model.ShoppingDetails
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,6 +26,8 @@ class CreateRequestViewModel @Inject constructor(
 ) : BaseViewModel<CreateRequestUiState, CreateRequestUiEvent, CreateRequestUiEffect>(
     CreateRequestUiState(),
 ) {
+    private var submitJob: Job? = null
+    private val isAr: Boolean get() = java.util.Locale.getDefault().language == "ar"
 
     init {
         loadUserProfileAddress()
@@ -182,48 +185,64 @@ class CreateRequestViewModel @Inject constructor(
 
     private fun validateDetails(state: CreateRequestUiState): String? = when (state.category) {
         RequestCategory.Shopping ->
-            if (state.itemsText.isBlank()) "Enter what you need (shopping list)." else null
+            if (state.itemsText.isBlank()) {
+                if (isAr) "أدخل ما تحتاجه (قائمة المشتريات)." else "Enter what you need (shopping list)."
+            } else null
         RequestCategory.Pickup -> when {
-            state.pickupAddress.isBlank() -> "Enter pickup address."
-            state.dropoffAddress.isBlank() -> "Enter drop-off address."
-            state.pickupItemDescription.isBlank() -> "Describe the item."
+            state.pickupAddress.isBlank() ->
+                if (isAr) "أدخل عنوان الاستلام." else "Enter pickup address."
+            state.dropoffAddress.isBlank() ->
+                if (isAr) "أدخل عنوان التسليم." else "Enter drop-off address."
+            state.pickupItemDescription.isBlank() ->
+                if (isAr) "صف الغرض المطلوب نقله." else "Describe the item."
             else -> null
         }
         RequestCategory.Bills -> when {
-            state.billType.isBlank() -> "Enter bill type."
-            state.accountRef.isBlank() -> "Enter account / reference number."
-            state.billAmountText.toDoubleOrNull() == null -> "Enter a valid amount."
+            state.billType.isBlank() ->
+                if (isAr) "أدخل نوع الفاتورة." else "Enter bill type."
+            state.accountRef.isBlank() ->
+                if (isAr) "أدخل رقم الحساب أو المرجع." else "Enter account / reference number."
+            state.billAmountText.toDoubleOrNull() == null ->
+                if (isAr) "أدخل مبلغاً صحيحاً." else "Enter a valid amount."
             else -> null
         }
         RequestCategory.Custom -> when {
-            state.customTitle.isBlank() -> "Enter a short title."
-            state.customBody.isBlank() -> "Describe your request."
+            state.customTitle.isBlank() ->
+                if (isAr) "أدخل عنواناً مختصراً." else "Enter a short title."
+            state.customBody.isBlank() ->
+                if (isAr) "صف طلبك بالتفصيل." else "Describe your request."
             else -> null
         }
-        null -> "Select a category."
+        null -> if (isAr) "اختر نوع الخدمة." else "Select a category."
     }
 
     private fun submit() {
         val state = uiState.value
-        if (state.isSubmitting) return
+        if (state.isSubmitting || submitJob?.isActive == true) return
         val fee = state.deliveryFeeText.toDoubleOrNull()
         if (fee == null || fee < 0) {
-            setState { copy(fieldError = "Enter a valid delivery fee.") }
+            setState { copy(fieldError = if (isAr) "أدخل رسوم توصيل صحيحة." else "Enter a valid delivery fee.") }
             return
         }
-        val input = state.toInput(fee) ?: return
+        val input = state.toInput(fee)
+        if (input == null) {
+            setState { copy(fieldError = if (isAr) "بيانات الطلب غير مكتملة." else "Incomplete request details.") }
+            return
+        }
         setState { copy(isSubmitting = true, fieldError = null) }
-        viewModelScope.launch {
-            when (val result = createRequest(input)) {
-                is Result.Success -> {
-                    setState { copy(isSubmitting = false) }
-                    sendEffect(CreateRequestUiEffect.Submitted)
+        submitJob = viewModelScope.launch {
+            try {
+                when (val result = createRequest(input)) {
+                    is Result.Success -> {
+                        sendEffect(CreateRequestUiEffect.Submitted)
+                    }
+                    is Result.Error -> {
+                        sendEffect(CreateRequestUiEffect.ShowMessage(result.userMessage()))
+                    }
+                    Result.Loading -> Unit
                 }
-                is Result.Error -> {
-                    setState { copy(isSubmitting = false) }
-                    sendEffect(CreateRequestUiEffect.ShowMessage(result.userMessage()))
-                }
-                Result.Loading -> Unit
+            } finally {
+                setState { copy(isSubmitting = false) }
             }
         }
     }
@@ -234,7 +253,7 @@ class CreateRequestViewModel @Inject constructor(
             RequestCategory.Shopping -> CreateRequestInput(
                 category = cat,
                 title = shopName.ifBlank { itemsText.lineSequence().firstOrNull().orEmpty() }
-                    .ifBlank { "Shopping request" },
+                    .ifBlank { if (isAr) "طلب شراء" else "Shopping request" },
                 description = buildString {
                     append(itemsText.trim())
                     if (notes.isNotBlank()) append("\n").append(notes.trim())
@@ -250,7 +269,7 @@ class CreateRequestViewModel @Inject constructor(
             )
             RequestCategory.Pickup -> CreateRequestInput(
                 category = cat,
-                title = pickupItemDescription.trim().ifBlank { "Pickup" },
+                title = pickupItemDescription.trim().ifBlank { if (isAr) "توصيل طرد" else "Pickup" },
                 description = pickupItemDescription.trim(),
                 deliveryFee = fee,
                 pickupLabel = pickupAddress.trim(),
@@ -262,7 +281,7 @@ class CreateRequestViewModel @Inject constructor(
                 CreateRequestInput(
                     category = cat,
                     title = "$billType — $accountRef",
-                    description = "Pay $billType ($accountRef) — $amount EGP",
+                    description = if (isAr) "دفع $billType ($accountRef) — $amount ج.م" else "Pay $billType ($accountRef) — $amount EGP",
                     budget = amount,
                     deliveryFee = fee,
                     bills = BillsDetails(
