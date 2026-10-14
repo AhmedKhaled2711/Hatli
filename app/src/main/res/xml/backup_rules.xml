@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <!-- Exclude local Room database (cached posts, user profiles) for pre-API 31 devices -->
+    <!-- Exclude local Room database (cached user profiles) for pre-API 31 devices -->
     <exclude domain="database" path="." />
     <!-- Exclude session DataStore containing auth tokens and user session state for pre-API 31 devices -->
     <exclude domain="file" path="datastore" />

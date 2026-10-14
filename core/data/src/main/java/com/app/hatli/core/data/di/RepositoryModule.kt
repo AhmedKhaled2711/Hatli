@@ -3,12 +3,10 @@ package com.app.hatli.core.data.di
 import com.app.hatli.core.data.preferences.SessionPreferencesRepositoryImpl
 import com.app.hatli.core.data.repository.AuthRepositoryImpl
 import com.app.hatli.core.data.repository.HomeRepositoryImpl
-import com.app.hatli.core.data.repository.PostRepositoryImpl
 import com.app.hatli.core.data.repository.RequestRepositoryImpl
 import com.app.hatli.core.data.repository.UserRepositoryImpl
 import com.app.hatli.core.domain.repository.AuthRepository
 import com.app.hatli.core.domain.repository.HomeRepository
-import com.app.hatli.core.domain.repository.PostRepository
 import com.app.hatli.core.domain.repository.RequestRepository
 import com.app.hatli.core.domain.repository.SessionPreferencesRepository
 import com.app.hatli.core.domain.repository.UserRepository
@@ -21,10 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
-
-    @Binds
-    @Singleton
-    abstract fun bindPostRepository(impl: PostRepositoryImpl): PostRepository
 
     @Binds
     @Singleton

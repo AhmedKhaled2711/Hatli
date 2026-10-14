@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
     <cloud-backup>
-        <!-- Exclude local Room database (cached posts, user profiles) -->
+        <!-- Exclude local Room database (cached user profiles) -->
         <exclude domain="database" path="." />
         <!-- Exclude session DataStore containing auth tokens and user session state -->
         <exclude domain="file" path="datastore" />
