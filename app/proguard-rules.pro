@@ -23,3 +23,11 @@
 -keep class * extends androidx.room.RoomDatabase
 -keep class com.app.hatli.core.database.entity.** { *; }
 -keep interface com.app.hatli.core.database.dao.** { *; }
+
+# Preserve Firebase Components and Crashlytics Discovery
+-keepattributes EnclosingMethod
+-keep class com.google.firebase.components.** { *; }
+-keep class * implements com.google.firebase.components.ComponentRegistrar
+-keep class com.google.firebase.crashlytics.** { *; }
+-keep class com.google.firebase.crashlytics.CrashlyticsRegistrar { *; }
+-keep class com.google.firebase.FirebaseApp { *; }
