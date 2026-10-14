@@ -127,6 +127,7 @@ sealed interface MainShellUiEffect : UiEffect {
     data class NavigateDetail(val requestId: String) : MainShellUiEffect
     data class NavigateRate(val requestId: String) : MainShellUiEffect
     data class ShowMessage(val message: String) : MainShellUiEffect
+    data object NavigateRunnerApproval : MainShellUiEffect
 }
 
 fun RequestSummary.runnerNextStatus(): RequestStatus? {

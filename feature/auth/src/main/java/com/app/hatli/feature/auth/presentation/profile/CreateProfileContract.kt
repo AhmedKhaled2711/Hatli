@@ -86,4 +86,5 @@ sealed interface CreateProfileUiEvent : UiEvent {
 
 sealed interface CreateProfileUiEffect : UiEffect {
     data object GoHome : CreateProfileUiEffect
+    data object GoRunnerApproval : CreateProfileUiEffect
 }

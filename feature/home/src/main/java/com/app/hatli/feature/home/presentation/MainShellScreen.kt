@@ -49,6 +49,7 @@ fun MainShellRoute(
     onOpenDetail: (String) -> Unit,
     onOpenRate: (String) -> Unit,
     onMessage: (String) -> Unit,
+    onRunnerApproval: () -> Unit = {},
     viewModel: MainShellViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,6 +61,7 @@ fun MainShellRoute(
             is MainShellUiEffect.NavigateDetail -> onOpenDetail(effect.requestId)
             is MainShellUiEffect.NavigateRate -> onOpenRate(effect.requestId)
             is MainShellUiEffect.ShowMessage -> onMessage(effect.message)
+            MainShellUiEffect.NavigateRunnerApproval -> onRunnerApproval()
         }
     }
 

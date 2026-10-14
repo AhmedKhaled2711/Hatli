@@ -60,6 +60,7 @@ fun OtpRoute(
     onRoleSelect: () -> Unit,
     onCreateProfile: () -> Unit,
     onHome: () -> Unit,
+    onRunnerApproval: () -> Unit = onHome,
     viewModel: OtpViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -68,6 +69,7 @@ fun OtpRoute(
             OtpUiEffect.GoRoleSelect -> onRoleSelect()
             OtpUiEffect.GoCreateProfile -> onCreateProfile()
             OtpUiEffect.GoHome -> onHome()
+            OtpUiEffect.GoRunnerApproval -> onRunnerApproval()
         }
     }
     OtpScreen(

@@ -53,12 +53,14 @@ import com.app.hatli.core.ui.base.CollectUiEffect
 @Composable
 fun CreateProfileRoute(
     onHome: () -> Unit,
+    onRunnerApproval: () -> Unit = onHome,
     viewModel: CreateProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     CollectUiEffect(viewModel.uiEffect) { effect ->
         when (effect) {
             CreateProfileUiEffect.GoHome -> onHome()
+            CreateProfileUiEffect.GoRunnerApproval -> onRunnerApproval()
         }
     }
     CreateProfileScreen(state = state, onEvent = viewModel::onEvent)

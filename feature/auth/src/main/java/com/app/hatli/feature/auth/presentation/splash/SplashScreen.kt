@@ -48,6 +48,7 @@ fun SplashRoute(
     onHome: () -> Unit,
     onStart: () -> Unit,
     onRoleSelect: () -> Unit = {},
+    onRunnerApproval: () -> Unit = onHome,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
     CollectUiEffect(viewModel.uiEffect) { effect ->
@@ -57,6 +58,7 @@ fun SplashRoute(
             SplashUiEffect.GoLogin -> onLogin()
             SplashUiEffect.GoRoleSelect -> onRoleSelect()
             SplashUiEffect.GoCreateProfile -> onCreateProfile()
+            SplashUiEffect.GoRunnerApproval -> onRunnerApproval()
             SplashUiEffect.GoHome -> onHome()
         }
     }

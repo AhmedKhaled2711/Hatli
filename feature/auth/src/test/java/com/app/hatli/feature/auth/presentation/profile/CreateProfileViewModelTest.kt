@@ -9,6 +9,7 @@ import com.app.hatli.core.domain.usecase.user.CreateUserProfileUseCase
 import com.app.hatli.core.domain.usecase.user.GetPendingRoleUseCase
 import com.app.hatli.core.model.AuthUser
 import com.app.hatli.core.model.Gender
+import com.app.hatli.core.model.TransportType
 import com.app.hatli.core.model.UserProfile
 import com.app.hatli.core.model.UserRole
 import com.google.common.truth.Truth.assertThat
@@ -101,6 +102,42 @@ class CreateProfileViewModelTest {
 
             val effect = awaitItem()
             assertThat(effect).isEqualTo(CreateProfileUiEffect.GoHome)
+        }
+
+        coVerify(exactly = 1) { createUserProfile(any()) }
+    }
+
+    @Test
+    fun `Submit with valid inputs for Runner triggers createUserProfile and sends GoRunnerApproval`() = runTest {
+        coEvery { getPendingRole() } returns UserRole.Runner
+        coEvery { createUserProfile(any()) } returns Result.Success(testCreatedProfile.copy(role = UserRole.Runner))
+
+        val viewModel = CreateProfileViewModel(getPendingRole, getCurrentAuthUser, createUserProfile)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        viewModel.onEvent(CreateProfileUiEvent.FirstName("Ali"))
+        viewModel.onEvent(CreateProfileUiEvent.LastName("Hassan"))
+        viewModel.onEvent(CreateProfileUiEvent.GenderSelected(Gender.Male))
+        viewModel.onEvent(CreateProfileUiEvent.Next)
+
+        viewModel.onEvent(CreateProfileUiEvent.City("Cairo"))
+        viewModel.onEvent(CreateProfileUiEvent.Area("Nasr City"))
+        viewModel.onEvent(CreateProfileUiEvent.Street("Abbas"))
+        viewModel.onEvent(CreateProfileUiEvent.Building("10"))
+        viewModel.onEvent(CreateProfileUiEvent.Next)
+
+        viewModel.onEvent(CreateProfileUiEvent.Transport(TransportType.Motorcycle))
+        viewModel.onEvent(CreateProfileUiEvent.VehicleInfo("Honda 150"))
+        viewModel.onEvent(CreateProfileUiEvent.Next)
+
+        viewModel.onEvent(CreateProfileUiEvent.NationalId("29901011234567"))
+
+        viewModel.uiEffect.test {
+            viewModel.onEvent(CreateProfileUiEvent.Submit)
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(CreateProfileUiEffect.GoRunnerApproval)
         }
 
         coVerify(exactly = 1) { createUserProfile(any()) }

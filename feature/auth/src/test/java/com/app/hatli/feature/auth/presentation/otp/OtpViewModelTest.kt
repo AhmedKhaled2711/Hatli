@@ -13,6 +13,7 @@ import com.app.hatli.core.domain.usecase.user.SetPendingRoleUseCase
 import com.app.hatli.core.model.Gender
 import com.app.hatli.core.model.UserProfile
 import com.app.hatli.core.model.UserRole
+import com.app.hatli.core.model.VerificationStatus
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -149,6 +150,86 @@ class OtpViewModelTest {
         }
 
         coVerify(exactly = 1) { setPendingRoleUseCase(UserRole.Runner) }
+    }
+
+    @Test
+    fun `routeAfterLogin sends GoRunnerApproval when runner profile is completed but verificationStatus is Pending`() = runTest {
+        val runnerProfile = testProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Pending,
+        )
+        coEvery { verifyOtpUseCase("test_ver_id", "123456") } returns Result.Success(Unit)
+        coEvery { getUserProfileUseCase() } returns Result.Success(runnerProfile)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiEffect.test {
+            viewModel.onEvent(OtpUiEvent.CodeChanged("123456"))
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(OtpUiEffect.GoRunnerApproval)
+        }
+    }
+
+    @Test
+    fun `routeAfterLogin sends GoRunnerApproval when runner profile is completed but verificationStatus is UnderReview`() = runTest {
+        val runnerProfile = testProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.UnderReview,
+        )
+        coEvery { verifyOtpUseCase("test_ver_id", "123456") } returns Result.Success(Unit)
+        coEvery { getUserProfileUseCase() } returns Result.Success(runnerProfile)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiEffect.test {
+            viewModel.onEvent(OtpUiEvent.CodeChanged("123456"))
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(OtpUiEffect.GoRunnerApproval)
+        }
+    }
+
+    @Test
+    fun `routeAfterLogin sends GoRunnerApproval when runner profile is completed but verificationStatus is Rejected`() = runTest {
+        val runnerProfile = testProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Rejected,
+        )
+        coEvery { verifyOtpUseCase("test_ver_id", "123456") } returns Result.Success(Unit)
+        coEvery { getUserProfileUseCase() } returns Result.Success(runnerProfile)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiEffect.test {
+            viewModel.onEvent(OtpUiEvent.CodeChanged("123456"))
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(OtpUiEffect.GoRunnerApproval)
+        }
+    }
+
+    @Test
+    fun `routeAfterLogin sends GoHome when runner profile is completed and verificationStatus is Approved`() = runTest {
+        val runnerProfile = testProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
+        coEvery { verifyOtpUseCase("test_ver_id", "123456") } returns Result.Success(Unit)
+        coEvery { getUserProfileUseCase() } returns Result.Success(runnerProfile)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiEffect.test {
+            viewModel.onEvent(OtpUiEvent.CodeChanged("123456"))
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(OtpUiEffect.GoHome)
+        }
     }
 
     @Test

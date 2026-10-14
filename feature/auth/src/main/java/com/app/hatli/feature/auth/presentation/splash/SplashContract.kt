@@ -18,5 +18,6 @@ sealed interface SplashUiEffect : UiEffect {
     data object GoLogin : SplashUiEffect
     data object GoRoleSelect : SplashUiEffect
     data object GoCreateProfile : SplashUiEffect
+    data object GoRunnerApproval : SplashUiEffect
     data object GoHome : SplashUiEffect
 }

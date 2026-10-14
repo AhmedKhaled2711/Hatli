@@ -49,6 +49,9 @@ class SplashViewModel @Inject constructor(
                     ResolveStartDestinationUseCase.StartDestination.CreateProfile ->
                         SplashUiEffect.GoCreateProfile
 
+                    ResolveStartDestinationUseCase.StartDestination.RunnerApproval ->
+                        SplashUiEffect.GoRunnerApproval
+
                     ResolveStartDestinationUseCase.StartDestination.Home ->
                         SplashUiEffect.GoHome
                 },

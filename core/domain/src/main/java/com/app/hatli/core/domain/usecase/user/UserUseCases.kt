@@ -8,6 +8,7 @@ import com.app.hatli.core.domain.repository.UserRepository
 import com.app.hatli.core.model.CreateProfileInput
 import com.app.hatli.core.model.UserProfile
 import com.app.hatli.core.model.UserRole
+import com.app.hatli.core.model.VerificationStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -16,10 +17,10 @@ class GetUserProfileUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository,
 ) {
-    suspend operator fun invoke(): Result<UserProfile?> {
+    suspend operator fun invoke(forceRefresh: Boolean = false): Result<UserProfile?> {
         val uid = authRepository.currentUser()?.uid
             ?: return Result.Error(AppError.Unauthorized())
-        return userRepository.getProfile(uid)
+        return userRepository.getProfile(uid, forceRefresh)
     }
 }
 
@@ -60,6 +61,7 @@ class ResolveStartDestinationUseCase @Inject constructor(
         data object Login : StartDestination
         data object RoleSelect : StartDestination
         data object CreateProfile : StartDestination
+        data object RunnerApproval : StartDestination
         data object Home : StartDestination
     }
 
@@ -78,7 +80,13 @@ class ResolveStartDestinationUseCase @Inject constructor(
                 val data = profile.data
 
                 when {
-                    data != null && data.profileCompleted -> StartDestination.Home
+                    data != null && data.profileCompleted -> {
+                        if (data.role == UserRole.Runner && data.verificationStatus != VerificationStatus.Approved) {
+                            StartDestination.RunnerApproval
+                        } else {
+                            StartDestination.Home
+                        }
+                    }
                     data != null && !data.profileCompleted -> {
                         sessionPreferences.setPendingRole(data.role)
                         StartDestination.CreateProfile

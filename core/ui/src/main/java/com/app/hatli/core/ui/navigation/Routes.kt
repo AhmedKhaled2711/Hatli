@@ -46,6 +46,9 @@ data object RoleSelectRoute
 @Serializable
 data object CreateProfileRoute
 
+@Serializable
+data object RunnerApprovalRoute
+
 // Home & Shell Destinations
 @Serializable
 data object MainShellRoute

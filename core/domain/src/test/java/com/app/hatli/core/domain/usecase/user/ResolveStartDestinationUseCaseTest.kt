@@ -9,6 +9,7 @@ import com.app.hatli.core.model.AuthUser
 import com.app.hatli.core.model.Gender
 import com.app.hatli.core.model.UserProfile
 import com.app.hatli.core.model.UserRole
+import com.app.hatli.core.model.VerificationStatus
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -79,11 +80,75 @@ class ResolveStartDestinationUseCaseTest {
     }
 
     @Test
-    fun `returns Home when authenticated user has completed profile`() = runTest {
+    fun `returns Home when authenticated user has completed profile as Requester`() = runTest {
         every { sessionPreferences.onboardingCompleted } returns flowOf(true)
         every { authRepository.currentUser() } returns testAuthUser
         every { sessionPreferences.pendingRole } returns flowOf(null)
         coEvery { userRepository.getProfile("user_123") } returns Result.Success(completedProfile)
+
+        val destination = useCase()
+
+        assertThat(destination).isEqualTo(ResolveStartDestinationUseCase.StartDestination.Home)
+    }
+
+    @Test
+    fun `returns RunnerApproval when authenticated user is Runner with Pending verification`() = runTest {
+        val runnerProfile = completedProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Pending,
+        )
+        every { sessionPreferences.onboardingCompleted } returns flowOf(true)
+        every { authRepository.currentUser() } returns testAuthUser
+        every { sessionPreferences.pendingRole } returns flowOf(null)
+        coEvery { userRepository.getProfile("user_123") } returns Result.Success(runnerProfile)
+
+        val destination = useCase()
+
+        assertThat(destination).isEqualTo(ResolveStartDestinationUseCase.StartDestination.RunnerApproval)
+    }
+
+    @Test
+    fun `returns RunnerApproval when authenticated user is Runner with UnderReview verification`() = runTest {
+        val runnerProfile = completedProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.UnderReview,
+        )
+        every { sessionPreferences.onboardingCompleted } returns flowOf(true)
+        every { authRepository.currentUser() } returns testAuthUser
+        every { sessionPreferences.pendingRole } returns flowOf(null)
+        coEvery { userRepository.getProfile("user_123") } returns Result.Success(runnerProfile)
+
+        val destination = useCase()
+
+        assertThat(destination).isEqualTo(ResolveStartDestinationUseCase.StartDestination.RunnerApproval)
+    }
+
+    @Test
+    fun `returns RunnerApproval when authenticated user is Runner with Rejected verification`() = runTest {
+        val runnerProfile = completedProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Rejected,
+        )
+        every { sessionPreferences.onboardingCompleted } returns flowOf(true)
+        every { authRepository.currentUser() } returns testAuthUser
+        every { sessionPreferences.pendingRole } returns flowOf(null)
+        coEvery { userRepository.getProfile("user_123") } returns Result.Success(runnerProfile)
+
+        val destination = useCase()
+
+        assertThat(destination).isEqualTo(ResolveStartDestinationUseCase.StartDestination.RunnerApproval)
+    }
+
+    @Test
+    fun `returns Home when authenticated user is Runner with Approved verification`() = runTest {
+        val runnerProfile = completedProfile.copy(
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
+        every { sessionPreferences.onboardingCompleted } returns flowOf(true)
+        every { authRepository.currentUser() } returns testAuthUser
+        every { sessionPreferences.pendingRole } returns flowOf(null)
+        coEvery { userRepository.getProfile("user_123") } returns Result.Success(runnerProfile)
 
         val destination = useCase()
 

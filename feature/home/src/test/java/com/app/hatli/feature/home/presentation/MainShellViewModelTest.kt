@@ -20,6 +20,7 @@ import com.app.hatli.core.model.RunnerHomeStats
 import com.app.hatli.core.model.RunnerPresence
 import com.app.hatli.core.model.UserProfile
 import com.app.hatli.core.model.UserRole
+import com.app.hatli.core.model.VerificationStatus
 import com.google.common.truth.Truth.assertThat
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -58,6 +59,7 @@ class MainShellViewModelTest {
         role: UserRole = UserRole.Requester,
         firstName: String = "Ahmed",
         lastName: String = "Khaled",
+        verificationStatus: VerificationStatus? = null,
     ) = UserProfile(
         uid = uid,
         role = role,
@@ -69,6 +71,7 @@ class MainShellViewModelTest {
         createdAt = 1000L,
         updatedAt = 1000L,
         profileCompleted = true,
+        verificationStatus = verificationStatus,
     )
 
     private fun createTestRunnerSnapshot(isOnline: Boolean = true) = RunnerHomeSnapshot(
@@ -134,8 +137,13 @@ class MainShellViewModelTest {
     }
 
     @Test
-    fun `init with Runner profile populates runner feeds`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner, firstName = "Ali")
+    fun `init with Runner profile populates runner feeds when Approved`() = runTest {
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            firstName = "Ali",
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = true)
 
         every { observeUserProfile() } returns flowOf(profile)
@@ -147,6 +155,29 @@ class MainShellViewModelTest {
         val state = viewModel.uiState.value
         assertThat(state.role).isEqualTo(UserRole.Runner)
         assertThat(state.runnerHome?.presence?.isOnline).isTrue()
+    }
+
+    @Test
+    fun `init with unapproved Runner emits NavigateRunnerApproval effect and does not start runner feeds`() = runTest {
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            firstName = "Ali",
+            verificationStatus = VerificationStatus.Pending,
+        )
+
+        every { observeUserProfile() } returns flowOf(profile)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiEffect.test {
+            testDispatcher.scheduler.advanceUntilIdle()
+
+            val effect = awaitItem()
+            assertThat(effect).isEqualTo(MainShellUiEffect.NavigateRunnerApproval)
+        }
+
+        assertThat(viewModel.uiState.value.runnerHome).isNull()
     }
 
     @Test
@@ -187,7 +218,11 @@ class MainShellViewModelTest {
 
     @Test
     fun `ToggleRunnerOnline toggles runner presence online state`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = false)
         every { observeUserProfile() } returns flowOf(profile)
         every { observeRunnerHome() } returns flowOf(snap)
@@ -204,7 +239,11 @@ class MainShellViewModelTest {
 
     @Test
     fun `ToggleRunnerOnline when runner is online toggles presence to offline`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = true)
         every { observeUserProfile() } returns flowOf(profile)
         every { observeRunnerHome() } returns flowOf(snap)
@@ -239,7 +278,11 @@ class MainShellViewModelTest {
 
     @Test
     fun `runner online shows banner when count less than 6 and not dismissed`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = true)
         every { observeUserProfile() } returns flowOf(profile)
         every { observeRunnerHome() } returns flowOf(snap)
@@ -255,7 +298,11 @@ class MainShellViewModelTest {
 
     @Test
     fun `runner offline does not show online banner`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = false)
         every { observeUserProfile() } returns flowOf(profile)
         every { observeRunnerHome() } returns flowOf(snap)
@@ -271,7 +318,11 @@ class MainShellViewModelTest {
 
     @Test
     fun `runner online banner dismissed does not show banner`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = true)
         every { observeUserProfile() } returns flowOf(profile)
         every { observeRunnerHome() } returns flowOf(snap)
@@ -286,7 +337,11 @@ class MainShellViewModelTest {
 
     @Test
     fun `runner online banner with count 6 or more does not show banner`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = true)
         every { observeUserProfile() } returns flowOf(profile)
         every { observeRunnerHome() } returns flowOf(snap)
@@ -301,7 +356,11 @@ class MainShellViewModelTest {
 
     @Test
     fun `DismissRunnerOnlineInfoBanner calls session preferences dismiss and updates state`() = runTest {
-        val profile = createTestUserProfile(uid = "runner1", role = UserRole.Runner)
+        val profile = createTestUserProfile(
+            uid = "runner1",
+            role = UserRole.Runner,
+            verificationStatus = VerificationStatus.Approved,
+        )
         val snap = createTestRunnerSnapshot(isOnline = true)
         every { observeUserProfile() } returns flowOf(profile)
         every { observeRunnerHome() } returns flowOf(snap)

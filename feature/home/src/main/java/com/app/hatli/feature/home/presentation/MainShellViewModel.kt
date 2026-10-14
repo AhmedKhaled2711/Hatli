@@ -14,6 +14,7 @@ import com.app.hatli.core.domain.usecase.request.AdvanceRequestStatusUseCase
 import com.app.hatli.core.domain.usecase.request.ConfirmDeliveryUseCase
 import com.app.hatli.core.domain.usecase.user.ObserveUserProfileUseCase
 import com.app.hatli.core.model.UserRole
+import com.app.hatli.core.model.VerificationStatus
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
@@ -67,7 +68,13 @@ class MainShellViewModel @Inject constructor(
                 }
                 when (profile?.role) {
                     UserRole.Requester -> startRequesterFeeds()
-                    UserRole.Runner -> startRunnerFeeds()
+                    UserRole.Runner -> {
+                        if (profile.verificationStatus == VerificationStatus.Approved) {
+                            startRunnerFeeds()
+                        } else {
+                            sendEffect(MainShellUiEffect.NavigateRunnerApproval)
+                        }
+                    }
                     null -> Unit
                 }
             }

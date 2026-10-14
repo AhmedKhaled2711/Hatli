@@ -9,6 +9,8 @@ import com.app.hatli.core.domain.usecase.auth.VerifyOtpUseCase
 import com.app.hatli.core.domain.usecase.user.GetPendingRoleUseCase
 import com.app.hatli.core.domain.usecase.user.GetUserProfileUseCase
 import com.app.hatli.core.domain.usecase.user.SetPendingRoleUseCase
+import com.app.hatli.core.model.UserRole
+import com.app.hatli.core.model.VerificationStatus
 import com.app.hatli.core.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -114,7 +116,11 @@ class OtpViewModel @Inject constructor(
                 val data = profile.data
                 when {
                     data != null && data.profileCompleted -> {
-                        sendEffect(OtpUiEffect.GoHome)
+                        if (data.role == UserRole.Runner && data.verificationStatus != VerificationStatus.Approved) {
+                            sendEffect(OtpUiEffect.GoRunnerApproval)
+                        } else {
+                            sendEffect(OtpUiEffect.GoHome)
+                        }
                     }
                     data != null && !data.profileCompleted -> {
                         setPendingRole(data.role)

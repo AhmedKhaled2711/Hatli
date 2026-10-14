@@ -222,4 +222,33 @@
     <string name="profile_verification_note">سيتم اعتماد حسابك مؤقتاً بحالة (قيد التوثيق). رفع المستندات اختياري حتى تفعيل المرفقات.</string>
     <string name="profile_verification_soon">قريباً</string>
 
+    <!-- ============================== -->
+    <!-- Runner Approval Status -->
+    <!-- ============================== -->
+    <string name="runner_approval_screen_title">حالة الحساب</string>
+    <string name="runner_approval_status_pending_title">طلبك قيد المراجعة</string>
+    <string name="runner_approval_status_pending_badge">قيد المراجعة ⏳</string>
+    <string name="runner_approval_status_pending_desc">تم استلام بيانات تسجيلك بنجاح. يقوم فريق العمل بمراجعة المعلومات لتفعيل حسابك ككابتن في أقرب وقت.</string>
+    <string name="runner_approval_status_under_review_title">طلبك قيد التدقيق والفحص</string>
+    <string name="runner_approval_status_under_review_badge">قيد الفحص 🔍</string>
+    <string name="runner_approval_status_under_review_desc">المستندات والبيانات المسجلة قيد التدقيق الفعلي حالياً. سيتم تفعيل حسابك فور استكمال المراجعة.</string>
+    <string name="runner_approval_status_approved_title">تمت الموافقة على حسابك!</string>
+    <string name="runner_approval_status_approved_badge">معتمد ورسمي 🟢</string>
+    <string name="runner_approval_status_approved_desc">أهلاً بك كابتن في فريق هاتلي! جاري تحويلك إلى لوحة التحكم لتلقي الطلبات…</string>
+    <string name="runner_approval_status_rejected_title">تعذر قبول الطلب</string>
+    <string name="runner_approval_status_rejected_badge">مرفوض 🔴</string>
+    <string name="runner_approval_status_rejected_desc">نعتذر منك، لم نتمكن من قبول طلبك في الوقت الحالي بعد مراجعة البيانات. يمكنك التواصل مع الدعم الفني للمزيد من المساعدة.</string>
+    <string name="runner_approval_status_unknown_title">حالة الحساب غير واضحة</string>
+    <string name="runner_approval_status_unknown_badge">غير محدد ⚠️</string>
+    <string name="runner_approval_status_unknown_desc">لم نتمكن من تحديد حالة حسابك بدقة. يرجى التأكد من اتصال الإنترنت والضغط على زر التحقق.</string>
+    <string name="runner_approval_steps_title">ماذا يحدث الآن؟</string>
+    <string name="runner_approval_step_1">مراجعة البيانات المسجلة والرقم القومي</string>
+    <string name="runner_approval_step_2">التأكد من شروط السلامة والتوصيل</string>
+    <string name="runner_approval_step_3">تفعيل الحساب فوراً لبدء استلام أول مشوار</string>
+    <string name="runner_approval_last_checked_just_now">آخر فحص: منذ لحظات</string>
+    <string name="runner_approval_refresh_button">التحقق من الحالة</string>
+    <string name="runner_approval_refreshing">جاري التحقق…</string>
+    <string name="runner_approval_logout_button">تسجيل الخروج</string>
+    <string name="runner_approval_captain_badge">كابتن توصيل</string>
+
 </resources>

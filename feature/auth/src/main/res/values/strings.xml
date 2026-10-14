@@ -219,4 +219,33 @@
     <string name="profile_verification_note">Your account will be provisionally approved under (Pending Verification). Document upload is optional until attachments are enabled.</string>
     <string name="profile_verification_soon">Soon</string>
 
+    <!-- ============================== -->
+    <!-- Runner Approval Status -->
+    <!-- ============================== -->
+    <string name="runner_approval_screen_title">Account Status</string>
+    <string name="runner_approval_status_pending_title">Application Under Review</string>
+    <string name="runner_approval_status_pending_badge">Pending Review ⏳</string>
+    <string name="runner_approval_status_pending_desc">We have received your registration details. Our operations team is reviewing your information to activate your Captain account.</string>
+    <string name="runner_approval_status_under_review_title">Active Verification</string>
+    <string name="runner_approval_status_under_review_badge">Under Review 🔍</string>
+    <string name="runner_approval_status_under_review_desc">Your documents and details are actively being verified. Your account will be activated as soon as review completes.</string>
+    <string name="runner_approval_status_approved_title">Account Approved!</string>
+    <string name="runner_approval_status_approved_badge">Approved 🟢</string>
+    <string name="runner_approval_status_approved_desc">Welcome to the Hatli delivery team! Redirecting to your Captain dashboard…</string>
+    <string name="runner_approval_status_rejected_title">Application Not Approved</string>
+    <string name="runner_approval_status_rejected_badge">Not Approved 🔴</string>
+    <string name="runner_approval_status_rejected_desc">We apologize, but your Captain application could not be approved at this time. Please contact support for assistance.</string>
+    <string name="runner_approval_status_unknown_title">Account Status Unspecified</string>
+    <string name="runner_approval_status_unknown_badge">Unspecified ⚠️</string>
+    <string name="runner_approval_status_unknown_desc">Could not determine your account approval status. Please check your connection and tap Check Status.</string>
+    <string name="runner_approval_steps_title">What happens next?</string>
+    <string name="runner_approval_step_1">Reviewing submitted details and national ID</string>
+    <string name="runner_approval_step_2">Verifying delivery safety and vehicle criteria</string>
+    <string name="runner_approval_step_3">Instant activation to start receiving delivery orders</string>
+    <string name="runner_approval_last_checked_just_now">Last checked: Just now</string>
+    <string name="runner_approval_refresh_button">Check Status</string>
+    <string name="runner_approval_refreshing">Checking…</string>
+    <string name="runner_approval_logout_button">Sign Out</string>
+    <string name="runner_approval_captain_badge">Delivery Captain</string>
+
 </resources>

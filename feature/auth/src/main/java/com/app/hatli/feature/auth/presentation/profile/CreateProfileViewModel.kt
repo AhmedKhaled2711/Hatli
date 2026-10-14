@@ -180,7 +180,11 @@ class CreateProfileViewModel @Inject constructor(
                 when (val result = createUserProfile(input)) {
                     is Result.Success -> {
                         setState { copy(isLoading = false) }
-                        sendEffect(CreateProfileUiEffect.GoHome)
+                        if (s.isRunner) {
+                            sendEffect(CreateProfileUiEffect.GoRunnerApproval)
+                        } else {
+                            sendEffect(CreateProfileUiEffect.GoHome)
+                        }
                     }
                     is Result.Error -> setState {
                         copy(isLoading = false, errorMessage = result.userMessage())

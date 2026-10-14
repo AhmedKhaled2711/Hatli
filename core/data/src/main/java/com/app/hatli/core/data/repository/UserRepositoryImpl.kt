@@ -47,11 +47,13 @@ class UserRepositoryImpl @Inject constructor(
         emit(null)
     }
 
-    override suspend fun getProfile(uid: String): Result<UserProfile?> =
+    override suspend fun getProfile(uid: String, forceRefresh: Boolean): Result<UserProfile?> =
         withContext(ioDispatcher) {
-            val cached = local.get(uid)
-            if (cached != null) {
-                return@withContext Result.Success(cached)
+            if (!forceRefresh) {
+                val cached = local.get(uid)
+                if (cached != null) {
+                    return@withContext Result.Success(cached)
+                }
             }
             try {
                 val remoteProfile = remote.get(uid)
