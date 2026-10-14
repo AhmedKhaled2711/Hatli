@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/assets/hatli_mobile_showcase.jpg" width="85%" alt="Hatli Mobile App Showcase" />
+  <img src="docs/assets/hatli_mobile_showcase.svg" width="92%" alt="Hatli Mobile App Showcase" />
 </p>
 
 ---
@@ -168,18 +168,23 @@ Chat conversation screens and multiline input forms utilize `Modifier.imePadding
 
 ## 🎨 Design System Tokens
 
-Hatli is styled with a distinct, high-contrast brand identity built for visibility in bright outdoor environments:
+Hatli is styled with an authentic, high-contrast brand identity derived directly from the official vector emblem ([`ic_hatli_logo.xml`](file:///e:/Hatli/core/designsystem/src/main/res/drawable/ic_hatli_logo.xml)) and Compose design tokens ([`Color.kt`](file:///e:/Hatli/core/designsystem/src/main/java/com/app/hatli/core/designsystem/theme/Color.kt)):
 
 <p align="center">
-  <img src="docs/assets/hatli_brand_showcase.jpg" width="85%" alt="Hatli Brand & Design System Showcase" />
+  <img src="docs/assets/hatli_brand_showcase.svg" width="92%" alt="Hatli Brand & Design System Showcase" />
 </p>
 
-| Token Name | Hex Code | Purpose |
+| Token Name | Hex Code | Visual & Architectural Role |
 | :--- | :---: | :--- |
-| **Brand Warm Coral** | `#FF6B35` | Primary buttons, active stepper nodes, active tab indicators, radar pulses |
-| **Mint Teal** | `#30E6C1` | Verified runner badges, completed errand states, success indicators |
-| **Off-White Canvas** | `#F8F9FA` | App background, light surface cards |
-| **Deep Charcoal** | `#1E2022` | High-contrast typography, dark mode surfaces, primary icons |
+| **Deep Petroleum Teal** | `#102F34` | Logo 'H' monogram structural anchor (`ic_hatli_logo.xml`), primary brand typography tone |
+| **Vibrant Coral Gradient** | `#F16B5A` ➔ `#F05C4C` (`#FF6B35`) | Dynamic courier wings, primary interactive CTAs (`BrandCoral`), progress nodes |
+| **Soft Ice Sage Mist** | `#EAF2F1` ➔ `#F5F8F7` | Official logo canvas background (`ic_launcher_background.xml`), ambient surface tone |
+| **Semantic Emerald Green** | `#0F9F55` (Container `#E8F8F0`) | Verified runner status badges, delivered order confirmations, positive ratings |
+| **Deep Charcoal & Dark Base** | `#1E2022` / Dark `#121418` | High-contrast body copy, dark mode surfaces (`DarkSurface`), container outlines |
+
+<p align="center">
+  <img src="docs/assets/hatli_brand_mockup_showcase.jpg" width="92%" alt="Hatli Studio Brand Mockup" />
+</p>
 
 ---
 
